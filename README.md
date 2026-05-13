@@ -10,7 +10,7 @@
     <img src="https://img.shields.io/badge/Claude_Code-compatible-blueviolet?logo=anthropic" alt="Claude Code compatible" />
   </a>
   <img src="https://img.shields.io/badge/agents-7-orange" alt="7 agents" />
-  <img src="https://img.shields.io/badge/commands-29-green" alt="29 commands" />
+  <img src="https://img.shields.io/badge/commands-30-green" alt="30 commands" />
   <img src="https://img.shields.io/badge/stack-any-lightgrey" alt="Works with any stack" />
 </p>
 
@@ -35,14 +35,17 @@ This gives you that team.
 
 ## What it actually does
 
-Seven specialist agents collaborate on your project — each with one job, one area of authority. When you run `/review`, four agents read your diff from four different angles:
+Seven specialist agents collaborate on your project — each with one job, one area of authority. When you run `/review`, five agents process your diff in sequence, with QA as the gate:
 
 ```
 You run:  /review
 
+  qa           → tests pass? AC met? edge cases covered?
+                 ↓ FAIL → stop here. back to dev. no exceptions.
+                 ↓ PASS → proceed
+
   pr-reviewer  → correctness, style, edge cases, dead code
   security     → secrets, OWASP, CVEs, input validation, auth
-  qa           → test coverage, acceptance criteria, missing states
   tech-lead    → architecture alignment, tech debt, patterns
 
   po           → collects all findings:
@@ -50,7 +53,8 @@ You run:  /review
                    BACKLOG    → added to BACKLOG.md automatically
                    WON'T FIX  → documented with reasoning
 
-You get:  APPROVED or CHANGES REQUESTED
+You get:  APPROVED → run /complete to commit
+          CHANGES REQUESTED → fix → /review again
           + every non-blocking issue in your backlog, not forgotten
 ```
 
@@ -93,24 +97,52 @@ First time only
   /init "I'm building a REST API for expense tracking"
   → agents scan your project, write real stories, set sprint goal
 
+Sprint planning (start of sprint)
+  /sprint-plan
+  → PO proposes stories from backlog
+  → dev commits capacity ("I can take 3 stories, STORY-001 is 2 days...")
+  → tech-lead estimates complexity, flags dependencies
+  → QA validates acceptance criteria
+  → SM finalizes sprint in STATE.md
+
 Every morning
   /standup
-  → all agents report, blockers surfaced, today's focus confirmed
+  → each agent reports: done / doing / blocked
+  → blockers get an owner and mitigation
+  → today's focus confirmed from NEXT.md
 
-When you're ready to build
+When you pick up a story
   /new-task
-  → PO picks next story, tech-lead writes spec if needed, dev starts
+  → PO selects highest priority unblocked story
+  → tech-lead writes spec if M+ complexity
+  → dev confirms: AC clear, approach clear, ready to start
 
-Before you commit
+You implement the story, then...
   /review
-  → 4 agents review your diff, PO gives verdict + backlogs non-blockers
-  /complete STORY-001
-  → mark done, commit
+  → QA validates first: tests pass? AC met? (hard stop if not)
+  → code review: style, security, architecture
+  → PO verdict: APPROVED or CHANGES REQUESTED
+
+  If CHANGES REQUESTED → fix → /review again
+  If APPROVED →
+
+  /complete STORY-XXX "description"
+  → commit with proper format
+  → story closed in STATE.md
+  → NEXT.md updated
+
+  → more stories? /new-task
+  → all done?    /sprint-close
+
+If something is blocking you
+  /unblock STORY-XXX "what was blocked and how it's resolved"
+  → tech-lead confirms resolution
+  → blocker cleared from STATE.md
 
 End of sprint
+  /sprint-close → velocity tallied, carry-overs moved to backlog
   /retro        → all agents reflect, actions become backlog stories
-  /sprint-close → velocity, carry-overs, sprint closed
-  /sprint-plan  → plan the next one
+  /sprint-plan  → plan the next sprint
 ```
 
 ---
@@ -190,13 +222,13 @@ Agents will write real stories into `BACKLOG.md`, set a sprint goal in `STATE.md
 
 ---
 
-## All 29 Commands
+## All 30 Commands
 
 | Group | Commands |
 |---|---|
 | Onboarding | `/init` |
 | Core ceremonies | `/standup` `/sprint-plan` `/sprint-close` `/retro` `/review` `/stories` `/backlog` `/new-task` `/status` |
-| Story lifecycle | `/discover` `/design` `/complete` `/bug` `/idea` `/missing` |
+| Story lifecycle | `/discover` `/design` `/complete` `/unblock` `/bug` `/idea` `/missing` |
 | Reviews & audits | `/arch-review` `/ux-review` `/security-review` `/risk-review` `/adr` |
 | Session management | `/done` `/checkpoint` `/resume` `/health-check` `/logs` `/po` `/incident` `/focus-group` |
 
@@ -271,6 +303,7 @@ New agents, new ceremony commands, improvements to collaboration chains — all 
 
 ## Release History
 
+* **1.1.0** — Real scrum flow: dev capacity in sprint planning, QA gates code review, /unblock command, handoff lines throughout.
 * **1.0.0** — Initial release. 7 agents, 29 commands, full agile lifecycle.
 
 ---
