@@ -17,7 +17,7 @@ and persistent team memory. No lock-in. Works with any language or framework.
 │   ├── pr-reviewer-agent.md   PR Reviewer
 │   ├── security-analyst-agent.md  Security Analyst
 │   └── tech-lead-agent.md     Tech Lead
-└── commands/                  ← Agile ceremonies as slash commands
+└── commands/                  ← 30 slash commands
 
 memory/                        ← Persistent team state
 ├── NEXT.md                    Exact next action (session continuity)
@@ -36,14 +36,39 @@ perspective in sequence, then one agent synthesizes into a shared artifact.
 
 ```
 /review chain:
+  qa           ──→  quality gate (tests + AC) — STOP if fail, no code review of broken code
   pr-reviewer  ──→  code quality findings
   security     ──→  vulnerability findings
-  qa           ──→  test coverage findings
   tech-lead    ──→  architecture findings
   po           ──→  [SYNTHESIZES ALL] → APPROVED / CHANGES REQUESTED + BACKLOG items
 ```
 
 The PO is the hub. Issues that don't block merge go straight to BACKLOG.md. Nothing is lost.
+
+---
+
+## The Dev Pipeline
+
+Every story follows this exact flow:
+
+```
+/sprint-plan  po proposes → dev commits capacity → tech-lead estimates → qa validates AC → pm finalizes
+      ↓
+/standup      daily: done / doing / blocked — blockers get owner + mitigation
+      ↓
+/new-task     po selects story → tech-lead specs → dev confirms and starts
+      ↓
+[implement]
+      ↓
+/review       qa gate first → code review → security → tech-lead → po verdict
+              APPROVED → /complete | CHANGES REQUESTED → fix → /review again
+      ↓
+/complete     commit + close story → /new-task (more stories) or /sprint-close (done)
+      ↓
+/sprint-close → /retro → /sprint-plan (next sprint)
+```
+
+If blocked at any point: `/unblock STORY-XXX "what resolved it"`
 
 ---
 
@@ -53,7 +78,7 @@ The PO is the hub. Issues that don't block merge go straight to BACKLOG.md. Noth
 |---|---|---|---|
 | `po-agent` | Product Owner | BACKLOG.md, sprint goal, user stories | No |
 | `pm-agent` | Scrum Master | STATE.md, NEXT.md, ceremonies | No |
-| `dev-agent` | Developer | Code, implementation | No |
+| `dev-agent` | Developer | Code, implementation, capacity estimates | No |
 | `qa-agent` | QA Engineer | Test strategy, acceptance criteria | YES — no ship without tests |
 | `pr-reviewer-agent` | PR Reviewer | Code review, merge gate | Soft — can block PR |
 | `security-analyst-agent` | Security | Vulnerability scan, risk register | Soft — can block PR |
@@ -65,15 +90,16 @@ The PO is the hub. Issues that don't block merge go straight to BACKLOG.md. Noth
 
 | Command | Collaboration Chain | Output Artifact |
 |---|---|---|
-| `/standup` | dev → qa → security → pm synthesizes → po notes | STATE.md updated |
-| `/sprint-plan` | po proposes → tech-lead estimates → qa adds AC → security flags → pm finalizes | Sprint in STATE.md |
-| `/sprint-close` | pm reads velocity → po reviews stories → all agents reflect | COMPLETED log |
+| `/standup` | dev → qa → security → tech-lead → pm synthesizes → po notes | STATE.md updated |
+| `/sprint-plan` | po proposes → dev estimates capacity → tech-lead complexity → qa validates AC → security flags → pm finalizes | Sprint in STATE.md |
+| `/sprint-close` | pm reads velocity → po reviews stories → all agents sign off | STATE.md CLOSED |
 | `/retro` | all agents reflect → pm facilitates → po backlogs actions → learnings logged | LEARNINGS.md |
-| `/review` | pr-reviewer → security → qa → tech-lead → po synthesizes | Verdict + BACKLOG.md |
+| `/review` | qa gate → pr-reviewer → security → tech-lead → po synthesizes | Verdict + BACKLOG.md |
 | `/stories` | po writes → qa adds test scenarios → security adds constraints → tech-lead adds notes | BACKLOG.md entry |
 | `/backlog` | po leads → tech-lead estimates → qa validates AC → security flags risk | BACKLOG.md prioritized |
-| `/new-task` | po selects → tech-lead specs → pm assigns | IN_PROGRESS in STATE.md |
+| `/new-task` | po selects → tech-lead specs → pm assigns → dev confirms | IN_PROGRESS in STATE.md |
 | `/status` | pm reads state → all agents report health | Full project picture |
+| `/unblock` | tech-lead confirms resolution → pm clears STATE.md → NEXT.md updated | Blocker removed |
 
 ---
 
@@ -88,8 +114,9 @@ cat memory/STATE.md    # sprint status
 **Then:**
 - Start of day → `/standup`
 - Need next work → `/new-task`
-- Before committing → `/review`
-- End of sprint → `/retro` then `/sprint-close`
+- Story done → `/review` then `/complete STORY-XXX`
+- Blocked → `/unblock STORY-XXX`
+- End of sprint → `/sprint-close` then `/retro`
 
 **End of session:**
 - Always overwrite `memory/NEXT.md` with the exact next action
@@ -100,20 +127,23 @@ cat memory/STATE.md    # sprint status
 ## Iron Rules
 
 1. **Tests first.** `qa-agent` has a hard veto. No story is done without passing tests.
-2. **Human approval.** Always show diffs before applying changes.
-3. **Backlog everything.** Review findings that don't block merge → BACKLOG.md. Never lost.
-4. **Decisions logged.** Every architecture choice → DECISIONS.md with a DEC-XXX number.
-5. **NEXT.md is sacred.** End every session with the single most specific next action written.
-6. **Append-only memory.** LEARNINGS.md and completed stories are never deleted.
+2. **QA before code review.** `/review` runs QA first — broken code doesn't get reviewed.
+3. **Human approval.** Always show diffs before applying changes.
+4. **Backlog everything.** Review findings that don't block merge → BACKLOG.md. Never lost.
+5. **Decisions logged.** Every architecture choice → DECISIONS.md with a DEC-XXX number.
+6. **NEXT.md is sacred.** End every session with the single most specific next action written.
+7. **Append-only memory.** LEARNINGS.md and completed stories are never deleted.
 
 ---
 
 ## Setup
 
-1. Copy `.claude/` and `memory/` into your project root
-2. Edit `memory/STATE.md` — set your project name and first sprint goal
-3. Edit `memory/BACKLOG.md` — add your first 3-5 stories
-4. Run `/status` — verify all agents load
-5. Run `/standup` — begin
+```bash
+cd your-project
+curl -fsSL https://raw.githubusercontent.com/thecoderbuddy/agile-team-skill/main/install.sh | bash
+claude
+```
 
-The team is ready when `/standup` shows all 7 agents reporting.
+Then run `/init` — agents scan your project (or use your description) and populate the memory files with real stories, a sprint goal, and your first next action.
+
+The team is ready when `/init` writes to `memory/BACKLOG.md`.
