@@ -56,3 +56,9 @@ RECOMMENDATION
   [continue as-is / descope X / extend sprint]
 ═══════════════════════════════════════
 ```
+
+Based on recommendation:
+- On track → Continue with `/new-task` or `/standup`.
+- Behind, stories to descope → Run `/backlog` to reprioritize and move stories out of sprint.
+- Story stalled / blocked → Run `/unblock STORY-XXX` to clear the blocker.
+- Behind but no descope → Alert in next `/standup`, flag sprint goal as AT RISK.

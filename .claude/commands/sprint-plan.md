@@ -1,6 +1,6 @@
 # /sprint-plan — Sprint Planning (Collaborative Chain)
 
-Five agents collaborate to build the sprint. PO proposes. Team challenges. SM finalizes.
+Six agents collaborate to build the sprint. PO proposes. Dev commits capacity. Team challenges. SM finalizes.
 
 ---
 
@@ -35,7 +35,33 @@ Proposed stories (priority order):
 
 ---
 
-## Step 2 — tech-lead-agent estimates
+## Step 2 — dev-agent commits capacity
+
+**dev-agent** reviews the proposed stories and states:
+- How many stories they can realistically complete this sprint (based on available days)
+- Time estimate per story in days (dev knows their own pace, not tech-lead)
+- Questions or clarifications needed before starting any story
+
+```
+DEV CAPACITY
+───────────────────────────────────────
+Available this sprint: [N days]
+Stories I can take:    [n stories]
+
+STORY-XXX: [2 days] — [clear, ready to start]
+STORY-XXX: [1 day]  — [need tech spec first]
+STORY-XXX: [3 days] — [have a question: ...]
+
+Total committed: [N days]
+───────────────────────────────────────
+```
+
+If total committed days exceed available days, dev-agent proposes which story to drop.
+pm-agent and po-agent decide on the trim.
+
+---
+
+## Step 4 — tech-lead-agent estimates
 
 **tech-lead-agent** reviews the proposed stories and provides:
 - Complexity estimate for each story: XS / S / M / L / XL
@@ -55,7 +81,7 @@ Concern: [any architectural risk]
 
 ---
 
-## Step 3 — qa-agent validates acceptance criteria
+## Step 5 — qa-agent validates acceptance criteria
 
 **qa-agent** reviews each proposed story and:
 - Confirms acceptance criteria are testable (flags if too vague)
@@ -73,7 +99,7 @@ STORY-XXX: AC needs clarification — [what's unclear]
 
 ---
 
-## Step 4 — security-analyst-agent flags risk
+## Step 6 — security-analyst-agent flags risk
 
 **security-analyst-agent** reviews the sprint stories and flags:
 - Any story with elevated security risk (auth, data handling, external APIs)
@@ -90,7 +116,7 @@ STORY-XXX: ELEVATED RISK — [reason] — add 0.5 days for security review
 
 ---
 
-## Step 5 — pm-agent finalizes
+## Step 7 — pm-agent finalizes
 
 **pm-agent** synthesizes all input and:
 - Adjusts scope if total complexity exceeds sprint capacity

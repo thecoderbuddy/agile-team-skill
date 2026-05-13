@@ -128,7 +128,9 @@ Technical Notes:
 ═══════════════════════════════════════════════════
 Added to memory/BACKLOG.md ✓
 
-Add to sprint? [Y to move to current sprint / N to leave in backlog]
 ```
 
 **po-agent writes the completed story to `memory/BACKLOG.md` before closing.**
+
+Stories added to backlog → Run `/backlog` to groom and prioritize.
+Ready to sprint? → Run `/sprint-plan` to commit stories to a sprint.

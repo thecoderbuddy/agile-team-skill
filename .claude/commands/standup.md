@@ -108,4 +108,7 @@ TODAY'S FOCUS
 ════════════════════════════════════════
 ```
 
-After standup: if next action is clear → start it. If not → run `/new-task`.
+After standup:
+- Next action is clear → start it. Run `/new-task` if you need the full task context.
+- Blocker found → raise to tech-lead-agent or run `/unblock STORY-XXX` to clear it.
+- Sprint goal at risk → run `/health-check` to assess and decide on descopes.
