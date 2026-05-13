@@ -78,6 +78,18 @@ That's the pattern for every command. Multiple specialists. One synthesizer. One
 
 ## The 7 Agents
 
+<table>
+  <tr>
+    <td align="center" width="120"><img src="assets/po-agent.png" width="80"/><br/><b>po-agent</b></td>
+    <td align="center" width="120"><img src="assets/pm-agent.png" width="80"/><br/><b>pm-agent</b></td>
+    <td align="center" width="120"><img src="assets/dev-agent.png" width="80"/><br/><b>dev-agent</b></td>
+    <td align="center" width="120"><img src="assets/qa-agent.png" width="80"/><br/><b>qa-agent</b></td>
+    <td align="center" width="120"><img src="assets/pr-reviewer-agent.png" width="80"/><br/><b>pr-reviewer</b></td>
+    <td align="center" width="120"><img src="assets/security-analyst-agent.png" width="80"/><br/><b>security</b></td>
+    <td align="center" width="120"><img src="assets/tech-lead-agent.png" width="80"/><br/><b>tech-lead</b></td>
+  </tr>
+</table>
+
 | Agent | What they do for you |
 |---|---|
 | `po-agent` | Writes proper user stories with acceptance criteria. Prioritizes your backlog. Synthesizes all review findings into a verdict. |

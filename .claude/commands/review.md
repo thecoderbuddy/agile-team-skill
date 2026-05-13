@@ -1,120 +1,233 @@
-# /review — PR Code Review (Collaborative Chain)
+# /review — Full PR Review Loop
 
-Five agents review every diff. QA goes first — no point reviewing code that doesn't pass tests.
-If QA fails, stop and return to dev. If QA passes, four more agents review. PO synthesizes.
+Use this when **you wrote the code yourself** and want the full review cycle.
+Agents review → write a PR response → dev fixes → agents re-review. Loops until approved.
+
+If agents are implementing the story for you, use `/new-task` instead — it includes this chain.
+
+Arguments: $ARGUMENTS (optional story ID for context)
 
 ---
 
-## Step 0 — Read the diff
+## Step 0 — Read the diff and story context
 
 ```bash
 git diff --stat
 git diff
+cat memory/BACKLOG.md   # find the story's acceptance criteria
+cat memory/DECISIONS.md # architectural constraints
 ```
 
-Also read the story from `memory/BACKLOG.md` to understand the intent.
+This is **review cycle 1**. Track the cycle number — it increments on each loop.
 
 ---
 
-## Step 1 — qa-agent (Quality Gate — runs first)
+## Step 1 — qa-agent (Quality Gate — always first)
 
-**qa-agent** validates the implementation before anyone else reviews it.
+**qa-agent** validates before anyone else reviews. Hard gate — if this fails, the review stops here.
 
-Specifically checks:
-- Tests exist for the changed functionality?
+Checks:
+- Tests exist for all changed functionality?
 - All acceptance criteria from the story are met?
-- Edge cases covered: loading, empty, error, success states?
+- Edge cases handled: empty, error, loading, success states?
 - Existing tests still pass?
 
-**If any check fails — STOP. Report failures. Do not proceed to code review.**
-Dev must fix and re-run `/review`. No exceptions (qa-agent hard veto).
+```
+QA GATE  [cycle N]
+───────────────────────────────────────
+Tests:      [PASS | FAIL — what's missing or broken]
+AC met:     [YES | NO — which criterion is not met]
+Edge cases: [COVERED | GAP — what's unhandled]
+
+Result: PASS → continue to code review
+        FAIL → stop. PR response written below. Dev fixes and re-runs /review.
+───────────────────────────────────────
+```
+
+If FAIL — write the PR response (Step 5) immediately and stop. No code review of broken code.
+
+---
+
+## Step 2 — pr-reviewer-agent (Code Quality)
+
+**pr-reviewer-agent** reviews the full diff.
+
+Checks:
+- Code does what the story says it should?
+- Matches existing patterns in the codebase?
+- Error cases handled?
+- No hardcoded secrets, commented-out code, dead code, or unrelated changes?
+- No N+1 queries, unbounded loops, or blocking calls in async context?
 
 ```
-QA GATE
+PR REVIEWER  [cycle N]
 ───────────────────────────────────────
-Tests:     [pass / FAIL — what broke]
-AC met:    [yes / NO — which criterion missing]
-Edge cases:[covered / GAP — what's unhandled]
-Result:    PASS → proceed | FAIL → return to dev
+Correctness:     [PASS | ISSUE — file:line — details]
+Style:           [PASS | ISSUE — file:line — details]
+Performance:     [PASS | ISSUE — file:line — details]
+Maintainability: [PASS | ISSUE — file:line — details]
+
+Inline comments:
+  [file:line] — [specific actionable comment]
+  [file:line] — [specific actionable comment]
 ───────────────────────────────────────
 ```
 
 ---
 
-## Step 2 — pr-reviewer-agent (Code Quality Lens)
+## Step 3 — security-analyst-agent (Security)
 
-**pr-reviewer-agent** reviews the diff for correctness, style, performance, and maintainability.
+**security-analyst-agent** scans the same diff.
 
-Specifically checks:
-- Does the code do what the story says it should?
-- Does it match existing patterns in the codebase?
-- Are error cases handled?
-- No hardcoded secrets (first pass)?
-- No commented-out code, unrelated changes, or dead code added?
-
----
-
-## Step 3 — security-analyst-agent (Security Lens)
-
-**security-analyst-agent** reviews the same diff for security vulnerabilities.
-
-Specifically checks:
-- Secrets scan: API keys, tokens, passwords in code or config
-- Input validation: any user input reaching the system without sanitisation?
-- Dependencies: any new packages with known CVEs?
+Checks:
+- Secrets: API keys, tokens, passwords, connection strings in code or config?
+- Input validation: user input reaching the system without sanitisation?
+- Dependencies: new packages with known CVEs?
 - Data handling: sensitive data logged, exposed, or stored insecurely?
-- Auth/AuthZ: any endpoints or resources now accessible without proper checks?
-
-Findings are categorised: CRITICAL/HIGH (blocking) | MEDIUM/LOW (backlog).
-
----
-
-## Step 4 — tech-lead-agent (Architecture Lens)
-
-**tech-lead-agent** reviews for architecture alignment.
-
-Specifically checks:
-- Implementation matches the tech spec (if one was written)?
-- Consistent with established patterns in DECISIONS.md?
-- Any new patterns introduced — are they intentional and should they be logged as a DEC?
-- Tech debt introduced? If so, is it acceptable and backlogged?
-
----
-
-## Step 5 — po-agent (Synthesis + Verdict)
-
-**po-agent** collects all findings from steps 2–4 and produces the final verdict.
-
-For each finding from any agent, po decides:
-- **FIX NOW** — blocks merge. List as required change.
-- **BACKLOG** — valid but not blocking. Add to `memory/BACKLOG.md` immediately with
-  format: `STORY-XXX: [issue] — found in review of [story] — Source: [agent]`
-- **WON'T FIX** — explain why and document reasoning inline.
-
----
-
-## Final Output
+- Auth/AuthZ: endpoints or resources now reachable without proper checks?
 
 ```
-CODE REVIEW — STORY-XXX
-═══════════════════════════════════════════════════
-Files changed: [n] | Lines: +[added] -[removed]
+SECURITY  [cycle N]
+───────────────────────────────────────
+Secrets:    [CLEAN | FOUND — details]
+Input:      [CLEAN | RISK — file:line — details]
+Deps:       [CLEAN | CVE — package, severity, CVE-ID]
+Data:       [CLEAN | RISK — details]
+Auth/AuthZ: [CLEAN | RISK — details]
 
-QA:            [PASS / FAIL — summary]
-PR REVIEWER:   [PASS / ISSUES — summary]
-SECURITY:      [CLEAN / FINDINGS — summary]
-TECH LEAD:     [ALIGNED / CONCERNS — summary]
-
-REQUIRED CHANGES (fix before merge):
-  1. [specific change required]
-  2. [specific change required]
-
-ADDED TO BACKLOG:
-  - STORY-XXX: [issue] — Source: [agent]
-
-VERDICT: APPROVED | CHANGES REQUESTED
-═══════════════════════════════════════════════════
+Findings:
+  CRITICAL: [description] — blocks merge
+  HIGH:     [description] — blocks merge
+  MEDIUM:   [description] → BACKLOG
+  LOW:      [description] → BACKLOG or info
+───────────────────────────────────────
 ```
 
-If **APPROVED** → Run `/complete STORY-XXX "description"` to commit and close the story.
-If **CHANGES REQUESTED** → Fix the required changes, then run `/review` again.
+CRITICAL and HIGH are blocking. MEDIUM/LOW go to BACKLOG.md — not forgotten, not blocking.
+
+---
+
+## Step 4 — tech-lead-agent (Architecture)
+
+**tech-lead-agent** checks alignment with the established architecture.
+
+Checks:
+- Implementation matches the tech spec (if one was written for this story)?
+- Consistent with patterns in DECISIONS.md?
+- New patterns introduced — are they intentional? Should they be logged as a DEC?
+- Tech debt introduced? Is it acceptable? Should it get a backlog story?
+
+```
+TECH LEAD  [cycle N]
+───────────────────────────────────────
+Spec alignment:    [MATCHES | DRIFT — details]
+Pattern:           [CONSISTENT | INCONSISTENT — file:line — details]
+Tech debt:         [NONE | INTRODUCED — log to backlog?]
+New decision:      [NONE | DEC-XXX needed — description]
+───────────────────────────────────────
+```
+
+If a new DEC is needed → tech-lead-agent writes it to `memory/DECISIONS.md` before closing.
+
+---
+
+## Step 5 — po-agent writes the PR response
+
+**po-agent** collects all findings from Steps 1–4 and writes the formal PR response.
+
+For each finding, po decides:
+- **FIX NOW** → blocks merge. Numbered, specific, actionable.
+- **BACKLOG** → valid but non-blocking. Written to `memory/BACKLOG.md` immediately.
+- **WON'T FIX** → documented with reasoning so it's not raised again.
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PR REVIEW — STORY-XXX  [Cycle N of M]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Files changed: [n] | +[lines added] -[lines removed]
+
+REVIEW SUMMARY
+  QA:        [PASS | FAIL]
+  Code:      [PASS | N issues]
+  Security:  [CLEAN | N findings]
+  Arch:      [ALIGNED | N concerns]
+
+──────────────────────────────────────────────────
+REQUIRED CHANGES  (fix all before merge)
+──────────────────────────────────────────────────
+  1. [file:line] [CATEGORY] — [specific change required]
+     Why: [brief reason]
+
+  2. [file:line] [CATEGORY] — [specific change required]
+     Why: [brief reason]
+
+──────────────────────────────────────────────────
+ADDED TO BACKLOG  (non-blocking, tracked)
+──────────────────────────────────────────────────
+  - [issue] — Source: [agent] — STORY-BUG-XXX created
+
+──────────────────────────────────────────────────
+WON'T FIX
+──────────────────────────────────────────────────
+  - [issue] — Reason: [why it's acceptable]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VERDICT:  APPROVED ✓  |  CHANGES REQUESTED ✗
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**po-agent appends any BACKLOG items to `memory/BACKLOG.md` before handing off.**
+
+---
+
+## Step 6 — If CHANGES REQUESTED: dev-agent addresses all required changes
+
+**dev-agent** reads the PR response and fixes every FIX NOW item:
+- Work through the list top to bottom
+- Do not skip items or partially address them
+- Do not introduce unrelated changes
+
+When done:
+
+```
+DEV FIX COMPLETE  [cycle N]
+───────────────────────────────────────
+Fixed:
+  1. [item 1] — [what changed] at [file:line]
+  2. [item 2] — [what changed] at [file:line]
+
+Not fixed: [item N] — [reason, if any — flag to user if blocked]
+───────────────────────────────────────
+→ Restarting review from Step 1 (cycle [N+1])
+```
+
+→ **Return to Step 0 automatically. A new review cycle begins.**
+
+---
+
+## Step 7 — If APPROVED: ready to commit
+
+```
+APPROVED — READY TO COMMIT
+───────────────────────────────────────
+Cycles:   [N]
+Story:    STORY-XXX — [title]
+Changes:  [summary of what was implemented]
+
+git add [files]
+git commit -m "feat(area): [description] — closes STORY-XXX"
+
+Approve commit? [Y/N]
+───────────────────────────────────────
+```
+
+Run `/complete STORY-XXX "description"` or approve inline to commit and close the story.
+
+---
+
+## Cycle Limits
+
+- If the same finding appears in 3 consecutive cycles → pause and flag to user. Something is structurally wrong.
+- If QA fails twice in a row → pause and show the user the exact failing criteria. Ask: "Fix manually or rewrite the approach?"
+- Security CRITICAL on any cycle → pause before dev fixes. Show finding and ask user to confirm the fix approach.
