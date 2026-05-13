@@ -1,0 +1,42 @@
+# OS
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code — local settings and runtime dirs (machine-specific, not for sharing)
+.claude/settings.local.json
+.claude/worktrees/
+.claude/skills/
+
+# Memory — auto-generated logs (not content, just tracking)
+memory/.file-log
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Python (if any tooling is added)
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+.uv/
+
+# Node (if any tooling is added)
+node_modules/
+npm-debug.log*
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
