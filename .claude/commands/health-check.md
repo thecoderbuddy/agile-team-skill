@@ -11,18 +11,23 @@ Are we on track? Should we descope? Run at sprint midpoint.
    git log --oneline -10
    ```
 
-2. **pm-agent assesses:**
-   - Tasks completed vs planned (compare git log against STATE.md sprint goal)
+2. **pm-agent assesses velocity:**
+   - Stories completed vs planned (compare git log against STATE.md)
    - Velocity: on track / behind / ahead
-   - Any task stalled more than 2 days?
-   - Scope: still achievable? Need to descope?
+   - Any story stalled more than 2 days with no commits?
+   - Scope: still achievable this sprint?
 
-3. **Risk check:**
-   - Any task taking longer than estimated?
-   - Any new blockers since sprint start?
-   - Any dependencies at risk?
+3. **po-agent assesses value delivery:**
+   - Is the sprint goal still on track to be met?
+   - If behind: which stories to descope (lowest value, highest effort)?
+   - Any priority shifts needed based on what's been built?
 
-4. Show health check:
+4. **qa-agent reports quality health:**
+   - Any known test failures on in-progress stories?
+   - Any acceptance criteria that have been quietly dropped?
+   - Quality risk if we rush to close?
+
+5. Show health check:
 
 ```
 SPRINT HEALTH CHECK
@@ -31,18 +36,21 @@ Sprint:    [N]
 Midpoint:  [date]
 
 VELOCITY
-  Planned: [X] tasks
-  Done:    [Y] tasks (from git log)
+  Planned: [X] stories
+  Done:    [Y] stories
   Status:  [on track / behind / ahead]
 
 STALLED
-  [tasks with no commits in 2+ days]
+  [stories with no commits in 2+ days or "none"]
+
+QUALITY
+  [qa-agent findings or "clean"]
 
 AT RISK
-  [tasks that might not make it]
+  [stories that might not make it]
 
 DESCOPE CANDIDATES
-  [tasks to drop if behind — with justification]
+  [po-agent recommendation: stories to drop if behind]
 
 RECOMMENDATION
   [continue as-is / descope X / extend sprint]

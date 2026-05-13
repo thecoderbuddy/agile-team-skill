@@ -25,33 +25,42 @@ Triggers incident response. SEV-1 = production down.
    git status
    ```
 
-3. **For SEV-1/SEV-2:**
+3. **security-analyst-agent assesses exposure:**
+   - Is there a data breach or security risk involved?
+   - Any sensitive data exposed?
+   - Does this need immediate containment before fixing?
+
+4. **tech-lead-agent investigates root cause:**
    - Identify the blast radius (what's affected)
-   - Check recent commits (did a recent change cause this?)
+   - Check recent commits — did a recent change cause this?
    - Read relevant code to understand the failure
-   - Propose fix or rollback
+   - Propose fix approach or rollback option
+   - If architectural issue: log DEC-XXX in `memory/DECISIONS.md`
 
-4. **Log the incident** — add a note to memory/STATE.md under an INCIDENTS section:
-   ```
-   INCIDENT — SEV-[N] — [date]
-   Description: [what happened]
-   Impact: [what's affected]
-   Status: [investigating / fixing / resolved]
-   ```
-
-5. **Log in DECISIONS.md** if this reveals an architectural risk that needs a DEC-XXX decision.
+5. **pm-agent logs and coordinates:**
+   - Add incident to `memory/STATE.md` under INCIDENTS section:
+     ```
+     INCIDENT — SEV-[N] — [date]
+     Description: [what happened]
+     Impact: [what's affected]
+     Status: [investigating / fixing / resolved]
+     ```
+   - For SEV-3/4: add story to `memory/BACKLOG.md` instead
 
 6. Show incident report:
 
 ```
 INCIDENT — SEV-[N]
 ═══════════════════════════════════════
-Description: [what happened]
-Impact:      [what's affected]
+Description:  [what happened]
+Impact:       [what's affected]
 Blast radius: [scope]
 
+SECURITY ASSESSMENT
+  [data exposure risk or "none"]
+
 ROOT CAUSE (hypothesis)
-  [what we think caused it]
+  [what tech-lead-agent identified]
 
 RECENT CHANGES
   [last 5 commits]

@@ -1,4 +1,4 @@
-# /complete — Mark Task Done, Test, Commit
+# /complete — Mark Story Done, Test, Commit
 
 Usage: `/complete STORY-XXX "description"`
 
@@ -20,32 +20,36 @@ Arguments: $ARGUMENTS
    git status
    ```
 
-3. If tests fail — STOP. Do not commit. Fix the issue first.
+3. **qa-agent validates:**
+   - Tests pass?
+   - Acceptance criteria from the story met?
+   - Any states unhandled (error, empty, loading)?
+   - If any check fails — STOP. Do not commit. Fix the issue first.
 
-4. If tests pass, check what files changed:
+4. If qa-agent approves, check what files changed:
    ```bash
    git status
    git diff --stat
    ```
 
-5. **Update memory/STATE.md** — reflect the completion (mark task done, update sprint progress).
+5. **pm-agent updates state:**
+   - Updates `memory/STATE.md` — marks story done, updates velocity
+   - Overwrites `memory/NEXT.md` with the next logical action
 
-6. **Update memory/NEXT.md** — overwrite with next logical action.
-
-7. Stage and commit:
+6. Stage and commit:
    ```bash
    git add [relevant files]
    git commit -m "feat(area): description — closes STORY-XXX"
    ```
 
-8. Show confirmation:
+7. Show confirmation:
 
 ```
 STORY COMPLETE
 ────────────────
 Story:    STORY-XXX
 Commit:   [hash]
-Tests:    passed
+QA:       passed
+Next:     [what NEXT.md now says]
 ────────────────
-Next: [what NEXT.md now says]
 ```
