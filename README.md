@@ -1,389 +1,277 @@
 # Agile Team for Claude Code
 
-> Drop 7 specialist AI agents into any project. Get a full agile team — standup, sprint planning, PR review, retrospectives, backlog, security analysis — all collaborating like a real team.
+> An AI-powered agile team for any software project. Ship with the discipline of a senior team — even when you're building alone.
 
-Works with any language. Works with any framework. Zero config beyond copying two folders.
+<p align="center">
+  <a href="https://github.com/thecoderbuddy/agile-team-skill/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License" />
+  </a>
+  <a href="https://claude.ai/code">
+    <img src="https://img.shields.io/badge/Claude_Code-compatible-blueviolet?logo=anthropic" alt="Claude Code compatible" />
+  </a>
+  <img src="https://img.shields.io/badge/agents-7-orange" alt="7 agents" />
+  <img src="https://img.shields.io/badge/commands-29-green" alt="29 commands" />
+  <img src="https://img.shields.io/badge/stack-any-lightgrey" alt="Works with any stack" />
+</p>
+
+<p align="center">
+  <a href="#setup">Quick Start</a> •
+  <a href="#the-7-agents">Agents</a> •
+  <a href="#all-29-commands">Commands</a> •
+  <a href="#contributing">Contributing</a>
+</p>
 
 ---
 
-## What is this?
+## The problem it solves
 
-A set of Claude Code agents and slash commands that give you an AI-powered agile team for your software project.
+Solo developers and small teams skip the things that matter most — not because they don't care, but because there's nobody to hold them to it.
 
-Not one assistant that tries to do everything. Seven specialists that collaborate with each other — each with a defined role, authority, and output — the same way a real scrum team would.
+No one reviews your PR critically. No one catches the security hole you didn't think of. Nobody asks "does this story actually have acceptance criteria?" Nobody remembers what you decided last sprint or why.
+
+This gives you that team.
+
+---
+
+## What it actually does
+
+Seven specialist agents collaborate on your project — each with one job, one area of authority. When you run `/review`, four agents read your diff from four different angles:
 
 ```
 You run:  /review
 
-What happens:
-  pr-reviewer  → reads the diff, checks correctness, style, performance
-  security     → scans for secrets, OWASP issues, vulnerable dependencies
-  qa           → checks test coverage, validates acceptance criteria
-  tech-lead    → checks architecture alignment, flags tech debt
-  po           → collects all findings, gives verdict, adds issues to backlog
+  pr-reviewer  → correctness, style, edge cases, dead code
+  security     → secrets, OWASP, CVEs, input validation, auth
+  qa           → test coverage, acceptance criteria, missing states
+  tech-lead    → architecture alignment, tech debt, patterns
 
-You get:  APPROVED or CHANGES REQUESTED + backlog items from everything that wasn't blocking
+  po           → collects all findings:
+                   FIX NOW    → blocks merge
+                   BACKLOG    → added to BACKLOG.md automatically
+                   WON'T FIX  → documented with reasoning
+
+You get:  APPROVED or CHANGES REQUESTED
+          + every non-blocking issue in your backlog, not forgotten
 ```
 
-Nothing is lost. Issues that don't block the merge go straight to the backlog. Every ceremony produces a real artifact.
+That's the pattern for every command. Multiple specialists. One synthesizer. One artifact.
 
 ---
 
-## The Collaboration Principle
+## Before and after
 
-**Nesting = Collaboration.** Every command is a choreographed chain of agents. Each agent adds their perspective. One agent synthesizes.
-
-```
-/sprint-plan
-  po          ──→  proposes sprint goal + stories from backlog
-  tech-lead   ──→  estimates complexity, flags dependencies
-  qa          ──→  validates acceptance criteria, flags untestable stories
-  security    ──→  flags elevated-risk stories
-  pm          ──→  [SYNTHESIZES] → finalizes sprint, writes STATE.md + NEXT.md
-
-/standup
-  dev         ──→  done / doing / blocked
-  qa          ──→  done / doing / blocked
-  security    ──→  active concerns
-  tech-lead   ──→  architectural blockers
-  pm          ──→  [SYNTHESIZES] → updates STATE.md, owns blockers
-  po          ──→  notes scope drift, flags sprint goal risk
-
-/retro
-  dev         ──→  what slowed me down / what worked
-  qa          ──→  quality gaps, late AC changes
-  security    ──→  issues caught late
-  tech-lead   ──→  tech debt accumulated
-  pm          ──→  [FACILITATES] → velocity, action items
-  po          ──→  converts action items to backlog stories, nothing drops
-
-/stories [feature]
-  po          ──→  writes user story + acceptance criteria
-  qa          ──→  adds test scenarios + definition of done
-  security    ──→  adds security constraints
-  tech-lead   ──→  adds technical notes + complexity estimate
-                   → story added to BACKLOG.md, ready to sprint
-```
+| Before | After |
+|---|---|
+| Commit and hope nothing breaks | 4 specialist agents review every diff |
+| Security issues show up in production | Security reviewed on every commit — OWASP, secrets, CVEs |
+| Lose context switching sessions | `NEXT.md` tells you exactly what to do, every session |
+| Backlog is a pile of random notes | Stories written, groomed, and prioritized by a product owner |
+| Tech debt accumulates silently | Tech debt gets a story the moment it's introduced |
+| Ship without acceptance criteria | QA hard veto — nothing ships without passing tests |
+| Retros never happen | Every sprint closes with a retro that produces real backlog items |
 
 ---
 
 ## The 7 Agents
 
-| Agent | Role | What they own | Hard veto? |
-|---|---|---|---|
-| `po-agent` | Product Owner | BACKLOG.md, sprint goal, story format | No |
-| `pm-agent` | Scrum Master | STATE.md, NEXT.md, ceremonies | No |
-| `dev-agent` | Developer | Implementation, code | No |
-| `qa-agent` | QA Engineer | Test strategy, acceptance criteria | **Yes** — nothing ships without tests |
-| `pr-reviewer-agent` | PR Reviewer | Code quality, merge gate | Soft — can block PR |
-| `security-analyst-agent` | Security Analyst | Vulnerability scan, secrets, OWASP | Soft — can block PR |
-| `tech-lead-agent` | Tech Lead | DECISIONS.md, architecture, estimates | No |
-
-**Hard veto** means qa-agent can block a story from being marked done — no exceptions. Tests must pass. Acceptance criteria must be met. The only override is an explicit exception logged in DECISIONS.md with a follow-up story in the backlog.
+| Agent | What they do for you |
+|---|---|
+| `po-agent` | Writes proper user stories with acceptance criteria. Prioritizes your backlog. Synthesizes all review findings into a verdict. |
+| `pm-agent` | Keeps you focused. Owns the sprint state and NEXT.md. Makes sure nothing is blocked without a plan. |
+| `dev-agent` | Implements stories, reports in standups, flags blockers early. |
+| `qa-agent` | Adds test scenarios to every story. **Hard veto** — nothing ships without passing tests. No exceptions. |
+| `pr-reviewer-agent` | Senior-level code review on every diff. Correctness, patterns, performance, maintainability. |
+| `security-analyst-agent` | Scans every diff for OWASP issues, secrets, CVEs, auth holes. **Soft veto** — can block a PR. |
+| `tech-lead-agent` | Tracks architecture decisions. Estimates complexity. Writes tech specs for complex work. Flags tech debt. |
 
 ---
 
-## Ceremonies
+## How a day works
 
-| Command | What happens | Output |
-|---|---|---|
-| `/standup` | All agents report. PM synthesizes. PO notes. | STATE.md updated |
-| `/sprint-plan` | PO proposes. Team challenges. PM finalizes. | Sprint in STATE.md |
-| `/sprint-close` | PM reads velocity. PO confirms stories. | Sprint closed |
-| `/retro` | All agents reflect. PM facilitates. PO backlogs actions. | LEARNINGS.md |
-| `/review` | 4 agents review. PO gives verdict + backlogs issues. | Verdict + BACKLOG.md |
-| `/stories [feature]` | PO writes. QA tests. Security constrains. Tech Lead estimates. | BACKLOG.md |
-| `/backlog` | PO prioritizes. Tech Lead estimates. QA validates AC. Security flags risk. | BACKLOG.md |
-| `/new-task` | PO selects. Tech Lead specs. PM assigns. Dev starts. | NEXT.md + STATE.md |
-| `/status` | All agents report health. Full project picture. | Project status |
+```
+First time only
+  /init "I'm building a REST API for expense tracking"
+  → agents scan your project, write real stories, set sprint goal
+
+Every morning
+  /standup
+  → all agents report, blockers surfaced, today's focus confirmed
+
+When you're ready to build
+  /new-task
+  → PO picks next story, tech-lead writes spec if needed, dev starts
+
+Before you commit
+  /review
+  → 4 agents review your diff, PO gives verdict + backlogs non-blockers
+  /complete STORY-001
+  → mark done, commit
+
+End of sprint
+  /retro        → all agents reflect, actions become backlog stories
+  /sprint-close → velocity, carry-overs, sprint closed
+  /sprint-plan  → plan the next one
+```
 
 ---
 
-## Memory System
+## Session Continuity
 
-Five files that persist state across sessions. Agents read and write these — you never need to manage them manually.
+At the end of every session, `pm-agent` writes `memory/NEXT.md` — specific enough that zero context is needed to resume.
+
+```
+Next time you open Claude Code:
+  /standup   → team picks up exactly where you left off
+```
+
+Five files persist your full project state across every session:
 
 ```
 memory/
-├── NEXT.md        The single most specific next action. Overwritten every session end.
-│                  Written precisely enough that zero context is needed to resume.
-│
-├── STATE.md       Current sprint: goal, status, in-progress stories, velocity, blockers.
-│                  Owned by pm-agent. Updated after every standup.
-│
-├── BACKLOG.md     All stories. Written by /stories. Enriched by /backlog.
-│                  Issues from /review go here. Retro actions go here. Nothing is lost.
-│
-├── DECISIONS.md   Architecture decisions (DEC-001, DEC-002, ...).
-│                  Owned by tech-lead-agent. Read by all agents before architecture work.
-│
-└── LEARNINGS.md   Retro learnings. Append-only, never deleted.
-                   Agents read this to avoid repeating past mistakes.
+├── NEXT.md       Exact next step — specific file, function, outcome
+├── STATE.md      Sprint goal, velocity, blockers, in-progress stories
+├── BACKLOG.md    All stories — from /stories, /review, /retro
+├── DECISIONS.md  Architecture decisions (DEC-001, DEC-002, ...)
+└── LEARNINGS.md  Retro learnings — append-only, never deleted
 ```
-
-**Session continuity:** at the start of every session, read `memory/NEXT.md`. That's your pickup point. At the end of every session, pm-agent overwrites it with the next exact step.
 
 ---
 
 ## Setup
 
-**Requirements:** Claude Code CLI or desktop app.
+### Prerequisites
 
-### 1. Run the installer inside your project
+- [Claude Code](https://claude.ai/code) CLI or desktop app
+
+### 1. Install inside your project
 
 ```bash
 cd your-project
 curl -fsSL https://raw.githubusercontent.com/thecoderbuddy/agile-team-skill/main/install.sh | bash
 ```
 
-Or if you cloned the repo locally:
+Or clone and install locally:
 
 ```bash
+git clone https://github.com/thecoderbuddy/agile-team-skill.git
 cd your-project
-bash /path/to/agile-team/install.sh
+bash /path/to/agile-team-skill/install.sh
 ```
 
-The installer handles existing files safely — it asks before overwriting anything.
+The installer asks before overwriting anything — safe to run on existing projects.
 
 ### 2. Open Claude Code
 
 ```bash
+cd your-project
 claude
 ```
 
-### 3. Run /init
+### 3. Onboard the team
 
+**New project:**
 ```
-/init "describe what you're building in one sentence"
-```
-
-The agents will scan your project (or use your description), write real stories into `BACKLOG.md`, set a sprint goal in `STATE.md`, and tell you exactly what to do next.
-
-**Existing project with no description?** Just run `/init` with no argument — agents scan the codebase, infer what's built and what's missing, and bootstrap the backlog from that.
-
-### 4. Start your first sprint
-
-```
-/sprint-plan     ← agents plan the sprint together
-/standup         ← begin
+/init "I'm building a task manager CLI in Python"
 ```
 
----
+**Existing project** — agents scan the codebase and infer what's built and missing:
+```
+/init
+```
 
-## How a typical day looks
+Agents will write real stories into `BACKLOG.md`, set a sprint goal in `STATE.md`, and tell you exactly what to do next.
+
+### 4. Begin
 
 ```
-First time (run once)
-  /init "I'm building a ..."   ← agents set up backlog, sprint goal, next action
-  /sprint-plan                 ← plan sprint 1
-
-Every morning
-  /standup          ← all agents report, blockers surfaced, focus confirmed
-
-During the day
-  /new-task         ← pick next story, get tech spec, begin implementation
-
-Before committing
-  /review           ← 4-agent review, verdict, backlog intake
-  /complete STORY-XXX ← mark done, commit
-
-End of sprint
-  /retro            ← all agents reflect, actions → backlog
-  /sprint-close     ← velocity, carry-overs, close
-  /sprint-plan      ← plan next sprint
+/sprint-plan   ← agents plan your first sprint together
+/standup       ← start
 ```
 
 ---
 
-## What agents check in /review
+## All 29 Commands
 
-**pr-reviewer-agent** — Code quality
-- Does the code do what it claims? Edge cases handled?
-- Matches existing patterns? No dead code, unrelated changes?
-- No hardcoded secrets (first pass)?
-
-**security-analyst-agent** — Security
-- Secrets scan: API keys, tokens, passwords in code or config
-- Input validation: user input reaching the system without sanitisation?
-- Dependencies: new packages with known CVEs?
-- Data handling: sensitive data logged or stored insecurely?
-- Auth: endpoints accessible without proper checks?
-
-**qa-agent** — Quality gate
-- Tests exist for the changed code?
-- Acceptance criteria from the story are met?
-- All states handled: loading, empty, error, success?
-
-**tech-lead-agent** — Architecture
-- Consistent with established patterns in DECISIONS.md?
-- New patterns introduced? Should they be logged as a DEC?
-- Tech debt introduced? Acceptable and backlogged?
-
-**po-agent** — Synthesis
-- Collects all findings
-- FIX NOW: blocks merge
-- BACKLOG: added to BACKLOG.md automatically
-- WON'T FIX: documented with reasoning
-- Final verdict: APPROVED or CHANGES REQUESTED
+| Group | Commands |
+|---|---|
+| Onboarding | `/init` |
+| Core ceremonies | `/standup` `/sprint-plan` `/sprint-close` `/retro` `/review` `/stories` `/backlog` `/new-task` `/status` |
+| Story lifecycle | `/discover` `/design` `/complete` `/bug` `/idea` `/missing` |
+| Reviews & audits | `/arch-review` `/ux-review` `/security-review` `/risk-review` `/adr` |
+| Session management | `/done` `/checkpoint` `/resume` `/health-check` `/logs` `/po` `/incident` `/focus-group` |
 
 ---
 
-## Iron Rules
+## Why agents collaborate instead of one agent doing everything
 
-These are not preferences. They are enforced by agent design.
+A single agent reviewing your PR has no tension. It wrote the advice, evaluated the security, and decided the verdict — same perspective all the way through.
 
-1. **Tests first.** `qa-agent` hard veto. No story is done without passing tests and met acceptance criteria.
+Collaboration chains give each agent a narrower job and genuine constraints:
 
-2. **Human approval.** Diffs are always shown before changes are applied. No agent applies code changes without your explicit approval.
+- The security analyst only cares about OWASP — not code style
+- QA only cares whether acceptance criteria are met — not architecture
+- The PO never writes findings — only synthesizes them and makes the call
+- The Scrum Master never prioritizes — only ensures nothing is lost
 
-3. **Backlog everything.** Review findings that don't block merge go to BACKLOG.md immediately. Nothing is forgotten.
-
-4. **Decisions logged.** Every architecture choice goes into DECISIONS.md with rationale and alternatives. `tech-lead-agent` owns this.
-
-5. **NEXT.md is sacred.** End every session by writing the single most specific next action. Zero context should be needed to resume.
-
-6. **Append-only memory.** LEARNINGS.md and completed stories are never deleted. The team learns from history.
+Narrower job = deeper output.
 
 ---
 
 ## Project Structure
 
 ```
-agile-team/
-├── CLAUDE.md                         ← Project constitution (read first)
-│
+agile-team-skill/
+├── install.sh                        ← one-command installer
+├── CLAUDE.md                         ← project constitution
 ├── .claude/
-│   ├── agents/
-│   │   ├── po-agent.md               Product Owner
-│   │   ├── pm-agent.md               Scrum Master
-│   │   ├── dev-agent.md              Developer
-│   │   ├── qa-agent.md               QA Engineer
-│   │   ├── pr-reviewer-agent.md      PR Reviewer
-│   │   ├── security-analyst-agent.md Security Analyst
-│   │   └── tech-lead-agent.md        Tech Lead
-│   │
-│   └── commands/
-│       │
-│       │   ── Onboarding ──
-│       ├── init.md                   /init
-│       │
-│       │   ── Core ceremonies ──
-│       ├── standup.md                /standup
-│       ├── sprint-plan.md            /sprint-plan
-│       ├── sprint-close.md           /sprint-close
-│       ├── retro.md                  /retro
-│       ├── review.md                 /review
-│       ├── stories.md                /stories
-│       ├── backlog.md                /backlog
-│       ├── new-task.md               /new-task
-│       ├── status.md                 /status
-│       │
-│       │   ── Story lifecycle ──
-│       ├── discover.md               /discover
-│       ├── design.md                 /design
-│       ├── complete.md               /complete
-│       ├── bug.md                    /bug
-│       ├── idea.md                   /idea
-│       ├── missing.md                /missing
-│       │
-│       │   ── Reviews & audits ──
-│       ├── arch-review.md            /arch-review
-│       ├── ux-review.md              /ux-review
-│       ├── security-review.md        /security-review
-│       ├── risk-review.md            /risk-review
-│       ├── adr.md                    /adr
-│       │
-│       │   ── Session management ──
-│       ├── done.md                   /done
-│       ├── checkpoint.md             /checkpoint
-│       ├── resume.md                 /resume
-│       ├── health-check.md           /health-check
-│       ├── logs.md                   /logs
-│       ├── po.md                     /po
-│       ├── incident.md               /incident
-│       └── focus-group.md            /focus-group
-│
-└── memory/                           ← Persistent team memory
-    ├── NEXT.md                       Exact next action
-    ├── STATE.md                      Current sprint
-    ├── BACKLOG.md                    Product backlog
-    ├── DECISIONS.md                  Architecture decisions
-    └── LEARNINGS.md                  Team learnings (append-only)
+│   ├── agents/                       ← 7 specialist agents
+│   │   ├── po-agent.md
+│   │   ├── pm-agent.md
+│   │   ├── dev-agent.md
+│   │   ├── qa-agent.md
+│   │   ├── pr-reviewer-agent.md
+│   │   ├── security-analyst-agent.md
+│   │   └── tech-lead-agent.md
+│   ├── commands/                     ← 29 slash commands
+│   │   ├── init.md                   /init
+│   │   ├── standup.md                /standup
+│   │   ├── review.md                 /review
+│   │   └── ...
+│   └── hooks/                        ← session tracking
+└── memory/                           ← persistent team state
+    ├── NEXT.md
+    ├── STATE.md
+    ├── BACKLOG.md
+    ├── DECISIONS.md
+    └── LEARNINGS.md
 ```
 
 ---
 
-## Why collaboration chains?
+## Multiple Projects
 
-Most AI agent setups give you one agent that switches modes. The problem: a single agent reviewing your PR is also the one that wrote the advice, evaluated the security, and decided on the verdict. There's no tension. No second opinion. No specialist depth.
-
-Collaboration chains mean:
-
-- The security analyst doesn't care about code style — they only care about OWASP
-- The QA engineer doesn't care about architecture — they only care about whether the story's acceptance criteria are met
-- The PO doesn't write any of the findings — they only synthesize them and make the call
-- The Scrum Master doesn't prioritize — they only ensure the process works and nothing is lost
-
-Each agent has a narrower job and does it better. The chain produces richer output than any single agent could.
-
----
-
-## Multi-Project Setup
-
-One developer. Multiple projects. One agile team.
+Install once per project. Each project gets its own `memory/` — completely separate sprint state, backlog, and decisions. Same 7 agents, same 29 commands, different context.
 
 ```
-Developer machine
-├── project-a/
-│   ├── .claude/        ← copy of agile-team/.claude/
-│   ├── memory/         ← project-a's memory (STATE, BACKLOG, NEXT, etc.)
-│   └── CLAUDE.md       ← project-a's constitution
-│
-└── project-b/
-    ├── .claude/        ← copy of agile-team/.claude/
-    ├── memory/         ← project-b's memory (completely separate)
-    └── CLAUDE.md       ← project-b's constitution
-```
-
-The `memory/` folder lives inside each project. `STATE.md`, `BACKLOG.md`, and `NEXT.md` are always scoped to the project you're currently in. No cross-contamination.
-
-The 7 agents and all ceremony commands stay identical across projects. Only the memory and project context change.
-
-### Per-project CLAUDE.md
-
-Each project has its own `CLAUDE.md` that sets project-specific context:
-
-```markdown
-# CLAUDE.md — Project B
-
-Project: project-b
-Stack: [your stack]
-
-## What this project does
-[one paragraph]
-
-## Architecture decisions
-See memory/DECISIONS.md
-
-## Start of session
-cat memory/NEXT.md
-cat memory/STATE.md
+~/projects/
+├── api/       ← .claude/ + memory/ + CLAUDE.md (sprint 3)
+└── frontend/  ← .claude/ + memory/ + CLAUDE.md (sprint 1)
 ```
 
 ---
 
 ## Contributing
 
-This is an open-source framework, not a product. Contributions welcome:
+New agents, new ceremony commands, improvements to collaboration chains — all welcome.
 
-- New agent definitions (designer, data engineer, DevOps, etc.)
-- New ceremony commands
-- Improvements to existing collaboration chains
-- Translations to other languages
+- **Add an agent:** create `.claude/agents/your-agent.md`. Define its role in each ceremony — that's the collaboration chain contract.
+- **Add a command:** create `.claude/commands/your-command.md`. Define which agents participate, in what order, and what artifact they produce.
 
-To add a new agent: create `.claude/agents/your-agent.md` following the existing format. Define the agent's role in each ceremony explicitly — that's the collaboration chain contract.
+---
 
-To add a new command: create `.claude/commands/your-command.md`. Define which agents participate, in what order, and what artifact they produce.
+## Release History
+
+* **1.0.0** — Initial release. 7 agents, 29 commands, full agile lifecycle.
 
 ---
 
@@ -393,4 +281,4 @@ MIT — use it, fork it, adapt it for your team.
 
 ---
 
-Built from experience running a 40-agent AI engineering team on a real product. Extracted and open-sourced for the developer community.
+*Built from experience running a 40-agent AI engineering team on a real product. Extracted and open-sourced for the developer community.*
