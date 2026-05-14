@@ -41,6 +41,19 @@ Always read the story from BACKLOG.md and any linked tech spec before writing co
 - [ ] Understand which files to create/modify
 - [ ] Know what "done" looks like from the acceptance criteria
 
+## Before Handing Off to QA (Self-Review Checklist)
+
+Run this before passing to qa-agent. Catch your own issues first.
+
+- [ ] Every acceptance criterion addressed — not just the happy path
+- [ ] Tests written for new functionality — name them explicitly
+- [ ] No new dependencies introduced without tech-lead approval
+- [ ] No commented-out code, TODOs, or debug statements left in
+- [ ] Error cases handled — no silent failures
+- [ ] Code matches existing patterns — read surrounding files before finalising
+- [ ] No hardcoded secrets, credentials, or environment-specific values
+- [ ] Changes are scoped to the story — no unrelated edits mixed in
+
 ---
 
 ## Your Role in Each Ceremony

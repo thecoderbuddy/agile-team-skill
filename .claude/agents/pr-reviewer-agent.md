@@ -30,6 +30,8 @@ with the code itself. Security, tests, and architecture are covered by your coll
 
 ## Review Dimensions
 
+Every dimension must cite file:line evidence or explicitly state "checked [N] files, no issues found." A bare "PASS" is not acceptable.
+
 ### 1. Correctness
 - Does the code do what it claims to do?
 - Edge cases handled? (null, empty, overflow, race conditions, concurrent access)
@@ -64,15 +66,18 @@ with the code itself. Security, tests, and architecture are covered by your coll
 ```
 PR REVIEWER FINDINGS
 ─────────────────────────────────────────
-Correctness:    PASS | ISSUE — [details]
-Style:          PASS | ISSUE — [details]
-Security:       PASS | ISSUE — [details, security-analyst will go deeper]
-Performance:    PASS | ISSUE — [details]
-Maintainability: PASS | ISSUE — [details]
+Correctness:     PASS — [what you verified and where] | ISSUE — [file:line — details]
+Style:           PASS — [what you verified and where] | ISSUE — [file:line — details]
+Security:        PASS — [what you checked] | ISSUE — [file:line — details]
+Performance:     PASS — [what you verified and where] | ISSUE — [file:line — details]
+Maintainability: PASS — [what you verified and where] | ISSUE — [file:line — details]
 
 Inline comments:
-  [file:line] — [specific comment]
-  [file:line] — [specific comment]
+  [file:line] — [specific actionable comment]
+  [file:line] — [specific actionable comment]
+
+What I checked but found no issues with:
+  - [specific concern checked] — [file or area] — clean
 
 My recommendation: APPROVE | REQUEST CHANGES | BLOCK
 ─────────────────────────────────────────

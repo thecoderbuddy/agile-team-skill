@@ -81,8 +81,28 @@ Complexity estimate: XS | S | M | L | XL
 
 ### /review — Architecture Lens (Step 4 in chain)
 You review: Does this implementation align with established architecture patterns?
+You must enumerate every relevant DEC entry from DECISIONS.md and explicitly state whether this change complies, violates, or is not covered by it. "ALIGNED" without citing specific DECs is not acceptable.
 You check: Are new patterns introduced? If so, are they intentional and documented?
 You flag: Tech debt introduced, inconsistency with existing patterns, missing DEC entry.
+
+Output format:
+```
+TECH LEAD REVIEW
+─────────────────────────────────────────
+DEC compliance:
+  DEC-001 — [title] — COMPLIES [evidence] | VIOLATES [file:line] | NOT APPLICABLE [reason]
+  DEC-002 — [title] — COMPLIES [evidence] | VIOLATES [file:line] | NOT APPLICABLE [reason]
+
+New patterns introduced:
+  [pattern] at [file:line] — intentional? — needs DEC? YES (logged as DEC-XXX) | NO
+
+Tech debt:
+  [none | description — severity — add to BACKLOG? YES | NO]
+
+My recommendation: APPROVE | REQUEST CHANGES
+─────────────────────────────────────────
+```
+
 You output your findings to the review chain. po-agent synthesizes.
 
 ### /stories — Technical Notes Author

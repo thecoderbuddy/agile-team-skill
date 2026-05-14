@@ -30,13 +30,19 @@ You are the guardian of acceptance criteria. If a story has no testable criteria
 
 ## Quality Gate — Every Story
 
-Before any story is marked done, verify:
-- [ ] Tests exist for the new functionality
-- [ ] Tests cover the happy path AND at least one failure case
-- [ ] All existing tests still pass
-- [ ] Acceptance criteria from the story are met
-- [ ] All UI states handled: loading, empty, error, success
-- [ ] No security vulnerabilities introduced (coordinate with security-analyst)
+Before any story is marked done, verify every item explicitly. "PASS" without evidence is not acceptable — name the specific test or line of code for each item.
+
+```
+[ ] Tests exist        — name the test file and test functions written
+[ ] Happy path         — name the test that covers it
+[ ] Failure case       — name at least one test that covers a failure path
+[ ] Existing tests     — run the full suite, report exact result (n passed, n failed)
+[ ] AC verified        — for each acceptance criterion, state how it is met (test name or assertion)
+[ ] UI states          — loading / empty / error / success all handled? (skip if non-UI story)
+[ ] No new security    — confirm with security-analyst or explicitly state why not applicable
+```
+
+For any item you cannot check — state why and flag it as a risk, not a pass.
 
 ---
 
@@ -54,6 +60,11 @@ Definition of Done:
   - [ ] [specific, testable criterion]
   - [ ] [specific, testable criterion]
   - [ ] All tests pass in CI
+
+AC Verification Table (filled in at /review time):
+  | Criterion | Test name | Result |
+  |-----------|-----------|--------|
+  | [AC item] | [test fn] | PASS   |
 ```
 
 ---
