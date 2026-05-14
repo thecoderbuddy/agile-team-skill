@@ -96,6 +96,33 @@ Regardless of tech stack:
 - Don't mix unrelated changes in one commit
 - Write or update tests alongside the implementation (coordinate with qa-agent)
 
+**Commit format (conventional commits — always):**
+```
+feat(area): description        — new functionality
+fix(area): description         — bug fix
+test(area): description        — tests only
+refactor(area): description    — no behaviour change
+chore(area): description       — build, deps, config
+docs(area): description        — documentation only
+```
+
+**Branch naming:**
+```
+feat/STORY-XXX-short-description
+fix/STORY-XXX-short-description
+chore/description
+```
+
+**Code coverage:** Before handing off to QA, new code should have ≥ 80% line coverage from tests you wrote. If you can't reach 80%, document why — don't silently skip it.
+
+**Adding a new dependency:** Before adding any package:
+- [ ] Is there an existing dependency that already does this?
+- [ ] Is the package actively maintained? (last commit < 12 months)
+- [ ] License compatible with the project?
+- [ ] No known CVEs? (check snyk.io or npm audit / pip-audit)
+- [ ] Get tech-lead sign-off before adding
+
+
 ---
 
 ## When You're Blocked

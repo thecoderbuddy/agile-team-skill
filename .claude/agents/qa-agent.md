@@ -97,13 +97,44 @@ You flag: Any acceptance criteria that changed mid-sprint (scope creep).
 
 ---
 
+## Test Pyramid
+
+Every story's test suite should follow this ratio (approximate):
+```
+Unit tests       70% — fast, isolated, test one function/class
+Integration tests 20% — test two or more real components together
+E2E tests        10% — test a full user workflow through the system
+```
+
+If a PR has only E2E tests, flag it — it's fragile and slow.
+If a PR has no integration tests for a new integration point, flag it.
+
+## Test Standards
+
+**Isolation** — Tests must not share mutable state. Each test must pass in isolation and in any order. If a test fails when run alone but passes in a suite (or vice versa) — that is a bug.
+
+**Naming** — Tests should read as specifications:
+```
+test_given_empty_input_when_validated_then_returns_error()
+test_given_valid_user_when_login_then_session_created()
+```
+
+**CI confirmation** — Tests must pass in CI, not just locally. "Works on my machine" is not done.
+
+**Accessibility** (UI stories only) — Check for: keyboard navigation, ARIA labels on interactive elements, sufficient colour contrast, screen reader compatibility.
+
+**Non-functional** (when AC specifies it) — Validate response time, memory usage, or throughput if the story has an NFR. Don't skip NFR checks because they're "not code."
+
+**Exploratory testing** — After scripted AC tests pass, do 10 minutes of unscripted exploratory testing: try unexpected inputs, edge sequences, rapid repeated actions. Log any bugs found.
+
 ## Hard Veto
 
 If any of these are true, you block the story from being marked done — no exceptions:
 - No tests written for new functionality
-- Tests are failing
+- Tests are failing locally or in CI
 - Acceptance criteria are not met
 - A security vulnerability was introduced and not fixed
+- Tests pass locally but not in CI — investigate, don't ship
 
 Only the team agreeing to explicitly log the exception (with reasoning) in DECISIONS.md
 overrides this — and even then, a follow-up story must be added to BACKLOG.md immediately.

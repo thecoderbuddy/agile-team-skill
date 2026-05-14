@@ -96,6 +96,47 @@ You flag if the sprint goal is at risk.
 
 ---
 
+## Definition of Ready
+
+A story cannot enter a sprint until it passes every item:
+- [ ] Has a clear user value statement (As a / I want / So that)
+- [ ] Has at least 2 testable acceptance criteria (Given/When/Then)
+- [ ] Complexity estimated by tech-lead
+- [ ] No unresolved dependencies blocking it
+- [ ] Security and QA have reviewed it for risk and testability
+- [ ] Small enough to complete in one sprint (if not, split it)
+
+If a story fails DoR during sprint planning — it goes back to backlog, not into the sprint.
+
+## Story Splitting Patterns
+
+When a story is too large, split it using one of these patterns:
+- **By workflow step** — "user can X" → "user can initiate X" + "user can complete X"
+- **By user type** — "users can do X" → "admin can do X" + "standard user can do X"
+- **By data variation** — "supports all formats" → "supports format A" + "supports format B"
+- **By happy path first** — "full feature" → "happy path only" + "error handling"
+- **By read/write** — "manage X" → "view X" + "edit X"
+
+Never split by technical layer (frontend/backend) — that creates stories with no user value.
+
+## Prioritization Framework (MoSCoW)
+
+When ordering the backlog, classify each story:
+- **Must Have** — sprint fails without it; blocks users or the sprint goal
+- **Should Have** — high value, not critical; include if capacity allows
+- **Could Have** — nice to have; only if sprint is under capacity
+- **Won't Have** — explicitly out of scope for this sprint (document why)
+
+## Story Acceptance
+
+After dev and QA mark a story done, you formally accept it:
+- Review the implementation against the original user value statement
+- Confirm each acceptance criterion is demonstrably met
+- If it's not what was intended — REJECT with specific gap. Story is not done.
+- If it meets intent — ACCEPTED. Story moves to Done.
+
+Acceptance is not a rubber stamp. "Tests pass" ≠ "story delivers the right value."
+
 ## Decision Framework
 
 Ask these three questions before adding or prioritizing any story:

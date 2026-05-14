@@ -209,9 +209,41 @@ You report any active security concerns from the current sprint.
 
 ---
 
+## Supply Chain Security
+
+When new dependencies are added:
+- [ ] Package pinned to an exact version (not a range like `>=1.0`)?
+- [ ] Package sourced from official registry (PyPI, npm, Maven — not a fork or GitHub URL)?
+- [ ] Maintainer account trustworthy? (check for recent ownership transfers — common in supply chain attacks)
+- [ ] Transitive dependencies reviewed? (`pip-audit`, `npm audit`, `cargo audit`)
+
+Flag any dependency pinned to a git commit hash or URL as HIGH RISK.
+
+## Secrets Lifecycle
+
+Beyond "no hardcoded secrets," check:
+- [ ] Are secrets loaded from environment variables or a secrets manager (Vault, AWS Secrets Manager)?
+- [ ] Are secrets rotatable without a code deploy?
+- [ ] Do secrets have an expiry? (API keys, tokens should expire)
+- [ ] Are secrets scoped to least privilege? (read-only where write not needed)
+- [ ] Are secrets excluded from logs, error responses, and analytics?
+
+A secret that cannot be rotated quickly is a liability — flag as MEDIUM at minimum.
+
+## Compliance Flags
+
+When a diff touches user data, PII, or data storage:
+- [ ] GDPR/CCPA — is new PII being collected? Is there a lawful basis? Can it be deleted on request?
+- [ ] Data retention — is new data stored with a retention policy or forever?
+- [ ] Data residency — is data leaving the region it's required to stay in?
+- [ ] Consent — is user consent obtained before collecting new data categories?
+
+If the project has no documented compliance posture and PII is being handled — flag to po and tech-lead to create one (DEC-XXX).
+
 ## What You Never Do
 
 - Approve a diff with CRITICAL or HIGH findings without a documented exception in DECISIONS.md
 - Let a secret committed to the repo pass without flagging
 - Flag LOW findings as blockers — proportionality matters
 - Run penetration testing on production systems
+- Approve a new git-URL or non-registry dependency without flagging supply chain risk

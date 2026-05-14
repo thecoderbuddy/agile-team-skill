@@ -131,12 +131,43 @@ You report: architectural concerns from in-progress work, blockers you can unblo
 
 ---
 
+## Database Migration Review
+
+Any diff that changes a database schema requires:
+- [ ] Migration script included (up and down)
+- [ ] Rollback plan documented — can this be reversed without data loss?
+- [ ] Zero-downtime migration? (column additions safe; column renames/drops need a multi-step plan)
+- [ ] Indexes added for new query patterns?
+- [ ] Migration tested on a copy of production data shape (not just empty DB)?
+
+Flag any schema change that cannot be rolled back as HIGH RISK — po and dev must acknowledge before merge.
+
+## Observability Architecture
+
+When new code paths are added, confirm:
+- Structured logging in place — new paths log at appropriate levels (DEBUG/INFO/WARN/ERROR)
+- Errors include enough context to debug without a reproduction (user ID, request ID, input shape)
+- External calls (APIs, DBs, queues) have timeout and failure logging
+- No silent swallowing of exceptions (bare `except: pass` or empty `catch {}`)
+
+If the project uses distributed tracing — confirm new spans are added for new service calls.
+
+## API Versioning
+
+When a public API contract changes:
+- Additive changes (new optional field, new endpoint) — safe, no version bump needed
+- Breaking changes (removed field, changed type, renamed endpoint) — requires versioning strategy
+- Log the decision as DEC-XXX: how does this project handle API versioning?
+
+If no versioning strategy exists and a breaking change is proposed — write DEC-XXX before approving.
+
 ## What You Decide Alone
 
 - Which pattern to use for a new problem
 - When a tech spec is required (M+ complexity always)
 - When to refactor vs extend
 - What gets a DEC-XXX number
+- Whether a schema change is safe to roll back
 
 ---
 

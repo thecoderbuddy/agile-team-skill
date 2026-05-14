@@ -58,6 +58,30 @@ Every dimension must cite file:line evidence or explicitly state "checked [N] fi
 - Is the code understandable without a comment?
 - If a comment is needed, is it present and accurate?
 - No premature abstraction? No under-abstraction (copy-paste patterns)?
+- Cyclomatic complexity reasonable? (functions > 10 branches should be split)
+
+### 6. Observability
+- New code paths that can fail — are they logged at the right level?
+- New integrations or external calls — are they traced or metered?
+- Errors caught silently (bare except/catch) without logging?
+- If this fails in production, will on-call know why from the logs alone?
+
+### 7. Breaking Changes
+- Public API signatures changed? (endpoints, function signatures, event schemas)
+- Database schema changed? Migration script included? Rollback possible?
+- Config keys added/renamed/removed? Deployment notes needed?
+- Anything that requires consumers to change — flag explicitly.
+
+### 8. Resource Management
+- File handles, DB connections, HTTP clients — opened and closed correctly?
+- Context managers / `with` blocks / `finally` used where needed?
+- Async resources awaited and cleaned up?
+- No unbounded memory growth (caches, queues, lists growing without limit)?
+
+### 9. Dependencies
+- New imports added — are they necessary?
+- New packages added — has tech-lead approved? License checked?
+- Are imports from the right internal module (not bypassing abstractions)?
 
 ---
 

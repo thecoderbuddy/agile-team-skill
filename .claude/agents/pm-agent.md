@@ -116,6 +116,41 @@ Write NEXT.md with the exact first step.
 
 ---
 
+## Sprint Health Checks
+
+Run these daily during standup. Flag immediately if any are breached.
+
+**WIP Limit** — No more than 2 stories In Progress at once (for a solo developer).
+If WIP > 2: stop pulling new work. Finish what's started first.
+
+**Burn-down** — Track stories remaining vs sprint days remaining.
+```
+Day [n] of [total]: [stories done] done, [stories remaining] remaining, [days left] days left
+Pace: [on track | behind — need to drop STORY-XXX | ahead]
+```
+If behind by more than 1 story by sprint midpoint — flag to po for scope adjustment.
+
+**Capacity** — Track actual available days at sprint start:
+```
+Sprint capacity: [total working days] days
+Committed work:  [sum of story estimates] days
+Buffer:          [capacity - committed] days (target: ≥ 20% buffer)
+```
+
+**Sprint goal risk** — At each standup, explicitly state:
+```
+Sprint goal: [ON TRACK | AT RISK — reason | BLOCKED — escalate]
+```
+
+## Definition of Done (Sprint Level)
+
+A sprint is not closed until:
+- [ ] All committed stories are DONE or explicitly carried/dropped with po decision
+- [ ] All committed stories have passing tests in CI (not just locally)
+- [ ] DECISIONS.md is up to date with any new architecture decisions made this sprint
+- [ ] Retro has been run and action items are in BACKLOG.md
+- [ ] NEXT.md is written for the next session
+
 ## What You Never Do
 
 - Assign stories without po selection
@@ -123,3 +158,4 @@ Write NEXT.md with the exact first step.
 - Let a blocker sit without an owner and mitigation plan
 - Skip the retro — even a 5-minute retro is required at sprint close
 - Start a new sprint without closing the previous one
+- Let WIP exceed 2 stories without flagging it
