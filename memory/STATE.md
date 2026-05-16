@@ -3,23 +3,34 @@
 # Updated after every: standup, sprint-plan, sprint-close
 
 Sprint: 1
-Goal: [Set your first sprint goal here — one sentence, one user outcome]
-Status: PLANNING
-Started: [date]
-Ends: [date]
+Goal: Make agile-team-skill production-ready — reliable session continuity, clear positioning, and multi-model support.
+Status: ACTIVE
+Started: 2026-05-16
+Ends: 2026-05-23
 
 ## In Progress
-[Nothing in progress yet — run /sprint-plan to begin]
+[Nothing — run /new-task to begin STORY-004]
+
+## Sprint Stories (execution order)
+- [x] STORY-002: Positioning — add "what makes this different" section — XS — High
+- [ ] STORY-004: Multi-model — configurable model per agent — XS — Medium
+- [ ] STORY-003: Max diff threshold — escalate to human — S — Medium
+- [ ] STORY-001: Session continuity — host sleep recovery — M — High
 
 ## Done This Sprint
-[Nothing done yet]
+- [x] STORY-002: Positioning — add "what makes this different" section (2026-05-16)
 
 ## Blockers
 [None]
 
 ## Velocity
-Stories planned: 0
-Stories done: 0
+Stories planned: 4
+Stories done: 1
+
+## Agent Notes
+- Tech: DEC-001 must be written before STORY-001 dev starts; --no-color flag on git diff stat (STORY-003)
+- Security: Shell injection guard on diff stat parsing in STORY-003
+- QA: All AC testable; medium test effort on STORY-001 only
 
 ---
 

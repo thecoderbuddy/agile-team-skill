@@ -1,6 +1,6 @@
 # Agile Team for Claude Code
 
-> An AI-powered agile team for any software project. Ship with the discipline of a senior team — even when you're building alone.
+> An AI agentic team designed for your agile workflow. For anyone building a product independently — with the discipline of a real team behind every decision.
 
 <p align="center">
   <a href="https://github.com/thecoderbuddy/agile-team-skill/blob/main/LICENSE">
@@ -17,7 +17,7 @@
 <p align="center">
   <a href="#setup">Quick Start</a> •
   <a href="#the-7-agents">Agents</a> •
-  <a href="#all-29-commands">Commands</a> •
+  <a href="#all-30-commands">Commands</a> •
   <a href="#contributing">Contributing</a>
 </p>
 
@@ -25,17 +25,19 @@
 
 ## The problem it solves
 
-Solo developers and small teams skip the things that matter most — not because they don't care, but because there's nobody to hold them to it.
+When you're building a product alone, you skip the things that matter most — not because you don't care, but because there's nobody to hold you to them.
 
-No one reviews your PR critically. No one catches the security hole you didn't think of. Nobody asks "does this story actually have acceptance criteria?" Nobody remembers what you decided last sprint or why.
+You ship without a proper review. You make a product decision, forget the reasoning, then reverse it two weeks later. You write a story with no acceptance criteria and call it done anyway. Security holes slip through. Tech debt piles up quietly. You know what good process looks like — you just have no one to run it with.
 
-This gives you that team.
+It doesn't matter if you're a developer, a founder, or someone building with AI for the first time. The gap is the same: the work is solo, but the discipline that makes teams ship well — review loops, clear ownership, sprint memory — isn't.
+
+This gives you that team. An AI agentic team designed around your agile workflow, not a single assistant trying to do everything at once.
 
 ---
 
 ## What it actually does
 
-Seven specialist agents collaborate on your project — each with one job, one area of authority. When you run `/review`, five agents process your diff in sequence, with QA as the gate:
+Seven agents. Each one has a single job and won't budge from it. When you run `/review`, QA checks first — if your code doesn't meet the acceptance criteria, the review stops there. No code review of broken code. If it passes, four agents process your diff in sequence, then the PO collects all findings and gives you one verdict:
 
 ```
 You run:  /review
@@ -246,18 +248,22 @@ Agents will write real stories into `BACKLOG.md`, set a sprint goal in `STATE.md
 
 ---
 
-## Why agents collaborate instead of one agent doing everything
+## Why this works when one agent doesn't
 
-A single agent reviewing your PR has no tension. It wrote the advice, evaluated the security, and decided the verdict — same perspective all the way through.
+A single agent reviewing your PR has no tension. It helped write the code, evaluated the security, and decided the verdict — same context, same perspective, all the way through. It has no reason to push back hard.
 
-Collaboration chains give each agent a narrower job and genuine constraints:
+These agents disagree with each other. Each one has a narrower job and genuine constraints the others don't share:
 
-- The security analyst only cares about OWASP — not code style
-- QA only cares whether acceptance criteria are met — not architecture
-- The PO never writes findings — only synthesizes them and makes the call
-- The Scrum Master never prioritizes — only ensures nothing is lost
+- QA has a **hard veto** — nothing ships without passing tests, no exceptions
+- Security has a **soft veto** — can block a PR; findings never silently disappear
+- The PO **never writes findings** — only synthesizes them and makes the call
+- The Scrum Master **never prioritizes** — only ensures nothing is lost
 
-Narrower job = deeper output.
+When QA fails, the chain stops. When security finds a critical issue, it escalates — it doesn't suggest. When a finding doesn't block merge, it goes straight to the backlog, not into a chat message you'll scroll past and forget.
+
+That's the difference between a team and a panel of assistants.
+
+*Built from experience running a 40-agent AI engineering team on a real product.*
 
 ---
 
@@ -276,7 +282,7 @@ agile-team-skill/
 │   │   ├── pr-reviewer-agent.md
 │   │   ├── security-analyst-agent.md
 │   │   └── tech-lead-agent.md
-│   ├── commands/                     ← 29 slash commands
+│   ├── commands/                     ← 30 slash commands
 │   │   ├── init.md                   /init
 │   │   ├── standup.md                /standup
 │   │   ├── review.md                 /review
@@ -294,7 +300,7 @@ agile-team-skill/
 
 ## Multiple Projects
 
-Install once per project. Each project gets its own `memory/` — completely separate sprint state, backlog, and decisions. Same 7 agents, same 29 commands, different context.
+Install once per project. Each project gets its own `memory/` — completely separate sprint state, backlog, and decisions. Same 7 agents, same 30 commands, different context.
 
 ```
 ~/projects/
@@ -316,7 +322,7 @@ New agents, new ceremony commands, improvements to collaboration chains — all 
 ## Release History
 
 * **1.1.0** — Real scrum flow: dev capacity in sprint planning, QA gates code review, /unblock command, handoff lines throughout.
-* **1.0.0** — Initial release. 7 agents, 29 commands, full agile lifecycle.
+* **1.0.0** — Initial release. 7 agents, 30 commands, full agile lifecycle.
 
 ---
 
@@ -326,4 +332,3 @@ MIT — use it, fork it, adapt it for your team.
 
 ---
 
-*Built from experience running a 40-agent AI engineering team on a real product. Extracted and open-sourced for the developer community.*
