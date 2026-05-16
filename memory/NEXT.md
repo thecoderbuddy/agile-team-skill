@@ -7,9 +7,10 @@ Sprint: 1
 Updated: 2026-05-16
 
 ## Exact Next Step
-Run /new-task to implement STORY-004: Multi-model — configurable model per agent.
+Run /new-task to implement STORY-003: Max diff threshold — escalate to human before review.
 
 ## Why
-STORY-002 is done (committed). STORY-004 is next in execution order (XS complexity, Medium priority).
-It requires adding a `model:` frontmatter field to all 7 agent .md files in .claude/agents/.
-No spec needed. After STORY-004: /new-task for STORY-003.
+STORY-004 is done (committed). STORY-003 is next in execution order (S complexity, Medium priority).
+It requires adding a diff size check to Step 0 of .claude/commands/new-task.md and .claude/commands/review.md.
+Use `git diff --stat --no-color` for counts. Default threshold: 500 lines or 20 files.
+After STORY-003: /new-task for STORY-001 (session continuity — the M complexity flagship).

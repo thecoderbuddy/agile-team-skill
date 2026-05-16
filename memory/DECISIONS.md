@@ -29,18 +29,28 @@ Consequences:
 
 ---
 
-## DEC-001 — [Add your first architecture decision here]
-Date: [date]
+## DEC-001 — Per-agent model configuration via frontmatter
+Date: 2026-05-16
 Status: ACTIVE
 
 Decision:
-  [Describe the architectural choice your team made]
+  Each agent is configured with its own Claude model via a `model:` field in the
+  agent's .md frontmatter. There is no global model config — each of the 7 agent
+  files sets its own model independently.
 
 Rationale:
-  [Why]
+  Different agents have different cost-quality tradeoffs. Security review and
+  architecture decisions benefit from maximum depth (Opus). Ceremony management
+  (standup, state updates) runs fine on lighter models (Haiku). A per-agent field
+  lets users tune each role without changing anything else. Claude Code supports
+  this natively — no custom tooling needed.
 
 Alternatives considered:
-  - [What else was evaluated and why it was not chosen]
+  - Single global model env var — rejected because it prevents per-role tuning
+  - Config file (e.g. models.yaml) — rejected because Claude Code already reads
+    agent frontmatter; adding a separate config layer adds complexity with no gain
 
 Consequences:
-  [What this means for future decisions]
+  - README must be kept current with valid model IDs when Anthropic releases new versions
+  - New agents added to .claude/agents/ must include a model: field or they inherit
+    the session default silently — this should be documented in the contributing guide

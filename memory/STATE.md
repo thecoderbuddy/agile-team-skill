@@ -13,19 +13,20 @@ Ends: 2026-05-23
 
 ## Sprint Stories (execution order)
 - [x] STORY-002: Positioning — add "what makes this different" section — XS — High
-- [ ] STORY-004: Multi-model — configurable model per agent — XS — Medium
+- [x] STORY-004: Multi-model — configurable model per agent — XS — Medium
 - [ ] STORY-003: Max diff threshold — escalate to human — S — Medium
 - [ ] STORY-001: Session continuity — host sleep recovery — M — High
 
 ## Done This Sprint
 - [x] STORY-002: Positioning — add "what makes this different" section (2026-05-16)
+- [x] STORY-004: Multi-model — configurable model per agent (2026-05-16)
 
 ## Blockers
 [None]
 
 ## Velocity
 Stories planned: 4
-Stories done: 1
+Stories done: 2
 
 ## Agent Notes
 - Tech: DEC-001 must be written before STORY-001 dev starts; --no-color flag on git diff stat (STORY-003)

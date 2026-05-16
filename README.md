@@ -183,6 +183,45 @@ memory/
 
 ---
 
+## Model configuration
+
+Each agent has a `model:` field in its frontmatter. Edit the agent file directly to change which model it uses — Claude Code picks it up automatically.
+
+```yaml
+# .claude/agents/security-analyst-agent.md
+---
+name: security-analyst-agent
+model: claude-opus-4-6    # change this to any valid model ID
+---
+```
+
+Valid model IDs: `claude-opus-4-6`, `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`
+
+> Note: the Haiku model ID includes a full date suffix — this is intentional. Unlike Opus and Sonnet, Haiku has no undated alias in the API.
+
+By default all agents run on Sonnet 4.6. You can tune each one independently:
+
+**Quality-first** — Opus for the agents that make the highest-stakes calls:
+
+| Agent file | Model | Why |
+|---|---|---|
+| `security-analyst-agent.md` | `claude-opus-4-6` | catches what lighter models miss |
+| `tech-lead-agent.md` | `claude-opus-4-6` | architecture decisions need depth |
+| everything else | `claude-sonnet-4-6` | solid default |
+
+**Cost-optimised** — Haiku for ceremony agents, Sonnet where quality matters:
+
+| Agent file | Model | Why |
+|---|---|---|
+| `pm-agent.md` | `claude-haiku-4-5-20251001` | standup synthesis, state updates |
+| `dev-agent.md` | `claude-haiku-4-5-20251001` | capacity estimates, status reports |
+| `po-agent.md` | `claude-haiku-4-5-20251001` | backlog updates, ceremony output |
+| everything else | `claude-sonnet-4-6` | review and security need the quality |
+
+Edit each agent's `.md` file individually — there is no single config file.
+
+---
+
 ## Setup
 
 ### Prerequisites

@@ -161,6 +161,11 @@
   The README badge, section heading, and "Multiple Projects" prose use 29 and 30 interchangeably.
   Fix: audit actual command count in .claude/commands/, update badge + all prose references to match.
 
+- [ ] STORY-BUG-002: Add model ID maintenance reminder — found during STORY-004
+  The valid model ID list in README "Model configuration" section will go stale when Anthropic
+  releases new versions. Fix: add a maintenance note in DEC-001 or CONTRIBUTING that the
+  model ID list must be updated on each Anthropic model release.
+
 ---
 
 ## Story format reference
