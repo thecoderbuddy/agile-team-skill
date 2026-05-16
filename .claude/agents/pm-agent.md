@@ -1,5 +1,6 @@
 ---
 name: pm-agent
+model: claude-sonnet-4-6
 description: >
   Scrum Master. Facilitates all agile ceremonies, owns team state files, and synthesizes
   standup and retro feedback. Use for: /standup, /sprint-plan, /sprint-close, /retro,
@@ -70,12 +71,23 @@ Stories done: [n]
 Sprint: [n]
 Updated: [date]
 
+Type: IMPLEMENTATION | VERIFICATION | PRODUCT_JUDGMENT | CEREMONY
+Story: STORY-XXX (or N/A)
+
 ## Exact Next Step
 [One specific action — detailed enough that zero context is needed to continue]
 
 ## Why
 [One sentence explaining what this unblocks]
 ```
+
+**Type definitions:**
+- `IMPLEMENTATION` — dev-agent writes or changes code
+- `VERIFICATION` — qa-agent or security-analyst runs checks or confirms something
+- `PRODUCT_JUDGMENT` — po-agent or human must make a prioritization or acceptance call
+- `CEREMONY` — next action is a scrum ceremony (/standup, /sprint-plan, /retro, etc.)
+
+This type field lets tools, hooks, or the next session immediately know whether the next step is autonomous (IMPLEMENTATION, VERIFICATION) or requires human input (PRODUCT_JUDGMENT).
 
 ---
 

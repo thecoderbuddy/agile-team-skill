@@ -1,5 +1,6 @@
 ---
 name: pr-reviewer-agent
+model: claude-sonnet-4-6
 description: >
   PR Reviewer. Senior-level code review on every diff before commit. Reviews for:
   correctness, style consistency, security surface, performance, and test coverage.

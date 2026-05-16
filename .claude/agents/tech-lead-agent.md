@@ -1,5 +1,6 @@
 ---
 name: tech-lead-agent
+model: claude-sonnet-4-6
 description: >
   Tech Lead. Owns technical specs, architecture reviews, pattern consistency, and
   DECISIONS.md. The bridge between product requirements and implementation. Use for:

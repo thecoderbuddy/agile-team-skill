@@ -9,16 +9,46 @@ Arguments: $ARGUMENTS (optional story ID for context)
 
 ---
 
-## Step 0 — Read the diff and story context
+## Checkpoint Protocol
+
+After **every agent step completes**, write to `memory/CHECKPOINT.md` before moving to the next step. This ensures recovery is possible if the session drops mid-chain.
+
+Format:
+```
+Command: /review
+Story: STORY-XXX
+Cycle: N
+Started: [timestamp]
+Last heartbeat: [timestamp] — Step N — [agent-name]
+
+Steps:
+  [DONE] Step 1 — qa-agent — PASS | FAIL — [one-line summary]
+  [DONE] Step 2 — pr-reviewer-agent — APPROVE | CHANGES — [one-line summary]
+  [IN_PROGRESS] Step 3 — security-analyst-agent
+  [PENDING] Step 4 — tech-lead-agent
+  [PENDING] Step 5 — po-agent
+```
+
+On chain completion (APPROVED verdict written), delete `memory/CHECKPOINT.md`.
+
+---
+
+## Step 0 — Check for incomplete chain + read context
 
 ```bash
+cat memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
 git diff --stat
 git diff
 cat memory/BACKLOG.md   # find the story's acceptance criteria
 cat memory/DECISIONS.md # architectural constraints
 ```
 
-This is **review cycle 1**. Track the cycle number — it increments on each loop.
+If `CHECKPOINT.md` exists and shows an incomplete `/review` chain for the same story:
+- Show the user what completed and what didn't
+- Ask: "Resume from Step N ([agent-name]), or restart from Step 1?"
+- Continue from the chosen point — do not re-run completed steps
+
+This is **review cycle 1** (or the cycle from CHECKPOINT.md if resuming). Track the cycle number — it increments on each loop.
 
 ---
 

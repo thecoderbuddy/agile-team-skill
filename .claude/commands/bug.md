@@ -8,12 +8,44 @@ One command. Agents investigate, diagnose, fix, test, review, and commit.
 
 ---
 
-## Step 0 — Read context
+## Checkpoint Protocol
+
+After **every agent step completes**, write to `memory/CHECKPOINT.md` before moving to the next step. This ensures recovery is possible if the session drops or the host sleeps mid-chain.
+
+Format:
+```
+Command: /bug
+Bug: [description]
+Started: [timestamp]
+Last heartbeat: [timestamp] — Step N — [agent-name]
+
+Steps:
+  [DONE] Step 1 — qa-agent — SEV-X — [one-line summary]
+  [DONE] Step 2 — tech-lead-agent — [root cause]
+  [DONE] Step 3 — dev-agent — fix complete
+  [IN_PROGRESS] Step 4 — qa-agent (validation)
+  [PENDING] Step 5 — security-analyst-agent
+  [PENDING] Step 6 — pr-reviewer-agent
+  [PENDING] Step 7 — po-agent
+```
+
+On chain completion (commit approved), delete `memory/CHECKPOINT.md`.
+
+---
+
+## Step 0 — Check for incomplete chain + read context
 
 ```bash
+cat memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
 cat memory/STATE.md
 git log --oneline -5
 ```
+
+If `CHECKPOINT.md` exists and shows an incomplete `/bug` chain:
+- Show the user which steps completed and which didn't
+- Show the last heartbeat timestamp (helps diagnose host sleep vs rate limit)
+- Ask: "Resume from Step N ([agent-name]), or start fresh?"
+- If resuming: continue from the next uncompleted step, do not re-run completed steps
 
 ---
 

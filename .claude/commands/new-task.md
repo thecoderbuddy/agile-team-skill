@@ -7,13 +7,45 @@ Arguments: $ARGUMENTS (optional story ID — skips selection if provided)
 
 ---
 
-## Step 0 — Read state
+## Checkpoint Protocol
+
+After **every agent step completes**, write to `memory/CHECKPOINT.md` before moving to the next step. This ensures recovery is possible if the session drops mid-chain.
+
+Format:
+```
+Command: /new-task
+Story: STORY-XXX
+Started: [timestamp]
+Last heartbeat: [timestamp] — Step N — [agent-name]
+
+Steps:
+  [DONE] Step 1 — po-agent — selected STORY-XXX
+  [DONE] Step 2 — tech-lead-agent — spec written | not needed (S)
+  [DONE] Step 3 — dev-agent — implementation complete
+  [DONE] Step 4 — qa-agent — PASS | FAIL
+  [IN_PROGRESS] Step 5 — pr-reviewer-agent
+  [PENDING] Step 6 — security-analyst-agent
+  [PENDING] Step 7 — tech-lead-agent (arch review)
+  [PENDING] Step 8 — po-agent (verdict)
+```
+
+On chain completion (commit approved and written), delete `memory/CHECKPOINT.md`.
+
+---
+
+## Step 0 — Check for incomplete chain + read state
 
 ```bash
+cat memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
 cat memory/STATE.md
 cat memory/NEXT.md
 cat memory/BACKLOG.md
 ```
+
+If `CHECKPOINT.md` exists and shows an incomplete `/new-task` chain:
+- Show the user which steps completed and which didn't
+- Ask: "Resume from Step N ([agent-name]), or start a new task?"
+- If resuming: continue from the next uncompleted step, do not re-run completed steps
 
 ---
 

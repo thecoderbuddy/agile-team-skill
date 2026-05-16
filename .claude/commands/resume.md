@@ -1,34 +1,68 @@
-# /resume — Pick Up After Rate Limit Reset
+# /resume — Pick Up After Rate Limit or Session Drop
 
-**FIRST command after any rate limit reset.** Restores full context without re-reading everything manually.
+**First command after any interruption** — rate limit reset, session drop, or context loss.
+Restores full context and recovers any incomplete agent chain automatically.
 
-## Steps
+---
 
-1. Read the exact pickup point:
-   ```bash
-   cat memory/NEXT.md
-   ```
+## Step 1 — Check for incomplete chain
 
-2. Read current project state:
-   ```bash
-   cat memory/STATE.md
-   ```
+```bash
+cat memory/CHECKPOINT.md 2>/dev/null
+```
 
-3. Read recent commits for ground truth:
-   ```bash
-   git log --oneline -5
-   ```
+If `CHECKPOINT.md` exists:
 
-## Output Format
+```
+INCOMPLETE CHAIN DETECTED
+─────────────────────────────────────────
+Command:   [/review | /new-task | /bug]
+Story:     STORY-XXX
+Started:   [timestamp]
+Last heartbeat: [timestamp] — Step N — [agent-name]
+Interruption:  [rate limit | host sleep suspected (gap > 5 min) | unknown]
+
+Completed: Step 1 — qa-agent — PASS
+           Step 2 — pr-reviewer-agent — APPROVE
+Stopped:   Step 3 — security-analyst-agent — NOT STARTED
+Pending:   Step 4 — tech-lead-agent
+           Step 5 — po-agent
+─────────────────────────────────────────
+Resume from Step 3 (security-analyst-agent)? [Y / N — start fresh]
+```
+
+**Interruption classification:**
+- If gap between `Last heartbeat` and now is < 2 minutes → likely rate limit reset
+- If gap is > 5 minutes → host sleep suspected (Mac lid closed, screensaver sleep)
+- Either way: chain state is preserved in CHECKPOINT.md — resume is safe
+
+If user confirms resume → continue the chain from the first `[PENDING]` or `[IN_PROGRESS]` step.
+Do not re-run `[DONE]` steps — trust the checkpoint.
+
+If `CHECKPOINT.md` does not exist → proceed to Step 2 (normal resume).
+
+---
+
+## Step 2 — Read current state
+
+```bash
+cat memory/NEXT.md
+cat memory/STATE.md
+git log --oneline -5
+```
+
+---
+
+## Step 3 — Output and continue
 
 ```
 RESUMING SESSION
-────────────────
-Next action:  [from NEXT.md]
-Sprint:       [from STATE.md]
-Last commits: [from git log]
-────────────────
-Continuing from where we left off.
+─────────────────────────────────────────
+Incomplete chain: [YES — resuming /review Step N | NO]
+Next action:      [from NEXT.md]
+Sprint:           [goal + status from STATE.md]
+Last commits:     [git log]
+─────────────────────────────────────────
 ```
 
-Then immediately continue the work described in NEXT.md. Do not ask "what should we work on?" — the answer is in NEXT.md.
+Then immediately continue the work. Do not ask "what should we work on?" — the answer is in NEXT.md or CHECKPOINT.md.

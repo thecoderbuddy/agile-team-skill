@@ -1,5 +1,6 @@
 ---
 name: po-agent
+model: claude-sonnet-4-6
 description: >
   Product Owner. Use for: writing user stories, managing the backlog, setting sprint goals,
   evaluating feature value, and synthesizing multi-agent review feedback into a verdict +
