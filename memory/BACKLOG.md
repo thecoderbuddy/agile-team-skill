@@ -166,6 +166,15 @@
   releases new versions. Fix: add a maintenance note in DEC-001 or CONTRIBUTING that the
   model ID list must be updated on each Anthropic model release.
 
+- [ ] STORY-BUG-003: Filename-based prompt injection via git diff --stat output — found during STORY-003
+  A file committed with a manipulative name could appear in diff stat output read by agents.
+  Pre-existing pattern (agents read git output everywhere), not introduced by STORY-003.
+  Severity: LOW-MEDIUM. Investigate sanitising filenames from stat output before agent reads it.
+
+- [ ] STORY-BUG-004: No input validation on MAX_DIFF_LINES / MAX_DIFF_FILES env vars — found during STORY-003
+  Values of "0" or "-1" would cause every diff to trigger the large-diff gate or bypass it.
+  Fix: add validation rule in the diff check instruction (must be positive integer, else use default).
+
 ---
 
 ## Story format reference

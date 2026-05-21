@@ -1,6 +1,6 @@
 ---
 name: pm-agent
-model: claude-sonnet-4-6
+model: sonnet
 description: >
   Scrum Master. Facilitates all agile ceremonies, owns team state files, and synthesizes
   standup and retro feedback. Use for: /standup, /sprint-plan, /sprint-close, /retro,

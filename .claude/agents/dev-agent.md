@@ -1,6 +1,6 @@
 ---
 name: dev-agent
-model: claude-sonnet-4-6
+model: sonnet
 description: >
   Developer. Implements stories, writes code, and reports status in standups. Generic and
   technology-agnostic — works with any language or framework the project uses. Use for:

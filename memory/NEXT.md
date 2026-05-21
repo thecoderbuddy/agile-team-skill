@@ -4,13 +4,14 @@
 # Written precisely enough that zero context is needed to continue.
 
 Sprint: 1
-Updated: 2026-05-16
+Updated: 2026-05-19
 
 ## Exact Next Step
-Run /new-task to implement STORY-003: Max diff threshold — escalate to human before review.
+Run /new-task to implement STORY-001: Session continuity — recover from host sleep mid-chain.
 
 ## Why
-STORY-004 is done (committed). STORY-003 is next in execution order (S complexity, Medium priority).
-It requires adding a diff size check to Step 0 of .claude/commands/new-task.md and .claude/commands/review.md.
-Use `git diff --stat --no-color` for counts. Default threshold: 500 lines or 20 files.
-After STORY-003: /new-task for STORY-001 (session continuity — the M complexity flagship).
+STORY-003 is done. STORY-001 is the final and flagship story of Sprint 1 (M complexity, High priority).
+Tech lead flagged: DEC-002 must be written before dev starts — define CHECKPOINT.md schema.
+Implementation touches: memory/CHECKPOINT.md schema, .claude/commands/new-task.md Step 0 resume logic,
+and deletion-on-commit at Step 9.
+After STORY-001: run /sprint-close — all 4 sprint stories will be done.

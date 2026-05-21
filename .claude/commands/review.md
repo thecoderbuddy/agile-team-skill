@@ -37,7 +37,7 @@ On chain completion (APPROVED verdict written), delete `memory/CHECKPOINT.md`.
 
 ```bash
 cat memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
-git diff --stat
+git diff --stat --no-color
 git diff
 cat memory/BACKLOG.md   # find the story's acceptance criteria
 cat memory/DECISIONS.md # architectural constraints
@@ -49,6 +49,31 @@ If `CHECKPOINT.md` exists and shows an incomplete `/review` chain for the same s
 - Continue from the chosen point — do not re-run completed steps
 
 This is **review cycle 1** (or the cycle from CHECKPOINT.md if resuming). Track the cycle number — it increments on each loop.
+
+Using the `git diff --stat --no-color` output already captured above, parse the summary line (e.g. `3 files changed, 142 insertions(+), 67 deletions(-)`):
+- **Lines changed** = insertions + deletions
+- **Files changed** = the integer before "files changed"
+
+Compare against thresholds — use `MAX_DIFF_LINES` / `MAX_DIFF_FILES` env vars if set, otherwise defaults:
+- Default: **500 lines** or **20 files**
+
+If either threshold is exceeded, pause and show the user:
+
+```
+DIFF TOO LARGE — confirm before review
+───────────────────────────────────────
+Files changed: [N]   (threshold: 20)
+Lines changed: [N]   (threshold: 500)
+
+Large diffs reduce review quality. Consider splitting into smaller stories.
+
+Continue anyway, or split this PR? [continue / split]
+───────────────────────────────────────
+```
+
+- If **continue** → proceed with a note in the review output that the diff is large
+- If **split** → stop. Remind user to break the work into smaller stories, then re-run `/review`
+- If within threshold → proceed silently
 
 ---
 

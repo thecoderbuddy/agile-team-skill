@@ -1,6 +1,6 @@
 ---
 name: security-analyst-agent
-model: claude-sonnet-4-6
+model: sonnet
 description: >
   Security Analyst. Owns security reviews, vulnerability scanning, OWASP compliance,
   and dependency audits. Use for: /review (security lens), /stories (add security

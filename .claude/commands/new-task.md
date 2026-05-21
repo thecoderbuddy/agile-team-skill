@@ -111,6 +111,37 @@ AC addressed:   [list each criterion and how it's met]
 → Handing off to QA
 ```
 
+Before proceeding to Step 4, run a diff size check:
+
+```bash
+git diff --stat --no-color
+```
+
+Parse the summary line (e.g. `3 files changed, 142 insertions(+), 67 deletions(-)`):
+- **Lines changed** = insertions + deletions
+- **Files changed** = the integer before "files changed"
+
+Compare against thresholds — use `MAX_DIFF_LINES` / `MAX_DIFF_FILES` env vars if set, otherwise defaults:
+- Default: **500 lines** or **20 files**
+
+If either threshold is exceeded, pause and show the user:
+
+```
+DIFF TOO LARGE — confirm before review
+───────────────────────────────────────
+Files changed: [N]   (threshold: 20)
+Lines changed: [N]   (threshold: 500)
+
+Large diffs reduce review quality. Consider splitting into smaller stories.
+
+Continue anyway, or split this PR? [continue / split]
+───────────────────────────────────────
+```
+
+- If **continue** → proceed to Step 4 with a note in the chain output that the diff is large
+- If **split** → stop. Remind the user to break the work into smaller stories, then re-run `/new-task`
+- If within threshold → proceed silently
+
 ---
 
 ## Step 4 — qa-agent quality gate
