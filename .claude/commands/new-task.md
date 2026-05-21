@@ -98,6 +98,7 @@ If spec is written, log any new architectural decisions as DEC-XXX in `memory/DE
 - Implement ALL acceptance criteria — not just the happy path
 - Write or update tests for any new functionality
 - No TODO comments — if it's not done, it's not done
+- **README check:** if this story adds, removes, or changes a user-facing feature, command, agent, or workflow — update README.md as part of this story. README drift is a merge blocker, not a backlog item.
 
 When implementation is complete, output:
 
@@ -219,13 +220,19 @@ CRITICAL or HIGH findings → back to Step 3. dev-agent fixes. Full chain reruns
 
 **tech-lead-agent** confirms the implementation aligns with established patterns.
 
+**README accuracy check:** read README.md and verify it still accurately describes the system after this implementation. Ask: does any section now describe something that no longer exists, works differently, or is missing entirely?
+
+- If README is accurate → note it as confirmed
+- If README is stale → flag as REQUEST CHANGES — dev must update README before merge. This is not a backlog item.
+
 ```
 TECH LEAD REVIEW
 ───────────────────────────────────────
-Spec alignment:   [matches / DRIFT — details]
+Spec alignment:      [matches / DRIFT — details]
 Pattern consistency: [aligned / INCONSISTENT — details]
-Tech debt:        [none / INTRODUCED — log to BACKLOG?]
-New DEC needed:   [yes — log DEC-XXX | no]
+Tech debt:           [none / INTRODUCED — log to BACKLOG?]
+New DEC needed:      [yes — log DEC-XXX | no]
+README accuracy:     [current / STALE — what section is wrong]
 
 Recommendation: APPROVE | REQUEST CHANGES
 ───────────────────────────────────────

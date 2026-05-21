@@ -171,6 +171,7 @@ Checks:
 - Consistent with patterns in DECISIONS.md?
 - New patterns introduced — are they intentional? Should they be logged as a DEC?
 - Tech debt introduced? Is it acceptable? Should it get a backlog story?
+- **README accuracy:** does README.md still accurately describe the system after this change? Any section that is now wrong, missing, or outdated must be flagged as REQUEST CHANGES — not a backlog item.
 
 ```
 TECH LEAD  [cycle N]
@@ -179,10 +180,12 @@ Spec alignment:    [MATCHES | DRIFT — details]
 Pattern:           [CONSISTENT | INCONSISTENT — file:line — details]
 Tech debt:         [NONE | INTRODUCED — log to backlog?]
 New decision:      [NONE | DEC-XXX needed — description]
+README accuracy:   [CURRENT | STALE — which section and what's wrong]
 ───────────────────────────────────────
 ```
 
 If a new DEC is needed → tech-lead-agent writes it to `memory/DECISIONS.md` before closing.
+If README is stale → flag as REQUEST CHANGES. Dev updates README before merge.
 
 ---
 
