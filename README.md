@@ -21,6 +21,12 @@
   <a href="#contributing">Contributing</a>
 </p>
 
+<p align="center">
+  <a href="https://buymeacoffee.com/sharvari">
+    <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support%20this%20project-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee" />
+  </a>
+</p>
+
 ---
 
 ## The problem it solves
@@ -169,6 +175,8 @@ At the end of every session, `pm-agent` writes `memory/NEXT.md` — specific eno
 Next time you open Claude Code:
   /standup   → team picks up exactly where you left off
 ```
+
+If a session drops mid-chain (rate limit, host sleep, lid close), the team writes a `CHECKPOINT.md` after every agent step. Run `/resume` and the chain picks up from exactly where it stopped — no repeated work, no lost progress. Corrupt or stale checkpoints are detected and discarded automatically.
 
 Five files persist your full project state across every session:
 
@@ -360,6 +368,16 @@ New agents, new ceremony commands, improvements to collaboration chains — all 
 
 * **1.1.0** — Real scrum flow: dev capacity in sprint planning, QA gates code review, /unblock command, handoff lines throughout.
 * **1.0.0** — Initial release. 7 agents, 30 commands, full agile lifecycle.
+
+---
+
+## Support
+
+If this saves you time, consider buying me a coffee:
+
+<a href="https://buymeacoffee.com/sharvari">
+  <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" />
+</a>
 
 ---
 
