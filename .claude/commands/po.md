@@ -7,7 +7,7 @@ po-agent does a comprehensive product review: gaps, personas, backlog health.
 1. Read product state:
    ```bash
    cat memory/STATE.md
-   cat memory/BACKLOG.md
+   sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — extract a single story body with awk if a verdict requires it
    ```
 
 2. Read the project roadmap from CLAUDE.md.

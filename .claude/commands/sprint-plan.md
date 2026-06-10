@@ -8,9 +8,18 @@ Six agents collaborate to build the sprint. PO proposes. Dev commits capacity. T
 
 ```bash
 cat memory/STATE.md
-cat memory/BACKLOG.md
+sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — extract a story body with awk to share with each agent
 git log --oneline -10
 ```
+
+**Token rule:** the orchestrator reads the Index, po-agent proposes by ID, and the
+orchestrator extracts just the proposed story bodies and passes them to each agent:
+
+```bash
+awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
+```
+
+Agents in this chain must NOT re-read `memory/BACKLOG.md` themselves.
 
 ---
 

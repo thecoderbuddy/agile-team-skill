@@ -39,9 +39,14 @@ On chain completion (APPROVED verdict written), delete `memory/CHECKPOINT.md`.
 cat memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
 git diff --stat --no-color
 git diff
-cat memory/BACKLOG.md   # find the story's acceptance criteria
+# Extract ONLY the story under review — do not read the full backlog:
+awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
 cat memory/DECISIONS.md # architectural constraints
 ```
+
+**Token rule:** the story body extracted above is passed to each agent in its step prompt.
+Agents in this chain must NOT re-read `memory/BACKLOG.md` themselves — they receive the
+story AC and the diff as input. Only po-agent (Step 5) touches BACKLOG.md, to append findings.
 
 If `CHECKPOINT.md` exists, validate it before acting on it (see DEC-002):
 

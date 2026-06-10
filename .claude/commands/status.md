@@ -9,7 +9,7 @@ Use at the start of every session. Reads state, checks git, shows what's next.
 ```bash
 cat memory/STATE.md
 cat memory/NEXT.md
-cat memory/BACKLOG.md
+sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — full bodies not needed for status
 git log --oneline -10
 git status
 ```

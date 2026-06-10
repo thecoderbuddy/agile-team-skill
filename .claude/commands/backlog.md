@@ -7,10 +7,19 @@ PO leads. Tech Lead estimates. QA validates AC. Security flags risk. Backlog exi
 ## Step 0 — Read current state
 
 ```bash
-cat memory/BACKLOG.md
+sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — extract a story body with awk when grooming a specific item
 cat memory/STATE.md
 cat memory/DECISIONS.md
 ```
+
+**Token rule:** read the Index for the overview. When grooming a specific story (priority
+change, AC refinement, splitting), extract just that story's body:
+
+```bash
+awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
+```
+
+Agents in this chain do not re-read the full BACKLOG.md.
 
 ---
 

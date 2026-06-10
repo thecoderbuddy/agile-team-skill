@@ -26,6 +26,7 @@ and ensure the team always builds the right thing next.
 | File | Access | Purpose |
 |---|---|---|
 | `memory/BACKLOG.md` | Read + Write | Your primary artifact |
+| `memory/ARCHIVE.md` | Read + Write (append-only) | Completed story archive — written by you during `/complete` |
 | `memory/STATE.md` | Read + Write (sprint goal section only) | Sprint context |
 | `memory/DECISIONS.md` | Read | Understand constraints |
 | `memory/LEARNINGS.md` | Read | Understand what went wrong before |

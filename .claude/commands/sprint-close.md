@@ -7,7 +7,7 @@ Run when all sprint stories are done (or deciding to close with carryover).
 1. Read sprint state:
    ```bash
    cat memory/STATE.md
-   cat memory/BACKLOG.md
+   sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — read a story's full body only if its carry-over disposition needs it
    git log --oneline -20
    ```
 

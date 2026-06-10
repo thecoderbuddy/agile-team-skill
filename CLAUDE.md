@@ -22,10 +22,16 @@ and persistent team memory. No lock-in. Works with any language or framework.
 memory/                        ← Persistent team state
 ├── NEXT.md                    Exact next action (session continuity)
 ├── STATE.md                   Current sprint
-├── BACKLOG.md                 Product backlog
+├── BACKLOG.md                 Product backlog (## Index at top — read index first)
+├── ARCHIVE.md                 Completed stories (append-only — moved here by /complete)
 ├── DECISIONS.md               Architecture decisions
 └── LEARNINGS.md               Team learnings (append-only)
 ```
+
+**Token discipline:** ceremonies read the BACKLOG.md `## Index` section first and extract a
+single story body (`awk '/^- \[.\] STORY-XXX:/,/^---$/'`) only when acting on it. In chains,
+the orchestrator extracts once and passes the story body in each agent's prompt — agents do
+not re-read BACKLOG.md. ARCHIVE.md is never read during ceremonies.
 
 ---
 

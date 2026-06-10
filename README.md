@@ -178,13 +178,14 @@ Next time you open Claude Code:
 
 If a session drops mid-chain (rate limit, host sleep, lid close), the team writes a `CHECKPOINT.md` after every agent step. Run `/resume` and the chain picks up from exactly where it stopped — no repeated work, no lost progress. Corrupt or stale checkpoints are detected and discarded automatically.
 
-Five files persist your full project state across every session:
+Six files persist your full project state across every session:
 
 ```
 memory/
 ├── NEXT.md       Exact next step — specific file, function, outcome
 ├── STATE.md      Sprint goal, velocity, blockers, in-progress stories
-├── BACKLOG.md    All stories — from /stories, /review, /retro
+├── BACKLOG.md    Open stories — Index at top, bodies below
+├── ARCHIVE.md    Completed stories — append-only, moved here by /complete
 ├── DECISIONS.md  Architecture decisions (DEC-001, DEC-002, ...)
 └── LEARNINGS.md  Retro learnings — append-only, never deleted
 ```
@@ -345,6 +346,7 @@ agile-team-skill/
     ├── NEXT.md
     ├── STATE.md
     ├── BACKLOG.md
+    ├── ARCHIVE.md
     ├── DECISIONS.md
     └── LEARNINGS.md
 ```

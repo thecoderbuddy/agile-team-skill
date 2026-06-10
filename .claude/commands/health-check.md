@@ -7,7 +7,7 @@ Are we on track? Should we descope? Run at sprint midpoint.
 1. Read sprint state:
    ```bash
    cat memory/STATE.md
-   cat memory/BACKLOG.md
+   sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only
    git log --oneline -10
    ```
 

@@ -39,8 +39,18 @@ On chain completion (commit approved and written), delete `memory/CHECKPOINT.md`
 cat memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
 cat memory/STATE.md
 cat memory/NEXT.md
-cat memory/BACKLOG.md
+# Read the backlog index only — not the full file:
+sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md
 ```
+
+**Token rule:** select the story from the index. Once selected (Step 1), extract just that
+story's body and pass it to every subsequent agent in its step prompt:
+
+```bash
+awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
+```
+
+Agents in this chain must NOT re-read `memory/BACKLOG.md` themselves.
 
 If `CHECKPOINT.md` exists, validate it before acting on it (see DEC-002):
 

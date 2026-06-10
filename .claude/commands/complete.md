@@ -43,18 +43,35 @@ This step commits the code and closes the story in STATE.md.
    This line is added to the story's DoD section in BACKLOG.md, after the last `- [ ]` or `- [x]` checkbox.
    Do not skip this step — it is required before the commit is written.
 
-4. **pm-agent updates state:**
+4. **po-agent archives the story:**
+   Perform the substeps in this exact order — the ordering matters because each step
+   depends on the prior state of BACKLOG.md.
+
+   1. Extract the story body from `memory/BACKLOG.md`:
+      ```bash
+      awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
+      ```
+      The `[.]` matches either `[ ]` or `[x]` so the extract works regardless of
+      whether the checkbox has been marked yet.
+   2. In the extracted text, change the leading `- [ ] STORY-XXX:` to `- [x] STORY-XXX:`
+      and add a `Completed: [date]` line under the priority/added-by metadata.
+   3. Append the marked extract to the end of `memory/ARCHIVE.md` verbatim. ARCHIVE.md
+      is append-only — never edit or delete existing entries.
+   4. Remove the story body block and the corresponding line in the `## Index` section
+      from `memory/BACKLOG.md`.
+
+5. **pm-agent updates state:**
    - Moves STORY-XXX from "In Progress" to "Done This Sprint" in `memory/STATE.md`
    - Updates velocity count (stories done / stories planned)
    - Overwrites `memory/NEXT.md` with the next logical action
 
-5. Stage and commit:
+6. Stage and commit:
    ```bash
    git add [relevant files]
    git commit -m "feat(area): description — closes STORY-XXX"
    ```
 
-6. Show confirmation:
+7. Show confirmation:
 
 ```
 STORY COMPLETE

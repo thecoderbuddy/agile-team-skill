@@ -3,6 +3,67 @@
 # Stories are added here by: /stories, /retro (action items), /review (non-blocking findings)
 # Groomed by: /backlog
 # Stories enter a sprint via: /sprint-plan
+# Completed stories are moved to memory/ARCHIVE.md by /complete (append-only, never deleted)
+
+---
+
+## Index
+
+One line per open item: ID — title — priority — complexity.
+Read this section for backlog overview; read a story's full body (below) only when acting on it.
+Keep this index in sync: add a line when a story is added, remove it when /complete archives the story.
+
+- [ ] STORY-001 — Session continuity: recover from host sleep mid-chain — High — M (note: completed Sprint 1, checkbox not closed)
+- [ ] STORY-015 — Story readiness gate: tech-lead implementation notes — High — XS
+- [ ] STORY-016 — Test evidence record on story close — Medium — XS (note: DoD all checked, checkbox not closed)
+- [ ] STORY-011 — pre-tool-use.sh Write tool secret content scan — High — S (note: DoD all checked, checkbox not closed)
+- [ ] STORY-018 — QA boundary-value scenarios for threshold stories — High — XS
+- [ ] STORY-019 — Dev self-review checklist for shell hook stories — High — XS
+- [ ] STORY-003 — Max diff threshold: escalate before review chain — Medium — S (note: completed Sprint 1, checkbox not closed)
+- [ ] STORY-004 — Multi-model execution: model per agent role — Medium — S (note: completed Sprint 1, checkbox not closed)
+- [ ] STORY-008 — Dependency vulnerability audit in /security-review — Medium — S
+- [ ] STORY-009 — CONTRIBUTING.md: agent authoring guide — Medium — S
+- [ ] STORY-010 — Security agent default model upgrade to opus — Medium — XS
+- [ ] STORY-005 — Per-run audit log of chain commands — Low — M
+- [ ] STORY-012 — Sprint health indicator in standup — Low — S
+- [ ] STORY-013 — /summary command: stakeholder sprint update — Low — XS
+- [ ] STORY-014 — Threat model template for auth/PII stories — Low — S
+- [ ] BUG-001 — README command count inconsistency (29 vs 30) — Low
+- [ ] BUG-002 — Model ID maintenance reminder — Low
+- [ ] BUG-003 — Filename-based prompt injection via diff stat — MEDIUM
+- [ ] BUG-004 — No validation on MAX_DIFF_LINES/MAX_DIFF_FILES — Low
+- [ ] BUG-005 — CHECKPOINT.md Cycle: field undocumented in DEC-002 — Low
+- [ ] BUG-006 — tech-lead sanitisation trigger list conflates inputs — Low
+- [ ] BUG-007 — sk- pattern also matches Stripe keys: document — Low
+- [ ] BUG-008 — Missing ghr_ GitHub runner token pattern — Low
+- [ ] BUG-010 — 30-day threshold inline comment, not named constant — LOW
+- [ ] BUG-011 — install.sh downloads hooks without checksum verification — MEDIUM
+- [ ] BUG-012 — /summary must not reproduce raw backlog text — MEDIUM
+- [ ] BUG-013 — post-tool-use.sh unquoted FILE_PATH log injection — LOW
+- [ ] BUG-014 — Force-push block misses --force-with-lease — MEDIUM
+- [ ] BUG-015 — rm -rf block hardcodes project-specific dirs — LOW
+- [ ] BUG-016 — SKIP_SECRET_SCAN is session-scoped — LOW
+- [ ] BUG-017 — Prompt injection surface: memory files as trusted context — MEDIUM
+- [ ] BUG-018 — curl-pipe-bash install.sh lacks integrity verification — MEDIUM
+- [ ] PROCESS-001 — Run /security-review before Sprint 3 starts (pm-agent)
+- [ ] STORY-020 — Migrate /backlog command to Index-first read pattern — High — XS
+- [ ] STORY-021 — Migrate /sprint-plan command to Index-first read pattern — High — XS
+- [ ] STORY-022 — Fix /complete step 4: reorder extract before archive, fix awk regex — High — XS
+- [ ] STORY-023 — Add ARCHIVE.md to DEC-004 memory file trust boundary — High — XS
+- [ ] STORY-024 — Charter ARCHIVE.md access in po-agent.md "Your Files" table — High — XS
+- [ ] STORY-025 — Update README memory tree to include ARCHIVE.md — Medium — XS
+- [ ] STORY-026 — Write DEC-006: Index-first memory read pattern convention — Medium — XS
+- [ ] STORY-027 — Write DEC-007: ARCHIVE.md append-only invariant and trust model — Medium — XS
+- [ ] STORY-028 — Index/body title drift mitigation — Low — S
+- [ ] STORY-029 — /complete checkpoint protocol for mid-archive failure recovery — Low — S
+- [ ] STORY-030 — Decide and enforce ARCHIVE.md git tracking status — Medium — XS
+- [ ] STORY-031 — Document story ID format constraint for awk safety — Low — XS
+- [ ] STORY-032 — Amend DECISIONS.md template to include optional "Amended:" field — Low — XS
+- [ ] BUG-019 — PROCESS-001 Index entry missing checkbox — Low
+- [ ] BUG-020 — BUG entries missing complexity field (format drift) — Low
+- [ ] BUG-021 — Priority case inconsistency: High vs HIGH across entries — Low
+- [ ] BUG-022 — backlog.md /backlog ceremony step wording inaccurate after token-discipline migration — Low
+- [ ] BUG-023 — README "Six files" hardcodes memory file count (will drift) — Low
 
 ---
 
@@ -37,31 +98,6 @@
   Security Considerations: none
   Technical Notes: Heartbeat must include step number, agent name, story ID, and ISO timestamp | Complexity: M
   Note: Completed Sprint 1 (2026-05-21). Checkboxes updated by PO review 2026-05-26.
-
----
-
-- [x] STORY-002: Positioning — add "what makes this different" section
-  Priority: High
-  Added by: po-agent on 2026-05-16
-  Completed: 2026-05-16
-
-  As a developer evaluating agile-team-skill,
-  I want a clear explanation of what makes this approach different,
-  So that I can quickly understand the value without reading the whole README.
-
-  Acceptance Criteria:
-    - Given a user visits the README, when they read it, then they find a dedicated positioning section explaining the organizational tension model
-    - Given the section, when read, then it covers: veto authority, enforcement vs suggestion, persistent memory, and review chain design
-    - Given the section, when read, then a new user understands the philosophy in under 60 seconds
-
-  Definition of Done:
-    - [x] "What makes this different" section added to README.md
-    - [x] No competitor names mentioned
-    - [x] Leads with organizational tension as the core idea
-
-  Test evidence: visual review — "what makes this different" section present, covers all 4 required topics, readable in under 60 seconds — visual review — PASS — 2026-05-16
-  Security Considerations: none
-  Technical Notes: README-only change | Complexity: XS
 
 ---
 
@@ -122,73 +158,6 @@
 
 ---
 
-- [x] STORY-006: Pre-commit secret scanning with gitleaks
-  Priority: High
-  Added by: po-agent on 2026-05-26 (PO review — security gap)
-  Completed: 2026-06-09
-
-  As a developer using agile-team-skill on a project that handles real user data,
-  I want a pre-commit secret scanner to run before any commit is made,
-  So that API keys, tokens, and credentials are blocked at the source before they ever reach the repository.
-
-  Acceptance Criteria:
-    - Given a developer attempts to commit a file containing a pattern that matches a known secret format (API key, token, connection string), when the pre-commit hook runs, then the commit is blocked and the offending file:line is reported
-    - Given a clean commit with no secrets, when the hook runs, then the commit proceeds without interruption
-    - Given a developer needs to suppress a false positive, when they add an inline ignore comment, then the scanner skips that line and logs the suppression
-    - Given the tool is not installed on the developer's machine, when the hook fires, then a clear installation instruction is shown rather than a silent failure
-
-  Test Scenarios:
-    - Happy path: clean commit, hook passes silently
-    - Secret found: commit blocked, file:line shown, no partial commit
-    - False positive suppression: inline ignore respected, suppression logged
-    - Tool not installed: actionable install instruction displayed
-
-  Definition of Done:
-    - [x] Secret scanning tool selected (gitleaks — single binary, no Python dependency) and documented in DECISIONS.md as DEC-003
-    - [x] Pre-commit hook source of truth at .claude/hooks/pre-commit.sh; install.sh copies to .git/hooks/pre-commit
-    - [x] install.sh warns if gitleaks not installed; hook exits 0 with warning so commits still work
-    - [x] README and CLAUDE.md security sections updated with false-positive workflow and emergency bypass
-    - [x] .gitleaks.toml config installed to project root by install.sh; hook runs gitleaks protect --staged --config .gitleaks.toml
-
-  Test evidence: all 7 AC verified by qa-agent — gitleaks not installed path (exit 0 + warning), false positive workflow (# gitleaks:allow), emergency bypass (--no-verify), staged vs unstaged scope, hook source path, DEC-003 confirmation — manual inspection — PASS — 2026-06-09
-  Security Considerations: The scanner must not log secret values — only file:line and pattern type. Scanner config must be committed to the repo so all users get the same baseline.
-  Technical Notes: gitleaks is a single static binary, works cross-platform, no runtime dependency. DEC-003 documents tool selection rationale. BUG-009 backlogged: relative .gitleaks.toml path fails from subdirectory — fix is git rev-parse --show-toplevel. | Complexity: S
-
----
-
-- [x] STORY-007: Security review scheduling — track last scan date and prompt when overdue
-  Priority: High
-  Added by: po-agent on 2026-05-26 (PO review — security gap)
-  Completed: 2026-06-09
-
-  As a developer running a project in production,
-  I want the team to remind me when the last /security-review was run,
-  So that I don't go months without a full codebase security audit without realising it.
-
-  Acceptance Criteria:
-    - Given /security-review completes, when the scan finishes, then the date is written to memory/STATE.md under a "Last security review:" field
-    - Given /standup runs and the last security review was more than 30 days ago, when the standup report is generated, then security-analyst-agent flags it as overdue with the date of the last scan
-    - Given no security review has ever been run, when /standup runs, then security-analyst-agent flags it as "never run" and recommends running /security-review before the sprint ends
-    - Given a user runs /security-review, when it completes, then the findings summary is appended to memory/LEARNINGS.md under a "Security Scans" section so trends are visible over time
-
-  Test Scenarios:
-    - Happy path: review run today, no overdue flag in standup
-    - Overdue: last review 35 days ago, standup flags with date
-    - Never run: standup flags "never run"
-    - Persistence: after two scans, LEARNINGS.md has two entries with dates and finding counts
-
-  Definition of Done:
-    - [x] /security-review writes "Last security review: [date]" to STATE.md on completion
-    - [x] /standup security-analyst-agent step reads STATE.md and flags if overdue (>30 days) or never run
-    - [x] /security-review appends a one-line summary (date, finding counts by severity) to LEARNINGS.md
-    - [x] Threshold (30 days) documented in CLAUDE.md as configurable
-
-  Test evidence: all 4 AC verified — STATE.md write format confirmed in /security-review.md; standup overdue flag (>30 days) and never-run paths confirmed in /standup.md; LEARNINGS.md append under "## Security Review Log" confirmed; 30-day threshold documented in CLAUDE.md as configurable — manual inspection — PASS — 2026-06-09
-  Security Considerations: none
-  Technical Notes: STATE.md already has an agent notes section — add "Last security review:" as a tracked field. Overdue check is a simple date arithmetic calculation in the standup step. BUG-010 backlogged: threshold value stored as HTML comment in command files rather than named config constant — risk of threshold drift if one instance is updated without the other. | Complexity: S
-
----
-
 - [ ] STORY-011: pre-tool-use.sh secret write guard — extend to Write tool content scanning
   Priority: High
   Added by: po-agent on 2026-05-26 (PO review — security gap in hook)
@@ -218,36 +187,6 @@
   Test evidence: 5 pattern regexes verified against AC pattern list; double-quote injection safety confirmed; SCAN_CONTENT never echoed; SKIP_SECRET_SCAN gate tested for unset/0/1 values; PEM regex cleaned up post-review — manual inspection — PASS — 2026-06-09
   Security Considerations: The hook must never log the matched secret value — only the pattern type and file path. Pattern list should be reviewed alongside /security-review cadence.
   Technical Notes: The current hook already has a bash-command secret check. This extends the same logic to the Write/Edit content field. jq is already used in the hook for input parsing. | Complexity: S
-
----
-
-- [x] STORY-017: Tech-lead spec checklist — absolute paths and named threshold constants
-  Priority: High
-  Added by: retro (Sprint 2) on 2026-06-09
-  Completed: 2026-06-09
-
-  As a developer implementing a story from a tech-lead spec,
-  I want the spec to explicitly call out absolute path requirements and named constants for thresholds,
-  So that I don't silently introduce CWD-relative paths or inline magic numbers that cause bugs in different environments.
-
-  Acceptance Criteria:
-    - Given tech-lead-agent produces a spec for any story involving shell scripts or file paths, when the spec is written, then it includes an explicit statement that all shell script paths must be absolute or resolved via `git rev-parse --show-toplevel`, not assumed from CWD
-    - Given tech-lead-agent produces a spec for any story that introduces a numeric threshold or configurable value, when the spec is written, then it requires that value to be defined as a named constant — not an inline literal — and names the constant explicitly
-    - Given a spec is missing either checklist item when it should be present, when dev reviews the spec before starting, then the missing item is treated as a spec gap to raise before implementation begins
-
-  Test Scenarios:
-    - Shell hook story: spec includes absolute path requirement, referencing git rev-parse --show-toplevel pattern
-    - Threshold story (e.g. retry count, day limit): spec names the constant (e.g. SECURITY_REVIEW_THRESHOLD_DAYS) before dev touches code
-    - Pure README story with no paths or thresholds: spec says "N/A — no paths or thresholds in scope"
-
-  Definition of Done:
-    - [x] tech-lead-agent.md spec output format updated with two new checklist items: absolute paths rule and named constants rule
-    - [x] Both rules are present as explicit lines in the spec template, not as a general reminder
-    - [x] Examples added inline: git rev-parse --show-toplevel for paths, named constant pattern for thresholds
-  Test evidence: both checklist lines verified in /new-task Implementation Notes template (lines 131-132) and /stories Technical Notes template (lines 168-169); trigger-rule blocks with historical examples (BUG-009, BUG-010) confirmed; N/A escape paths verified; 2 PR review fixes applied (Paths "When in scope" framing, /stories scope aligned) — manual inspection — PASS — 2026-06-09
-
-  Security Considerations: CWD-relative paths in shell hooks are a latent correctness bug that also creates a predictable failure mode — fixing the spec prevents the class of bug, not just individual instances.
-  Technical Notes: This is a prompt/instruction change to tech-lead-agent.md only. No code change. Directly addresses BUG-009 (relative .gitleaks.toml path) and BUG-010 (inline threshold) root causes at the spec level. | Complexity: XS
 
 ---
 
@@ -608,13 +547,6 @@
   Values of "0" or "-1" would cause every diff to trigger the large-diff gate or bypass it.
   Fix: add validation rule in the diff check instruction (must be positive integer, else use default).
 
-- [x] STORY-BUG-009: pre-commit.sh .gitleaks.toml path is relative — fails if git commit run from subdirectory — found during STORY-006
-  Completed: 2026-06-09
-  gitleaks protect --staged --config .gitleaks.toml will fail to find the config if the user runs git commit from a subdirectory of the repo.
-  Fix: use --config "$(git rev-parse --show-toplevel)/.gitleaks.toml" to always resolve to repo root.
-  Test evidence: all 5 AC met; edge cases verified — gitleaks not installed (exit 0), empty REPO_ROOT guard, missing config file fallback; REPO_ROOT empty guard and config existence check confirmed; double-quoting correct throughout, no injection surface; DEC-003+005 compliant — manual inspection by full review chain (qa, pr-reviewer, security, tech-lead) — PASS — 2026-06-09
-  PO verdict: APPROVED — no required changes, no conflicts, no recurring findings. Release note: CHECKSUMS.sha256 must be regenerated for pre-commit.sh per DEC-005 before next release (tracked under BUG-011, not a merge blocker).
-
 - [ ] STORY-BUG-007: pre-tool-use.sh sk- pattern also matches Stripe keys — document this is intentional coverage — found during STORY-011
   sk-[A-Za-z0-9]{20,} matches OpenAI AND Stripe secret keys (both use sk- prefix). This is correct behaviour but should be documented in the hook comment so future maintainers don't narrow the pattern. Fix: add "also covers Stripe sk- keys (sk_live_, sk_test_)" to the comment block above the pattern.
 
@@ -758,6 +690,477 @@
   Added by: retro (Sprint 2) on 2026-06-09
   Rank: 1 (highest priority retro action)
   Action: pm-agent must schedule and confirm /security-review completes before the Sprint 3 planning ceremony. This is a ceremony sequencing requirement, not a product feature. No story written. pm-agent owns the reminder and the gate.
+
+---
+
+## Token Discipline — maintenance findings (added /review MAINTENANCE-TOKEN-DISCIPLINE 2026-06-10)
+
+- [ ] STORY-020: Migrate /backlog command to Index-first read pattern
+  Priority: High
+  Added by: po-agent (review synthesis) on 2026-06-10
+
+  As a team member running the /backlog ceremony,
+  I want the command to read only the ## Index section of BACKLOG.md instead of the full file,
+  So that the grooming ceremony consumes the minimum tokens needed and CLAUDE.md's "Token discipline" paragraph is accurate.
+
+  Acceptance Criteria:
+    - Given /backlog runs, when it reads BACKLOG.md, then it uses `sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md` (or equivalent) rather than `cat memory/BACKLOG.md`
+    - Given a story body is needed during grooming, when an agent acts on a specific story, then the full body is extracted individually — the Index read does not also load all bodies
+    - Given the migration is complete, when CLAUDE.md states "ceremonies read the BACKLOG.md ## Index section first", then that statement is true for all ceremony commands including /backlog
+
+  Test Scenarios:
+    - Happy path: /backlog runs, only Index section loaded, ceremony completes correctly
+    - Story body access: grooming action on a specific story extracts only that story's body
+    - CLAUDE.md claim verified: all 9 ceremony commands use Index-first pattern
+
+  Definition of Done:
+    - [ ] .claude/commands/backlog.md line 10 (or equivalent) updated from `cat memory/BACKLOG.md` to `sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md`
+    - [ ] Token rule prose added to /backlog command matching the pattern used in the other 7 migrated commands
+    - [ ] CLAUDE.md "Token discipline" paragraph is now accurate for all ceremony commands
+
+  Security Considerations: none
+  Technical Notes: This is the highest-value remaining migration — /backlog is the primary grooming ceremony and the one most likely to run against a large backlog. | Complexity: XS
+
+---
+
+- [ ] STORY-021: Migrate /sprint-plan command to Index-first read pattern
+  Priority: High
+  Added by: po-agent (review synthesis) on 2026-06-10
+
+  As a team running the /sprint-plan ceremony,
+  I want the command to read only the ## Index section of BACKLOG.md instead of the full file,
+  So that the 6-agent sprint planning chain does not pay the token cost of loading all story bodies upfront.
+
+  Acceptance Criteria:
+    - Given /sprint-plan runs, when it reads BACKLOG.md, then it uses `sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md` rather than `cat memory/BACKLOG.md`
+    - Given an agent in the sprint-plan chain needs a specific story's full body, when it acts on that story, then it extracts the body individually using awk
+    - Given the migration is complete, when CLAUDE.md states all ceremonies use the Index-first pattern, then that is true
+
+  Test Scenarios:
+    - Happy path: /sprint-plan runs, only Index section loaded, all 6 agents receive Index context
+    - Story body drill-down: po-agent selects a story for the sprint and tech-lead receives only that story's body
+    - Token reduction verified: full BACKLOG.md is not read in the sprint-plan chain
+
+  Definition of Done:
+    - [ ] .claude/commands/sprint-plan.md updated from `cat memory/BACKLOG.md` to `sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md`
+    - [ ] Token rule prose added matching the pattern in the other migrated commands
+    - [ ] Any per-story body extraction within the ceremony uses the awk `\[.\] STORY-XXX:` pattern
+
+  Security Considerations: none
+  Technical Notes: /sprint-plan is the largest ceremony chain (6 agents) — this is the highest token-consumption migration after /backlog. | Complexity: XS
+
+---
+
+- [ ] STORY-022: Fix /complete step 4 — reorder extract before archive, fix awk regex
+  Priority: High
+  Added by: po-agent (review synthesis) on 2026-06-10
+
+  As a developer running /complete to close a story,
+  I want the awk extraction step to run before the archive move, and the awk regex to match open-checkbox stories,
+  So that the extraction does not silently find nothing (story already moved) and the pattern matches the story at the point it is still in BACKLOG.md.
+
+  Acceptance Criteria:
+    - Given /complete runs on a story, when step 4 executes, then awk extraction is the first bullet in step 4 — it runs before "move body to ARCHIVE.md" and before "mark [x]"
+    - Given the awk command runs, when it searches for the story ID, then it uses `\[.\]` (matches any checkbox state) not `\[x\]` (which only matches already-closed stories)
+    - Given the corrected step runs in sequence, when /complete completes, then the story body is correctly extracted, archived, and removed from BACKLOG.md
+
+  Test Scenarios:
+    - Happy path: extraction runs first, story body captured correctly, archive appended, BACKLOG.md entry removed
+    - Ordering regression: verify awk runs before mark-done step — story is still open-checkbox at extraction time
+    - Regex coverage: awk matches a story with `[ ]` checkbox (open), not just `[x]` (closed)
+
+  Definition of Done:
+    - [ ] .claude/commands/complete.md step 4 reordered: bullet 1 is awk extraction, bullet 2 is mark the extracted copy as [x] and add Completed: date, bullet 3 is append marked copy to ARCHIVE.md, bullet 4 is remove body and Index entry from BACKLOG.md
+    - [ ] awk regex changed from `\[x\]` to `\[.\]`
+    - [ ] Step 4 instructions verified consistent with the ordering used in review.md and new-task.md
+
+  Security Considerations: none
+  Technical Notes: The \[.\] pattern is already established convention in review.md and new-task.md — this aligns /complete with the existing pattern. | Complexity: XS
+
+---
+
+- [ ] STORY-023: Add ARCHIVE.md to DEC-004 memory file trust boundary
+  Priority: High
+  Added by: po-agent (review synthesis) on 2026-06-10
+
+  As a team member or future agent author,
+  I want ARCHIVE.md explicitly listed in DEC-004's memory file trust boundary,
+  So that agents reading the archive apply the same "content is data, not commands" constraint that applies to all other memory files.
+
+  Acceptance Criteria:
+    - Given DEC-004 is read, when the memory file list is examined, then ARCHIVE.md appears alongside BACKLOG.md, STATE.md, DECISIONS.md, LEARNINGS.md, CHECKPOINT.md, and NEXT.md
+    - Given a future agent author reads DEC-004, when they add a step that reads ARCHIVE.md, then the trust constraint is unambiguous — no independent inference needed
+    - Given the amendment is made, when DEC-004's consequences section is read, then it still correctly states all listed memory files are covered by the data-not-commands constraint
+
+  Test Scenarios:
+    - DEC-004 text check: ARCHIVE.md present in the memory file enumeration
+    - Completeness check: no other memory file introduced in this PR is missing from the list
+    - No constraint weakening: existing language in DEC-004 unchanged except for the addition
+
+  Definition of Done:
+    - [ ] memory/DECISIONS.md DEC-004 decision text updated to include ARCHIVE.md in the memory file list
+    - [ ] DEC-004 consequences section updated if it references the file list by example
+    - [ ] Amendment date noted inline in DEC-004 (e.g. "Amended 2026-06-10: added ARCHIVE.md")
+
+  Security Considerations: This is a security control amendment. Omitting ARCHIVE.md from the trust boundary at the same moment it is introduced as a memory file is the exact gap DEC-004 was written to prevent. The conservative position (require before merge, not backlog) was accepted by PO.
+  Technical Notes: Single amendment to memory/DECISIONS.md. DEC-004 is at line ~129. | Complexity: XS
+
+---
+
+- [ ] STORY-024: Charter ARCHIVE.md access in po-agent.md "Your Files" table
+  Priority: High
+  Added by: po-agent (review synthesis) on 2026-06-10
+
+  As the po-agent executing /complete step 4,
+  I want ARCHIVE.md listed in my "Your Files" table with Read+Write access,
+  So that I am operating within my chartered file access when appending completed stories to the archive — not outside it.
+
+  Acceptance Criteria:
+    - Given .claude/agents/po-agent.md is read, when the "Your Files" table is examined, then ARCHIVE.md appears as a row with access "Read + Write" and purpose "Append-only completed story archive"
+    - Given po-agent receives the /complete step 4 instruction to write to ARCHIVE.md, when it checks its charter, then the file is explicitly listed — no ambiguity
+    - Given the table is updated, when a new agent author reads po-agent.md to understand its file access scope, then ARCHIVE.md is visible alongside BACKLOG.md and STATE.md
+
+  Test Scenarios:
+    - Table check: ARCHIVE.md row present in po-agent.md "Your Files" table
+    - Access level correct: Read + Write (not Read-only — po-agent appends to the file)
+    - Purpose text matches CLAUDE.md description of the file
+
+  Definition of Done:
+    - [ ] .claude/agents/po-agent.md "Your Files" table updated with ARCHIVE.md row
+    - [ ] Access column reads "Read + Write"
+    - [ ] Purpose column reads "Append-only completed story archive"
+
+  Security Considerations: none
+  Technical Notes: Single row addition to the po-agent.md file table. | Complexity: XS
+
+---
+
+- [ ] STORY-025: Update README memory tree to include ARCHIVE.md
+  Priority: Medium
+  Added by: po-agent (review synthesis) on 2026-06-10
+
+  As a new user or contributor reading the README,
+  I want ARCHIVE.md visible in the memory/ directory tree,
+  So that I understand where completed stories go and do not assume they vanish from BACKLOG.md without explanation.
+
+  Acceptance Criteria:
+    - Given the README memory tree (at approximately line 184), when a reader scans the memory/ directory listing, then ARCHIVE.md appears with a description matching its role (e.g. "Completed stories (append-only — moved here by /complete)")
+    - Given there is a second memory tree in the README (at approximately line 348), when a reader views it, then ARCHIVE.md is present there as well
+    - Given both trees are updated, when the CLAUDE.md tree is compared to the README trees, then all three are consistent
+
+  Test Scenarios:
+    - First tree updated: ARCHIVE.md present at line ~184 with correct description
+    - Second tree updated: ARCHIVE.md present at line ~348 with consistent description
+    - CLAUDE.md consistency: README and CLAUDE.md trees both list ARCHIVE.md
+
+  Definition of Done:
+    - [ ] README.md first memory tree (~line 184) updated to include ARCHIVE.md
+    - [ ] README.md second memory tree (~line 348) updated to include ARCHIVE.md
+    - [ ] Description in README matches the description in CLAUDE.md
+
+  Security Considerations: none
+  Technical Notes: CLAUDE.md already has ARCHIVE.md in its tree (added in this PR). README has two separate locations that need updating. | Complexity: XS
+
+---
+
+- [ ] STORY-026: Write DEC-006 — Index-first memory read pattern convention
+  Priority: Medium
+  Added by: po-agent (review synthesis) on 2026-06-10
+
+  As a future command author or agent developer,
+  I want an architecture decision documenting the Index-first BACKLOG.md read pattern,
+  So that the convention is codified and the 7 migrated commands do not drift apart over time as new commands are added.
+
+  Acceptance Criteria:
+    - Given DEC-006 is read, when a new command author decides how to read BACKLOG.md, then the decision gives an unambiguous prescription: read only the ## Index section first; extract individual story bodies only when acting on a specific story
+    - Given the decision is written, when it references the sed command, then it includes the exact pattern (`sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md`) so authors copy it correctly
+    - Given DEC-006 is active, when any future command is reviewed, then deviation from the pattern is a DEC violation — not a style suggestion
+
+  Test Scenarios:
+    - Decision text check: contains the exact sed command and the awk extraction pattern
+    - Rationale present: explains why Index-only reads reduce token consumption
+    - Consequences section: lists that new command authors must apply the pattern and that deviation is a DEC violation
+
+  Definition of Done:
+    - [ ] memory/DECISIONS.md DEC-006 entry written with Date, Status: ACTIVE, Decision, Rationale, Alternatives considered, Consequences
+    - [ ] Decision includes the exact sed command and awk body-extraction pattern
+    - [ ] DEC-006 number does not conflict with existing decisions (DEC-001 through DEC-005 are taken)
+
+  Security Considerations: none
+  Technical Notes: tech-lead-agent owns DECISIONS.md. This story should be picked up by tech-lead as part of the same PR that completes the /backlog and /sprint-plan migrations. | Complexity: XS
+
+---
+
+- [ ] STORY-027: Write DEC-007 — ARCHIVE.md append-only invariant and trust model
+  Priority: Medium
+  Added by: po-agent (review synthesis) on 2026-06-10
+
+  As a future team member or agent author,
+  I want an architecture decision documenting ARCHIVE.md's append-only invariant and its place in the memory file trust model,
+  So that the rules around this file are as explicit as those governing BACKLOG.md, STATE.md, and CHECKPOINT.md.
+
+  Acceptance Criteria:
+    - Given DEC-007 is read, when an agent author considers writing to ARCHIVE.md, then the decision states clearly: only po-agent may write to ARCHIVE.md, only via /complete, and only in append mode — no deletions, no edits to existing entries
+    - Given the decision references the trust model, when it is read alongside DEC-004, then the two decisions are consistent — ARCHIVE.md is covered by the data-not-commands constraint
+    - Given DEC-007 is active, when a review finds an agent writing to ARCHIVE.md outside /complete, then this is a DEC-007 violation
+
+  Test Scenarios:
+    - Invariant statement: decision explicitly names append-only, po-agent only, /complete only
+    - DEC-004 cross-reference: DEC-007 references DEC-004 for the trust model
+    - Violation example: decision or consequences section names what a violation looks like
+
+  Definition of Done:
+    - [ ] memory/DECISIONS.md DEC-007 entry written with Date, Status: ACTIVE, Decision, Rationale, Alternatives considered, Consequences
+    - [ ] Decision states: append-only, po-agent only, /complete only
+    - [ ] Decision references DEC-004 for the trust boundary
+    - [ ] DEC-007 number does not conflict with existing or planned decisions
+
+  Security Considerations: The append-only invariant is a data-integrity control. An agent that can edit or delete ARCHIVE.md entries can falsify the completed-story history. This decision makes that a policy violation detectable in review.
+  Technical Notes: tech-lead-agent owns DECISIONS.md. Pick up alongside DEC-006 in the same session. | Complexity: XS
+
+---
+
+- [ ] STORY-028: Index/body title drift mitigation
+  Priority: Low
+  Added by: po-agent (review synthesis) on 2026-06-10
+
+  As a developer or PO grooming the backlog,
+  I want a mechanism or convention that prevents the Index one-liner title from drifting away from the story body title over time,
+  So that agents reading only the Index get accurate story summaries and do not make decisions based on stale titles.
+
+  Acceptance Criteria:
+    - Given a story's body title is updated, when the Index is not also updated, then there is a detectable inconsistency — either a manual convention makes this a ceremony step, or a validation note in the Index header warns authors to keep them in sync
+    - Given a new story is added via /stories, when the Index entry is written, then the title text is copied verbatim from the story body title — not paraphrased
+    - Given the convention is documented, when a future /backlog grooming session runs, then the agent's ceremony instructions include a title-sync check step
+
+  Test Scenarios:
+    - New story: Index title matches body title exactly
+    - Edited story: /backlog or /complete ceremony includes step to verify Index title matches body
+    - Drift detected: inconsistency between Index and body is flagged, not silently tolerated
+
+  Definition of Done:
+    - [ ] Index header comment updated to explicitly state "Index titles must match story body titles verbatim"
+    - [ ] /backlog command updated to include a title-sync verification step
+    - [ ] /stories command updated to copy body title to Index entry exactly
+
+  Security Considerations: none
+  Technical Notes: This is a process/convention change. No code. The risk is agents making wrong prioritisation decisions from stale Index titles. | Complexity: S
+
+---
+
+- [ ] STORY-029: /complete checkpoint protocol for mid-archive failure recovery
+  Priority: Low
+  Added by: po-agent (review synthesis) on 2026-06-10
+
+  As a developer running /complete,
+  I want the archive step to be covered by the checkpoint protocol,
+  So that a session drop between step 4 (archive) and step 6 (commit) does not leave BACKLOG.md and ARCHIVE.md in an inconsistent state with git history.
+
+  Acceptance Criteria:
+    - Given /complete step 4 begins, when a checkpoint heartbeat is written before the archive write, then a session drop at any point in step 4-6 is recoverable — the next /complete or /new-task run detects the partial state
+    - Given a partial archive state is detected on resume, when the user is prompted, then the options are: "complete the archive step" or "roll back to pre-archive state" — not silent continuation
+    - Given /complete finishes successfully, when the checkpoint is cleared, then BACKLOG.md, ARCHIVE.md, and git history are all consistent
+
+  Test Scenarios:
+    - Happy path: complete runs end-to-end, checkpoint written and cleared, files consistent
+    - Drop after archive write, before commit: checkpoint shows archive step complete; resume skips it
+    - Drop mid-archive (partial append): checkpoint shows step in progress; resume detects and offers rollback
+
+  Definition of Done:
+    - [ ] /complete command updated to write a checkpoint heartbeat at the start of step 4
+    - [ ] Resume path in /new-task or /complete detects mid-archive checkpoint and presents recovery options
+    - [ ] DEC-002 schema updated to include /complete as a command using the checkpoint protocol
+
+  Security Considerations: The append-only invariant of ARCHIVE.md means a partial write that is not rolled back creates a permanently corrupt entry. The checkpoint protocol is the primary guard against this.
+  Technical Notes: DEC-002 already governs the checkpoint schema. This story extends the protocol to /complete. | Complexity: S
+
+---
+
+- [ ] STORY-030: Decide and enforce ARCHIVE.md git tracking status
+  Priority: Medium
+  Added by: po-agent (review synthesis) on 2026-06-10
+
+  As a developer or new team member cloning this repo,
+  I want a clear, enforced decision about whether ARCHIVE.md is tracked in git,
+  So that completed story history is not silently lost on a clean checkout, and the decision is not left ambiguous.
+
+  Acceptance Criteria:
+    - Given a decision is made to track ARCHIVE.md in git, when the file is created by /complete, then it is committed as part of the same commit that closes the story — not left untracked
+    - Given a decision is made to NOT track ARCHIVE.md, when the file is created, then it is added to .gitignore with a comment explaining the deliberate choice
+    - Given either decision is made, when CLAUDE.md and DEC-007 are read, then the git tracking status of ARCHIVE.md is explicitly documented — not implied
+
+  Test Scenarios:
+    - Git tracked path: ARCHIVE.md appears in git status after /complete; /complete commit includes it
+    - Gitignored path: ARCHIVE.md listed in .gitignore; git status shows nothing after /complete
+    - Documentation check: CLAUDE.md and DEC-007 both state the decision explicitly
+
+  Definition of Done:
+    - [ ] Decision made (track or ignore) and documented in DEC-007
+    - [ ] Either: ARCHIVE.md committed by /complete step, OR .gitignore updated with ARCHIVE.md entry and comment
+    - [ ] CLAUDE.md updated to state the tracking decision
+
+  Security Considerations: If ARCHIVE.md is untracked and not gitignored, it is invisible to git and will be lost. If it is tracked, it exposes completed story content to anyone with repo read access — confirm this is acceptable given the project's access model.
+  Technical Notes: Current state: ARCHIVE.md is untracked and not in .gitignore (security finding LOW from this review). The preferred resolution is git-tracked — completed story history is not sensitive and benefits from version control. | Complexity: XS
+
+---
+
+- [ ] STORY-031: Document story ID format constraint for awk safety
+  Priority: Low
+  Added by: po-agent (review synthesis) on 2026-06-10
+
+  As a team member adding stories to the backlog,
+  I want the story ID format constraint documented and enforced by convention,
+  So that awk commands substituting a story ID into a regex pattern are not broken or exploited by an ID containing regex metacharacters.
+
+  Acceptance Criteria:
+    - Given BACKLOG.md story format reference is read, when the ID field is examined, then it states: "Story IDs must match the pattern [A-Z][A-Z0-9-]+ (uppercase letters, digits, hyphens only — no regex metacharacters)"
+    - Given a story is added via /stories or /backlog, when the ID is assigned, then it conforms to the documented constraint — no parentheses, dots, brackets, or other regex special characters
+    - Given the constraint is documented, when a command author writes an awk command using a story ID, then the format reference is the justification for why the ID is safe to use in a regex without escaping
+
+  Test Scenarios:
+    - Valid IDs: STORY-001, BUG-018, STORY-BUG-007 — all match [A-Z][A-Z0-9-]+
+    - Invalid ID example: STORY-001(v2) — contains parentheses, would break awk pattern
+    - Documentation check: format reference in BACKLOG.md includes the constraint
+
+  Definition of Done:
+    - [ ] BACKLOG.md story format reference updated with story ID format constraint
+    - [ ] Constraint states the allowed character set: [A-Z][A-Z0-9-]+
+    - [ ] /stories command or CONTRIBUTING.md references the constraint when describing how to assign IDs
+
+  Security Considerations: An ID containing regex metacharacters could cause awk to match unintended story bodies. This is a low-probability risk today (IDs are assigned by agents following convention) but documents the assumption explicitly.
+  Technical Notes: All existing IDs in BACKLOG.md conform to the constraint — this is a documentation-only change. | Complexity: XS
+
+---
+
+- [ ] STORY-032: Amend DECISIONS.md template to include optional "Amended:" field
+  Priority: Low
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Found by: pr-reviewer-agent and tech-lead-agent — /review MAINTENANCE-TOKEN-DISCIPLINE cycle 2 (2026-06-10)
+
+  As a tech-lead or future agent author amending an existing architecture decision,
+  I want the DEC template in DECISIONS.md to include an optional "Amended:" field,
+  So that amendment dates (like the one added inline at DEC-004:131) have a consistent, schema-backed home rather than being one-off freeform additions.
+
+  Acceptance Criteria:
+    - Given the "How to add a decision" template in DECISIONS.md is read, when an author amends an existing DEC, then the template includes an optional field: `Amended: [date] — [one-line summary of change]`
+    - Given the template is updated, when DEC-004's existing "Amended:" line is compared to it, then the line conforms to the template format — no retroactive edit needed if it already matches
+    - Given the template is active, when a future review finds an amendment without the field, then that is a schema violation and a review finding
+
+  Test Scenarios:
+    - Template check: "Amended:" field present in the How-to-add-a-decision template
+    - DEC-004 conformance: existing DEC-004 amendment line matches the template format
+    - New amendment: author adding a future amendment uses the template field correctly
+
+  Definition of Done:
+    - [ ] "How to add a decision" template in memory/DECISIONS.md updated to include optional "Amended:" field
+    - [ ] Field documented as optional (not required for new decisions, only for amended ones)
+    - [ ] DEC-004 amendment line verified to conform to the template format
+
+  Security Considerations: none
+  Technical Notes: This folds into the DEC-006/DEC-007 work in STORY-027 or is a standalone XS change to DECISIONS.md. Assign to tech-lead-agent. | Complexity: XS
+
+---
+
+- [ ] BUG-019: PROCESS-001 Index entry missing checkbox
+  Priority: Low
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Found by: pr-reviewer-agent — /review MAINTENANCE-TOKEN-DISCIPLINE (2026-06-10)
+
+  The PROCESS-001 entry in the ## Index section reads:
+    `- PROCESS-001 — Run /security-review before Sprint 3 starts (pm-agent)`
+  All other Index entries have a `[ ]` checkbox. PROCESS-001 has none, breaking the consistent format.
+  Fix: add `[ ]` checkbox to the PROCESS-001 Index line, matching all other entries.
+
+  Definition of Done:
+    - [ ] PROCESS-001 Index entry updated to `- [ ] PROCESS-001 — Run /security-review before Sprint 3 starts (pm-agent)`
+    - [ ] Manual verification: Index section scanned — all entries have `[ ]` checkbox
+
+  Security Considerations: none
+  Technical Notes: Single character fix in the Index section of BACKLOG.md. | Complexity: XS
+
+---
+
+- [ ] BUG-020: BUG entries in Index missing complexity field
+  Priority: Low
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Found by: pr-reviewer-agent — /review MAINTENANCE-TOKEN-DISCIPLINE (2026-06-10)
+
+  STORY entries in the Index follow the format: `ID — title — priority — complexity`.
+  BUG entries omit the complexity field entirely (e.g. `BUG-001 — README command count inconsistency (29 vs 30) — Low`).
+  This creates format drift between STORY and BUG Index entries, making the Index harder to read uniformly.
+  Fix: add a complexity estimate to all BUG Index entries, or document that BUG entries intentionally omit complexity.
+
+  Definition of Done:
+    - [ ] Decision made: BUG entries include complexity field OR Index header documents that BUG entries omit it by design
+    - [ ] All BUG Index entries updated consistently with the decision
+    - [ ] Format reference at bottom of BACKLOG.md updated to reflect BUG entry format
+
+  Security Considerations: none
+  Technical Notes: If complexity is added, use XS for single-file bug fixes, S for multi-file. | Complexity: XS
+
+---
+
+- [ ] BUG-021: Priority case inconsistency across backlog entries
+  Priority: Low
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Found by: pr-reviewer-agent — /review MAINTENANCE-TOKEN-DISCIPLINE (2026-06-10)
+
+  STORY entries use title-case priority: "High", "Medium", "Low".
+  BUG entries use uppercase priority: "HIGH", "MEDIUM", "LOW".
+  This inconsistency makes programmatic parsing harder and creates visual noise.
+  Fix: standardise on title-case (High/Medium/Low) across all entries — STORY and BUG alike.
+
+  Definition of Done:
+    - [ ] All BUG entries in both the Index and story bodies updated from "HIGH/MEDIUM/LOW" to "High/Medium/Low"
+    - [ ] Story format reference at bottom of BACKLOG.md updated if it specifies a case convention
+    - [ ] Manual scan: no remaining "HIGH", "MEDIUM", or "LOW" priority values in the backlog
+
+  Security Considerations: none
+  Technical Notes: Grep for `Priority: HIGH\|Priority: MEDIUM\|Priority: LOW` in BACKLOG.md to find all instances. | Complexity: XS
+
+---
+
+- [ ] BUG-022: /backlog command ceremony step wording inaccurate after token-discipline migration
+  Priority: Low
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Found by: pr-reviewer-agent — /review MAINTENANCE-TOKEN-DISCIPLINE cycle 2 (2026-06-10)
+
+  After the token-discipline migration, .claude/commands/backlog.md step 1 prose still reads
+  "po-agent reads BACKLOG.md" — which is now technically inaccurate. The correct description
+  post-migration is "po-agent reviews the Index". Additionally, the prohibition wording "do not
+  re-read" is softer than the "must NOT re-read" wording used in sprint-plan.md and review.md.
+  Fix: (1) update step 1 prose to "po-agent reviews the Index"; (2) align prohibition wording
+  to "must NOT re-read" to match the stronger form used in other migrated commands.
+
+  Definition of Done:
+    - [ ] .claude/commands/backlog.md step 1 prose updated from "reads BACKLOG.md" to "reviews the Index"
+    - [ ] Prohibition wording in backlog.md changed from "do not re-read" to "must NOT re-read"
+    - [ ] Both changes verified by reading the updated file
+
+  Security Considerations: none
+  Technical Notes: Two-line edit in .claude/commands/backlog.md. Fold into STORY-020 implementation if not yet done, or pick up as a standalone XS fix. | Complexity: XS
+
+---
+
+- [ ] BUG-023: README "Six files" hardcodes memory file count and will drift
+  Priority: Low
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Found by: pr-reviewer-agent — /review MAINTENANCE-TOKEN-DISCIPLINE cycle 2 (2026-06-10)
+
+  README.md line ~181 contains prose that hardcodes the number of memory files (e.g. "Six files").
+  This count will drift as files are added (ARCHIVE.md was just added in this PR). Hardcoding
+  a count in prose is a maintenance trap — it requires a separate README edit every time the
+  memory file set changes.
+  Fix: remove the hardcoded count and replace with a description that does not depend on a
+  specific number (e.g. "These files persist team state across sessions:" with no count).
+
+  Definition of Done:
+    - [ ] README.md line ~181 updated to remove the hardcoded file count
+    - [ ] Replacement prose does not reference a specific number of files
+    - [ ] Manual check: no other hardcoded memory-file counts remain in README.md
+
+  Security Considerations: none
+  Technical Notes: One-line edit in README.md. Can be folded into STORY-025 (README memory tree update) or done standalone. | Complexity: XS
 
 ---
 

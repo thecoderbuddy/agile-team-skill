@@ -12,7 +12,7 @@ PO writes. QA tests it. Security constrains it. Tech Lead estimates it. Then it'
 
 ```bash
 cat memory/STATE.md
-cat memory/BACKLOG.md
+sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — for next STORY-XXX ID and duplicate check
 cat memory/DECISIONS.md
 ```
 
