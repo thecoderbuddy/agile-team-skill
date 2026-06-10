@@ -57,6 +57,40 @@ Consequences:
 
 ---
 
+## DEC-003 — Secret scanning tool: gitleaks
+Date: 2026-06-09
+Status: ACTIVE
+
+Decision:
+  gitleaks is the selected tool for pre-commit secret scanning. The hook script
+  lives at `.claude/hooks/pre-commit.sh` and is installed to `.git/hooks/pre-commit`
+  by `install.sh`. The gitleaks config (`.gitleaks.toml`) is committed to the repo
+  so all contributors share the same baseline ruleset. False positives are suppressed
+  with an inline `# gitleaks:allow` comment.
+
+Rationale:
+  Single static binary with no runtime dependencies (no Python, no npm). Cross-platform:
+  macOS (Homebrew), Linux (curl binary), Windows (scoop). Built-in rule set covers
+  150+ secret types out of the box. `gitleaks protect --staged` scans only staged
+  changes making it fast enough for pre-commit use without scanning the full repo
+  history on every commit.
+
+Alternatives considered:
+  - detect-secrets (Yelp): requires Python runtime, produces a baseline JSON that
+    needs ongoing maintenance. Rejected for DX complexity.
+  - truffleHog: heavier dependency, better suited for CI than pre-commit. Rejected.
+  - Custom grep patterns: fragile, doesn't benefit from gitleaks' maintained rule set.
+    Rejected.
+
+Consequences:
+  - Contributors must install gitleaks to activate scanning. install.sh warns if not
+    present but does not block installation (hook gracefully skips if missing).
+  - .gitleaks.toml must be updated when new project-specific patterns need allowlisting.
+  - Version is not pinned by default in install.sh (uses whatever brew/package manager
+    installs). Consider pinning in CI for supply-chain safety.
+
+---
+
 ## DEC-002 — CHECKPOINT.md schema and validity rules
 Date: 2026-05-16
 Status: ACTIVE

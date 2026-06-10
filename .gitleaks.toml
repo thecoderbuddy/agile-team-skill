@@ -1,0 +1,16 @@
+title = "Agile Team Secret Scanner"
+
+# Uses gitleaks' built-in rules (150+ secret types).
+# Add project-specific allowlists below.
+
+[allowlist]
+  description = "Project-level false positive suppressions"
+  # To suppress a specific line: add '# gitleaks:allow' as an inline comment.
+  # To suppress a file pattern (e.g. test fixtures): add to paths below.
+  # paths = [
+  #   "tests/fixtures/",
+  # ]
+  # To suppress a regex pattern across the repo: add to regexes below.
+  # regexes = [
+  #   "EXAMPLE_[A-Z]+_KEY",
+  # ]

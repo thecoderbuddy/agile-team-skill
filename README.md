@@ -234,6 +234,13 @@ Edit each agent's `.md` file individually — there is no single config file.
 ### Prerequisites
 
 - [Claude Code](https://claude.ai/code) CLI or desktop app
+- [gitleaks](https://github.com/gitleaks/gitleaks) (optional but recommended) — activates pre-commit secret scanning
+
+  ```bash
+  brew install gitleaks   # macOS
+  ```
+
+  The installer will warn if gitleaks is missing and skip scanning until it's available. Everything else works without it.
 
 ### 1. Install inside your project
 

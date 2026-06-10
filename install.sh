@@ -242,6 +242,10 @@ else
       chmod +x "$TARGET_DIR/.claude/hooks/$hook.sh"
     done
 
+    # Also download the pre-commit hook source (installed to .git/hooks/ below)
+    curl -fsSL "$REPO_URL/.claude/hooks/pre-commit.sh" -o "$TARGET_DIR/.claude/hooks/pre-commit.sh"
+    chmod +x "$TARGET_DIR/.claude/hooks/pre-commit.sh"
+
     curl -fsSL "$REPO_URL/.claude/settings.json" -o "$TARGET_DIR/.claude/settings.json"
     print_ok "Hooks and settings installed"
   fi
@@ -296,6 +300,45 @@ EOF
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Secret scanning — install gitleaks pre-commit hook
+# ─────────────────────────────────────────────────────────────────────────────
+
+print_step "Setting up secret scanning..."
+
+# Install gitleaks config if not already present
+if [ ! -f "$TARGET_DIR/.gitleaks.toml" ]; then
+  curl -fsSL "$REPO_URL/.gitleaks.toml" -o "$TARGET_DIR/.gitleaks.toml"
+  print_ok ".gitleaks.toml installed"
+else
+  print_ok ".gitleaks.toml already present — skipping"
+fi
+
+# Install pre-commit hook into .git/hooks/ if inside a git repo
+if [ -d "$TARGET_DIR/.git" ]; then
+  if [ -f "$TARGET_DIR/.claude/hooks/pre-commit.sh" ]; then
+    cp "$TARGET_DIR/.claude/hooks/pre-commit.sh" "$TARGET_DIR/.git/hooks/pre-commit"
+    chmod +x "$TARGET_DIR/.git/hooks/pre-commit"
+    print_ok "pre-commit hook installed (.git/hooks/pre-commit)"
+  fi
+else
+  print_warn "Not a git repo — skipping pre-commit hook installation"
+fi
+
+# Check if gitleaks is available
+if command -v gitleaks &>/dev/null; then
+  GITLEAKS_VERSION=$(gitleaks version 2>/dev/null || echo "installed")
+  print_ok "gitleaks detected ($GITLEAKS_VERSION) — secret scanning active"
+else
+  print_warn "gitleaks not installed — hook installed but scanning will be skipped until gitleaks is available"
+  echo ""
+  echo "    Install gitleaks to activate secret scanning:"
+  echo "      macOS:   brew install gitleaks"
+  echo "      Linux:   https://github.com/gitleaks/gitleaks/releases"
+  echo "      Windows: scoop install gitleaks"
+  echo ""
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Done
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -306,7 +349,9 @@ echo ""
 echo "  What's installed:"
 echo "    .claude/agents/    — 7 specialist agents"
 echo "    .claude/commands/  — 29 slash commands"
-echo "    .claude/hooks/     — session tracking"
+echo "    .claude/hooks/     — safety gates + secret scanning
+    .gitleaks.toml     — secret scanner config
+    .git/hooks/        — pre-commit secret scan (active if gitleaks installed)"
 echo "    memory/            — persistent team state"
 echo "    CLAUDE.md          — project constitution"
 echo ""

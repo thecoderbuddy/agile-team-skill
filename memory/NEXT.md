@@ -6,18 +6,24 @@
 Sprint: 2
 Updated: 2026-06-09
 
+Type: CEREMONY
+Story: STORY-007
+
 ## Exact Next Step
-Run /new-task to start STORY-016: Test evidence record on story close (flex story).
+Run /new-task to implement STORY-007: Security review scheduling — track last scan date
+and prompt when overdue. This is the final story in Sprint 2.
+
+po-agent selects STORY-007. tech-lead specs the two touch points:
+  1. /security-review command — write "Last security review: [date]" to STATE.md on completion
+     and append a one-line summary to LEARNINGS.md (date + finding counts by severity).
+  2. /standup security-analyst-agent step — read STATE.md "Last security review:" field;
+     flag as overdue if >30 days old, or flag "never run" if field is absent.
+Threshold (30 days) must be documented in CLAUDE.md as configurable.
+Complexity: S.
 
 ## Why
-STORY-015 and STORY-010 done. STORY-016 is next (XS, flex). It's a /complete command
-edit — lightweight. If it runs over time budget, drop it and move to STORY-011.
+STORY-006 was approved and closed (5/6 sprint stories done). STORY-007 is the only
+remaining story. Completing it closes Sprint 2 and unblocks /sprint-close + /retro.
 
 ## Sprint 2 Remaining (execution order)
-3. STORY-016: Test evidence record (XS) [FLEX] ← NEXT
-4. STORY-011: Write tool secret guard (S)
-5. STORY-006: Pre-commit secret scanning (S) [needs DEC-003 before start]
-6. STORY-007: Security review scheduling (S)
-
-Type: STORY
-Story: STORY-016
+6. STORY-007: Security review scheduling (S) — last story — START HERE

@@ -126,7 +126,29 @@ cat memory/STATE.md    # sprint status
 
 ## Security Hook Configuration
 
-### Secret scan override
+### Pre-commit secret scanning (gitleaks)
+
+The installer adds a pre-commit git hook that runs `gitleaks protect --staged`
+before every commit. If a secret pattern is detected, the commit is blocked.
+
+**False positive suppression:** Add `# gitleaks:allow` as an inline comment on
+the offending line:
+
+```python
+TEST_API_KEY = "sk-test-placeholder"  # gitleaks:allow
+```
+
+**Emergency bypass** (use sparingly, document why in commit message):
+```bash
+git commit --no-verify -m "reason: ..."
+```
+
+**Not installed?** The hook exits 0 with a warning — commits still work.
+Install gitleaks to activate: `brew install gitleaks`
+
+---
+
+### Secret scan override (Write/Edit tool)
 The `pre-tool-use.sh` hook scans every Write and Edit tool call for known secret
 patterns (OpenAI keys, GitHub tokens, AWS keys, Bearer tokens, PEM private keys).
 
