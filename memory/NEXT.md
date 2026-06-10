@@ -6,29 +6,21 @@
 Sprint: 3
 Updated: 2026-06-09
 
-Type: VERIFICATION
-Story: N/A (PROCESS-001 — blocking pre-sprint gate)
+Type: STORY
+Story: STORY-019
 
 ## Exact Next Step
-BLOCKING GATE — run /security-review before any Sprint 3 story moves to IN_PROGRESS.
-This is PROCESS-001, the highest-priority retro action from Sprint 2. No story work starts
-until this gate clears.
+Run /new-task for STORY-019 — Dev self-review checklist for shell hook stories.
 
-Steps in order:
-1. Run /security-review now
-2. After it completes, pm-agent writes "Last Security Review: 2026-06-09" to STATE.md
-   and marks PROCESS-001 as CLEARED in STATE.md
-3. First story to start after gate clears: BUG-009
-   - Run /new-task for BUG-009
-   - The fix is a single line in .claude/hooks/pre-commit.sh: replace
-       --config .gitleaks.toml
-     with
-       --config "$(git rev-parse --show-toplevel)/.gitleaks.toml"
-   - This is ELEVATED RISK — it must ship before any other sprint story that involves
-     testing gitleaks behaviour
+This is the next story in Sprint 3 execution order (after STORY-017 done).
+File to change: .claude/agents/dev-agent.md
+Change: add two-item shell hook self-review checklist to the pre-QA handoff step:
+  1. All paths in the hook are absolute or resolved via git rev-parse --show-toplevel — no CWD assumptions
+  2. Every regex pattern has been verified against at least one positive match and one negative match
+Checklist is scoped to shell hook files only; N/A for non-hook stories.
 
-## Why
-BUG-009 is a live defect: pre-commit.sh fails silently when git commit is run from any
-subdirectory of the repo, rendering the gitleaks scanner non-functional for those users.
-It is the first story in Sprint 3 execution order. PROCESS-001 gates everything because
-no hook changes should be tested before the security baseline scan is on record.
+## Sprint 3 remaining
+- [ ] STORY-019: Dev self-review checklist for shell hook stories — XS — High
+- [ ] STORY-018: QA boundary-value scenarios at /stories time — XS — High
+- [ ] BUG-007 + BUG-008: ghr_ pattern + Stripe comment in pre-tool-use.sh — XS — Medium
+- [ ] STORY-013: /summary command — XS — Low [FLEX]

@@ -221,9 +221,10 @@
 
 ---
 
-- [ ] STORY-017: Tech-lead spec checklist — absolute paths and named threshold constants
+- [x] STORY-017: Tech-lead spec checklist — absolute paths and named threshold constants
   Priority: High
   Added by: retro (Sprint 2) on 2026-06-09
+  Completed: 2026-06-09
 
   As a developer implementing a story from a tech-lead spec,
   I want the spec to explicitly call out absolute path requirements and named constants for thresholds,
@@ -240,9 +241,10 @@
     - Pure README story with no paths or thresholds: spec says "N/A — no paths or thresholds in scope"
 
   Definition of Done:
-    - [ ] tech-lead-agent.md spec output format updated with two new checklist items: absolute paths rule and named constants rule
-    - [ ] Both rules are present as explicit lines in the spec template, not as a general reminder
-    - [ ] Examples added inline: git rev-parse --show-toplevel for paths, named constant pattern for thresholds
+    - [x] tech-lead-agent.md spec output format updated with two new checklist items: absolute paths rule and named constants rule
+    - [x] Both rules are present as explicit lines in the spec template, not as a general reminder
+    - [x] Examples added inline: git rev-parse --show-toplevel for paths, named constant pattern for thresholds
+  Test evidence: both checklist lines verified in /new-task Implementation Notes template (lines 131-132) and /stories Technical Notes template (lines 168-169); trigger-rule blocks with historical examples (BUG-009, BUG-010) confirmed; N/A escape paths verified; 2 PR review fixes applied (Paths "When in scope" framing, /stories scope aligned) — manual inspection — PASS — 2026-06-09
 
   Security Considerations: CWD-relative paths in shell hooks are a latent correctness bug that also creates a predictable failure mode — fixing the spec prevents the class of bug, not just individual instances.
   Technical Notes: This is a prompt/instruction change to tech-lead-agent.md only. No code change. Directly addresses BUG-009 (relative .gitleaks.toml path) and BUG-010 (inline threshold) root causes at the spec level. | Complexity: XS

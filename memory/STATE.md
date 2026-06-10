@@ -18,7 +18,7 @@ No story work begins until this gate clears.
 
 ## Sprint Stories (execution order)
 - [x] BUG-009: Fix relative .gitleaks.toml path in pre-commit.sh — S — High [DONE — APPROVED 2026-06-09]
-- [ ] STORY-017: Tech-lead spec checklist — absolute paths + named constants — XS — High
+- [x] STORY-017: Tech-lead spec checklist — absolute paths + named constants — XS — High [DONE — APPROVED 2026-06-09]
 - [ ] STORY-019: Dev self-review checklist for shell hook stories — XS — High
 - [ ] STORY-018: QA boundary-value scenarios at /stories time — XS — High
 - [ ] BUG-007 + BUG-008: ghr_ pattern + Stripe comment in pre-tool-use.sh (batched) — XS — Medium
@@ -26,13 +26,14 @@ No story work begins until this gate clears.
 
 ## Done This Sprint
 - [x] BUG-009: Fix relative .gitleaks.toml path in pre-commit.sh — APPROVED 2026-06-09 — full review chain (qa, pr-reviewer, security, tech-lead, po) — no required changes
+- [x] STORY-017: Tech-lead spec checklist — absolute paths + named constants — APPROVED 2026-06-09 — full review chain — 2 fixes in PR review round
 
 ## Blockers
 [None]
 
 ## Velocity
 Stories planned: 6 (5 core + 1 flex)
-Stories done: 1
+Stories done: 2
 Sprint capacity: ~1 working day (~2 hours active work)
 
 ## Agent Notes

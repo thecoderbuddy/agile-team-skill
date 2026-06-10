@@ -128,6 +128,8 @@ Implementation Notes:
   - Required flags/options: [e.g. --no-color on git diff --stat] | none
   - Sanitisation required: YES — [reason and input source] | NO | N/A
   - Env var validation: [rule, e.g. "must be positive integer, else use default"] | none
+  - Paths: all shell script paths must be absolute or resolved via `git rev-parse --show-toplevel` — CWD-relative paths not allowed | N/A — no shell paths in scope
+  - Named constants: any numeric threshold or configurable value must be a named constant, not an inline literal. Constant name: [XXX_YYY] | N/A — no thresholds in scope
 ───────────────────────────────────────
 ```
 
@@ -139,9 +141,19 @@ Implementation Notes:
 If YES: name the input source and the sanitisation approach.
 If NO: state why (e.g. "pure prompt edit, no execution surface").
 
+**Paths** must be explicitly answered for any story involving a shell script (.sh file):
+- When in scope: dev must resolve all paths via `git rev-parse --show-toplevel` — never assume CWD == repo root. Git hooks do not guarantee this.
+- When N/A: confirm no shell scripts are created or modified.
+
+**Named constants** must be explicitly answered for any story that introduces a numeric threshold or configurable value (e.g. retry count, day limit, line count, file count):
+- If a constant is required: name it explicitly in the spec (e.g. `SECURITY_REVIEW_THRESHOLD_DAYS=30`). Dev must define it as a named variable, not inline the literal.
+- If N/A: confirm no thresholds are introduced.
+
 Historical examples:
 - STORY-003 (diff threshold): sanitisation required — git diff --stat output could contain injected filenames; also required --no-color flag to avoid ANSI escape codes in parsing
 - STORY-001 (checkpoint): env var validation — CHECKPOINT.md field parsing; corrupt/missing fields must be detected at Step 0, not silently trusted
+- BUG-009 (pre-commit.sh): paths — relative .gitleaks.toml path failed from subdirectory; fix required `REPO_ROOT=$(git rev-parse --show-toplevel)` pattern
+- BUG-010 (30-day threshold): named constants — threshold inline in HTML comment; risk of drift across files if one is updated and another missed
 
 ---
 
@@ -153,6 +165,8 @@ Technical Notes:
   - [dependency or prerequisite]
   - [DEC-XXX that applies]
   - Sanitisation required: YES — [input source + approach] | NO — [reason] | N/A
+  - Paths: all shell script paths must be absolute or resolved via `git rev-parse --show-toplevel` | N/A — no shell paths in scope
+  - Named constants: any numeric threshold or configurable value must be a named constant, not an inline literal. Constant name: [XXX_YYY] | N/A — no thresholds in scope
   Complexity: [S/M/L/XL]
   Needs tech spec: YES | NO
 ```
