@@ -58,6 +58,7 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
 - [ ] BUG-021 — Priority case inconsistency: High vs HIGH across entries — Low
 - [ ] BUG-022 — backlog.md /backlog ceremony step wording inaccurate after token-discipline migration — Low
 - [ ] BUG-023 — README "Six files" hardcodes memory file count (will drift) — Low
+- [ ] STORY-033 — pr-reviewer-agent dimensions 11/12 prose trim — Low — XS
 
 ---
 
@@ -987,6 +988,36 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
 
   Security Considerations: none
   Technical Notes: One-line edit in README.md. Can be folded into STORY-025 (README memory tree update) or done standalone. | Complexity: XS
+
+---
+
+- [ ] STORY-033: pr-reviewer-agent dimensions 11/12 prose trim
+  Priority: Low
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Found by: tech-lead-agent — /review MAINTENANCE-AGENT-TRIM cycle 1 (2026-06-10)
+
+  As a pr-reviewer-agent running in a review chain,
+  I want the SOLID (dimension 11) and Structural Conventions (dimension 12) sections trimmed of their explanatory prose while retaining all checklist substance,
+  So that the agent prompt is leaner without losing any review signal.
+
+  Acceptance Criteria:
+    - Given the trimmed pr-reviewer-agent.md is read, when dimensions 11 and 12 are examined, then all checklist items from the current version are present — no check is lost, only prose reduced
+    - Given the trim is applied, when a reviewer counts lines in dimensions 11 and 12, then the combined line count is reduced by at least 30% from the current ~35-40 lines
+    - Given the trimmed file is used in a review chain, when the agent reviews a diff touching layered architecture or SOLID violations, then the finding quality is equivalent to the untrimmed version
+
+  Test Scenarios:
+    - Checklist completeness: all 5 SOLID principles still covered post-trim
+    - Layer check completeness: all 6 layer-separation bullets still present post-trim
+    - No new prose added: trim is net-negative on line count (no regressions)
+
+  Definition of Done:
+    - [ ] .claude/agents/pr-reviewer-agent.md dimensions 11 and 12 trimmed
+    - [ ] Line count reduction of at least 30% across both dimensions combined
+    - [ ] Full /review cycle run on the trimmed file — qa, pr-reviewer, security, tech-lead all PASS
+    - [ ] No review findings introduced by the trim itself
+
+  Security Considerations: none
+  Technical Notes: Tech-lead assessed as low risk and consistent with the conservative trim direction established by MAINTENANCE-AGENT-TRIM. Do not trim now — this is the explicit "next trim" candidate. Pick up when the team decides to do a second conservative pass. | Complexity: XS
 
 ---
 

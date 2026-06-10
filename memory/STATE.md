@@ -28,6 +28,7 @@ No story work begins until this gate clears.
 - [x] BUG-009: Fix relative .gitleaks.toml path in pre-commit.sh — APPROVED 2026-06-09 — full review chain (qa, pr-reviewer, security, tech-lead, po) — no required changes
 - [x] STORY-017: Tech-lead spec checklist — absolute paths + named constants — APPROVED 2026-06-09 — full review chain — 2 fixes in PR review round
 - [x] STORY-020..025: Token-discipline maintenance work (out-of-plan) — APPROVED 2026-06-10 — full /review chain (cycle 1 → 2) — 6 fixes applied in cycle 2; shipped in d1a3ecd
+- [x] MAINTENANCE-AGENT-TRIM: conservative trim of pr-reviewer + security-analyst agent files (out-of-plan) — APPROVED 2026-06-10 — full /review chain (cycle 1) — Q2/Q5 restored inline by po — STORY-033 backlogged
 
 ## Blockers
 [None]

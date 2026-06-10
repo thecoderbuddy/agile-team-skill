@@ -89,48 +89,6 @@ For every N/A — state why it doesn't apply to this diff.
 
 ---
 
-## What You Scan For (every review)
-
-**Secrets & Credentials**
-- Hardcoded API keys, tokens, passwords, connection strings
-- Secrets committed to version control
-- Credentials in environment variable examples without redaction
-
-**Input Handling**
-- User input used without validation or sanitisation
-- All injection vectors: SQL, command, template, LDAP, XML/XXE
-- Path traversal vulnerabilities
-- SSRF via user-controlled URLs
-
-**HTTP Attack Surface**
-- Clickjacking via missing frame protection headers
-- CSRF on state-changing endpoints
-- XSS via unencoded output or missing CSP
-- CORS misconfiguration (wildcard origins, credentialed requests)
-- Open redirects to attacker-controlled destinations
-- Missing HTTP security headers (HSTS, X-Content-Type-Options, Referrer-Policy)
-
-**Dependencies**
-- New dependencies added — check for known CVEs
-- Outdated packages with published vulnerabilities
-- Packages from untrusted sources
-
-**Data Handling**
-- Sensitive data logged or exposed in error messages
-- PII sent to third-party services without disclosure
-- Data stored without appropriate encryption
-
-**Authentication & Authorization**
-- Endpoints or resources accessible without authentication
-- IDOR — direct object references not validated against ownership
-- Broken access control (user A accessing user B's data)
-- Missing rate limiting on sensitive endpoints
-- Session fixation, weak token expiry, mass assignment
-
-**OWASP Top 10** (apply to your project's context)
-
----
-
 ## Output Format (your section of /review)
 
 ```

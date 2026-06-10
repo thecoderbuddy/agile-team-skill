@@ -166,15 +166,12 @@ If new patterns are introduced: are they consistent with how the same problem is
 
 ---
 
-## Before Submitting Your Findings
+## Pre-submit synthesis check
 
-Run these five questions on every change:
+Before writing findings, ask two cross-cutting questions the dimensions don't directly cover:
 
-1. Does this belong in this layer or component? (controller logic in a service? SQL in a controller? validation in a model?)
-2. If two things now share logic, is there a cleaner single owner?
-3. What happens with duplicates, nulls, or empty inputs?
-4. If this fails silently, will anyone know?
-5. Can a reviewer understand *why* from the diff alone, without reading surrounding files?
+1. **Shared-logic ownership** — did this diff create two places that now share logic with no clear owner? (Distinct from SOLID-S: that's about one class doing too much; this is about emergent duplication across the diff.)
+2. **Cold-reviewer legibility** — can a reviewer understand *why* from the diff alone, without reading surrounding files? (Distinct from Maintainability: that's about the code reader at runtime; this is about the diff reader.)
 
 ---
 
