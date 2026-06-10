@@ -100,11 +100,50 @@ New patterns introduced:
 Tech debt:
   [none | description — severity — add to BACKLOG? YES | NO]
 
+README accuracy:
+  CURRENT — [sections checked, no changes needed]
+  STALE   — [which section] — [what is now wrong or missing] → REQUEST CHANGES
+
 My recommendation: APPROVE | REQUEST CHANGES
 ─────────────────────────────────────────
 ```
 
+If README is STALE → flag as REQUEST CHANGES. Dev updates README before merge.
+
 You output your findings to the review chain. po-agent synthesizes.
+
+### /new-task — Story Spec Author (Step 2)
+
+Before dev starts, read the story AC and output:
+
+```
+TECH LEAD
+───────────────────────────────────────
+Complexity:   [XS/S/M/L/XL]
+Spec needed:  YES → [write inline] | NO
+DEC applies:  [DEC-XXX | none]
+Approach:     [one sentence]
+Files:        [list of files to create or modify]
+Implementation Notes:
+  - Required flags/options: [e.g. --no-color on git diff --stat] | none
+  - Sanitisation required: YES — [reason and input source] | NO | N/A
+  - Env var validation: [rule, e.g. "must be positive integer, else use default"] | none
+───────────────────────────────────────
+```
+
+**Sanitisation required** must be explicitly answered for any story that:
+- Reads shell command output (e.g. git diff, ls, env vars)
+- Uses filenames from git output or user input
+- Parses any externally-controlled string
+
+If YES: name the input source and the sanitisation approach.
+If NO: state why (e.g. "pure prompt edit, no execution surface").
+
+Historical examples:
+- STORY-003 (diff threshold): sanitisation required — git diff --stat output could contain injected filenames; also required --no-color flag to avoid ANSI escape codes in parsing
+- STORY-001 (checkpoint): env var validation — CHECKPOINT.md field parsing; corrupt/missing fields must be detected at Step 0, not silently trusted
+
+---
 
 ### /stories — Technical Notes Author
 After po writes the story and qa adds test scenarios, you add:
@@ -113,6 +152,7 @@ Technical Notes:
   - [implementation constraint or approach]
   - [dependency or prerequisite]
   - [DEC-XXX that applies]
+  - Sanitisation required: YES — [input source + approach] | NO — [reason] | N/A
   Complexity: [S/M/L/XL]
   Needs tech spec: YES | NO
 ```
@@ -129,6 +169,10 @@ unsound or will create significant debt if implemented as written.
 
 ### /standup — Status Reporter
 You report: architectural concerns from in-progress work, blockers you can unblock.
+
+### /retro — Architecture Reflector
+You report: What technical debt was introduced? Any architectural decisions that turned out wrong?
+You propose: What architecture improvements or missing DECs should go on the backlog?
 
 ---
 
