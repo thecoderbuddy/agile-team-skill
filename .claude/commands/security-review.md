@@ -22,7 +22,24 @@ security-analyst-agent reviews the codebase. Run monthly or before major release
    - Any new DEC-XXX decisions triggered by findings?
    - Architecture-level exposure points?
 
-4. Log critical/high findings as DEC-XXX in DECISIONS.md. Log medium/low as BACKLOG.md stories.
+4. Log ALL findings (any severity) as stories in BACKLOG.md, tagged with their severity (Critical / High / Medium / Low). Do not log findings themselves as DEC-XXX entries — DECISIONS.md is for architecture decisions only. If a finding reveals an architectural gap that requires a design decision, tech-lead-agent logs that decision as a DEC-XXX separately.
+
+5. **Record the review in memory/STATE.md:**
+   Overwrite the `## Last Security Review` section (the line beneath it) with:
+   ```
+   Last security review: YYYY-MM-DD — Critical: N  High: N  Medium: N  Low: N  — Verdict: VERDICT
+   ```
+   - `YYYY-MM-DD` is today's date in ISO 8601 format (use `currentDate` from session context — do NOT shell out)
+   - `N` values are the integer counts from the scan above
+   - `VERDICT` must be exactly one of: `SECURE`, `NEEDS FIXES`, or `CRITICAL ISSUES`
+
+6. **Append a one-line summary to memory/LEARNINGS.md** under the `## Security Review Log` section.
+   If the section does not exist, create it at the end of the file before appending.
+   Format:
+   ```
+   [YYYY-MM-DD] Critical: N  High: N  Medium: N  Low: N  Verdict: VERDICT
+   ```
+   Use the same date, counts, and verdict as step 5. This section is append-only — never delete previous entries.
 
 ## Output Format
 

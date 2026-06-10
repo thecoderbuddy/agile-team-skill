@@ -33,11 +33,34 @@ qa-agent
 ```
 
 **security-analyst-agent** reports:
+
+Before reporting, read `memory/STATE.md` and evaluate security review cadence:
+
+- Security review threshold: **30 days**  <!-- CONFIGURABLE: Edit only this value to change the threshold everywhere in this block -->
+- Use `currentDate` from session context for date arithmetic — do NOT shell out for the date.
+- If the `## Last Security Review` section heading is absent from STATE.md entirely → set Blocked to:
+  `SECURITY REVIEW OVERDUE — '## Last Security Review' section missing from STATE.md. Check STATE.md structure, then run /security-review.`
+- If the `## Last Security Review` line reads `[Never run]` → set Blocked to:
+  `SECURITY REVIEW OVERDUE — never run. Run /security-review.`
+- If the `## Last Security Review` line contains a date and that date is more than the configured threshold before today → set Blocked to:
+  `SECURITY REVIEW OVERDUE — last run N days ago (threshold: [configured value] days). Run /security-review.`
+  (replace N with the actual number of days elapsed; replace [configured value] with the threshold set above)
+- If the date is within the configured threshold → Blocked is `nothing` (no flag, no noise)
+
+<!-- Verification scenarios — security-analyst-agent must match these exactly:
+  Scenario A: STATE.md has "Last Security Review: [Never run]"
+              Expected: overdue flag in Blocked — "SECURITY REVIEW OVERDUE — never run. Run /security-review."
+  Scenario B: STATE.md has "Last Security Review: 2026-05-01 — ..." (35 days before 2026-06-09)
+              Expected: overdue flag — "SECURITY REVIEW OVERDUE — last run 35 days ago (threshold: [configured value] days). Run /security-review."
+  Scenario C: STATE.md has "Last Security Review: 2026-06-08 — ..." (1 day ago)
+              Expected: no flag — Blocked is "nothing"
+-->
+
 ```
 security-analyst-agent
   Done:    [security scans completed, findings addressed]
   Doing:   [any active security review]
-  Blocked: [nothing, or specific concern]
+  Blocked: [cadence flag from above, or "nothing"]
 ```
 
 **tech-lead-agent** reports:

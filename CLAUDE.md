@@ -182,6 +182,30 @@ or the DEC-001 payload check. Those run regardless.
 
 ---
 
+## Security Review Cadence
+
+The team tracks when `/security-review` was last run and flags it during `/standup` if overdue.
+
+**Default:** 30 days (see `.claude/commands/standup.md` for the configured value — that file is the single source of truth)
+
+**How to change the threshold:**
+Edit the single value on the line marked `<!-- CONFIGURABLE: ... -->` in
+`.claude/commands/standup.md`. That is the only integer you need to change — the logic
+condition and flag message text both reference it as "the configured threshold".
+
+**What triggers the flag:**
+The `security-analyst-agent` standup block will set a `Blocked:` entry when either:
+- The `## Last Security Review` line in `memory/STATE.md` reads `[Never run]`
+- The date recorded there is more than the configured threshold (default: 30 days) before today
+
+When within threshold, no flag is raised and the standup stays clean.
+
+**Where review results are stored:**
+- `memory/STATE.md` — `## Last Security Review` line (overwritten each run)
+- `memory/LEARNINGS.md` — `## Security Review Log` section (append-only history)
+
+---
+
 ## Setup
 
 ```bash

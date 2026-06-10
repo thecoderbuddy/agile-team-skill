@@ -7,23 +7,33 @@ Sprint: 2
 Updated: 2026-06-09
 
 Type: CEREMONY
-Story: STORY-007
+Story: N/A
 
 ## Exact Next Step
-Run /new-task to implement STORY-007: Security review scheduling — track last scan date
-and prompt when overdue. This is the final story in Sprint 2.
+All 6 Sprint 2 stories are DONE. Run /sprint-close to formally close the sprint.
 
-po-agent selects STORY-007. tech-lead specs the two touch points:
-  1. /security-review command — write "Last security review: [date]" to STATE.md on completion
-     and append a one-line summary to LEARNINGS.md (date + finding counts by severity).
-  2. /standup security-analyst-agent step — read STATE.md "Last security review:" field;
-     flag as overdue if >30 days old, or flag "never run" if field is absent.
-Threshold (30 days) must be documented in CLAUDE.md as configurable.
-Complexity: S.
+/sprint-close will:
+  1. Read velocity from STATE.md (6/6 — full sprint delivered)
+  2. Confirm all committed stories are in "Done This Sprint" — they are
+  3. Ask po-agent to confirm no stories need to be carried forward or dropped
+  4. Set STATE.md Status from ACTIVE to CLOSED
+  5. Write the sprint close summary (goal achieved, velocity, dates)
+  6. Reset STATE.md In Progress and Blockers sections for Sprint 3
+
+After /sprint-close, immediately run /retro:
+  - Each agent contributes one item per column (went well / improve / action items)
+  - pm-agent facilitates
+  - po-agent converts action items to BACKLOG.md entries
+  - Retro summary is appended to memory/LEARNINGS.md
+
+Do not start Sprint 3 planning until both /sprint-close and /retro are complete.
 
 ## Why
-STORY-006 was approved and closed (5/6 sprint stories done). STORY-007 is the only
-remaining story. Completing it closes Sprint 2 and unblocks /sprint-close + /retro.
+Sprint 2 is fully delivered (6/6 stories, 100% velocity). Closing the sprint and running
+the retro unblocks Sprint 3 planning and captures process improvements before they are lost.
 
-## Sprint 2 Remaining (execution order)
-6. STORY-007: Security review scheduling (S) — last story — START HERE
+## Sprint 2 Final Velocity
+Stories planned: 6 (5 core + 1 flex)
+Stories done: 6
+Pace: ON TRACK — full sprint delivered on day 1
+Sprint goal: ACHIEVED

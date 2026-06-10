@@ -19,7 +19,7 @@ Ends: 2026-06-16
 - [x] STORY-016: Test evidence record on story close — XS — Medium [FLEX]
 - [x] STORY-011: pre-tool-use.sh Write/Edit content secret scan — S — High
 - [x] STORY-006: Pre-commit secret scanning with gitleaks — S — High
-- [ ] STORY-007: Security review scheduling — overdue flag in standup — S — High
+- [x] STORY-007: Security review scheduling — overdue flag in standup — S — High
 
 ## Done This Sprint
 - [x] STORY-015: Story readiness gate — implementation notes block (2026-06-09)
@@ -27,13 +27,14 @@ Ends: 2026-06-16
 - [x] STORY-016: Test evidence record on story close (2026-06-09)
 - [x] STORY-011: pre-tool-use.sh Write/Edit content secret scan (2026-06-09)
 - [x] STORY-006: Pre-commit secret scanning with gitleaks (2026-06-09)
+- [x] STORY-007: Security review scheduling — overdue flag in standup (2026-06-09)
 
 ## Blockers
 [None]
 
 ## Velocity
 Stories planned: 6 (5 core + 1 flex)
-Stories done: 5
+Stories done: 6
 
 ## Agent Notes
 - Tech: DEC-003 (gitleaks selection) must be written before STORY-006 starts | STORY-011 uses existing hook infrastructure at line 61-87 of pre-tool-use.sh | Execution order: 015 → 010 → 016 → 011 → 006 → 007

@@ -156,9 +156,10 @@
 
 ---
 
-- [ ] STORY-007: Security review scheduling — track last scan date and prompt when overdue
+- [x] STORY-007: Security review scheduling — track last scan date and prompt when overdue
   Priority: High
   Added by: po-agent on 2026-05-26 (PO review — security gap)
+  Completed: 2026-06-09
 
   As a developer running a project in production,
   I want the team to remind me when the last /security-review was run,
@@ -177,13 +178,14 @@
     - Persistence: after two scans, LEARNINGS.md has two entries with dates and finding counts
 
   Definition of Done:
-    - [ ] /security-review writes "Last security review: [date]" to STATE.md on completion
-    - [ ] /standup security-analyst-agent step reads STATE.md and flags if overdue (>30 days) or never run
-    - [ ] /security-review appends a one-line summary (date, finding counts by severity) to LEARNINGS.md
-    - [ ] Threshold (30 days) documented in CLAUDE.md as configurable
+    - [x] /security-review writes "Last security review: [date]" to STATE.md on completion
+    - [x] /standup security-analyst-agent step reads STATE.md and flags if overdue (>30 days) or never run
+    - [x] /security-review appends a one-line summary (date, finding counts by severity) to LEARNINGS.md
+    - [x] Threshold (30 days) documented in CLAUDE.md as configurable
 
+  Test evidence: all 4 AC verified — STATE.md write format confirmed in /security-review.md; standup overdue flag (>30 days) and never-run paths confirmed in /standup.md; LEARNINGS.md append under "## Security Review Log" confirmed; 30-day threshold documented in CLAUDE.md as configurable — manual inspection — PASS — 2026-06-09
   Security Considerations: none
-  Technical Notes: STATE.md already has an agent notes section — add "Last security review:" as a tracked field. Overdue check is a simple date arithmetic calculation in the standup step. | Complexity: S
+  Technical Notes: STATE.md already has an agent notes section — add "Last security review:" as a tracked field. Overdue check is a simple date arithmetic calculation in the standup step. BUG-010 backlogged: threshold value stored as HTML comment in command files rather than named config constant — risk of threshold drift if one instance is updated without the other. | Complexity: S
 
 ---
 
@@ -537,6 +539,17 @@
   /review checkpoint format includes a `Cycle:` field not listed in DEC-002's required fields.
   DEC-002 defines minimums, not exhaustive schema — but optional fields should be documented.
   Fix: amend DEC-002 to list `Cycle:` as an optional field present in /review checkpoints only.
+
+- [ ] STORY-BUG-010: STORY-007 30-day threshold stored as inline comment, not named constant — found during STORY-007 review
+  Severity: LOW
+  Found by: security-analyst-agent — /review cycle for STORY-007 (2026-06-09)
+  The 30-day overdue threshold for /security-review scheduling is embedded as an HTML comment
+  in the command files rather than defined as a single named constant. If a maintainer updates
+  the threshold in one location but misses another, the standup check and the CLAUDE.md
+  documentation will diverge, causing missed overdue alerts without any visible error.
+  Fix: introduce a single named threshold reference (e.g. SECURITY_REVIEW_THRESHOLD_DAYS=30)
+  as a documented constant in CLAUDE.md and reference it by name in both /security-review.md
+  and /standup.md instruction text so all three locations stay in sync.
 
 ---
 
