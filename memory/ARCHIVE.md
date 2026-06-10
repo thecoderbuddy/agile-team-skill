@@ -134,3 +134,153 @@
   Fix: use --config "$(git rev-parse --show-toplevel)/.gitleaks.toml" to always resolve to repo root.
   Test evidence: all 5 AC met; edge cases verified — gitleaks not installed (exit 0), empty REPO_ROOT guard, missing config file fallback; REPO_ROOT empty guard and config existence check confirmed; double-quoting correct throughout, no injection surface; DEC-003+005 compliant — manual inspection by full review chain (qa, pr-reviewer, security, tech-lead) — PASS — 2026-06-09
   PO verdict: APPROVED — no required changes, no conflicts, no recurring findings. Release note: CHECKSUMS.sha256 must be regenerated for pre-commit.sh per DEC-005 before next release (tracked under BUG-011, not a merge blocker).
+
+---
+
+- [x] STORY-020: Migrate /backlog command to Index-first read pattern
+  Priority: High
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Completed: 2026-06-10
+
+  As a team member running the /backlog ceremony,
+  I want the command to read only the ## Index section of BACKLOG.md instead of the full file,
+  So that the grooming ceremony consumes the minimum tokens needed and CLAUDE.md's "Token discipline" paragraph is accurate.
+
+  Acceptance Criteria:
+    - Given /backlog runs, when it reads BACKLOG.md, then it uses `sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md` (or equivalent) rather than `cat memory/BACKLOG.md`
+    - Given a story body is needed during grooming, when an agent acts on a specific story, then the full body is extracted individually — the Index read does not also load all bodies
+    - Given the migration is complete, when CLAUDE.md states "ceremonies read the BACKLOG.md ## Index section first", then that statement is true for all ceremony commands including /backlog
+
+  Definition of Done:
+    - [x] .claude/commands/backlog.md line 10 (or equivalent) updated from `cat memory/BACKLOG.md` to `sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md`
+    - [x] Token rule prose added to /backlog command matching the pattern used in the other 7 migrated commands
+    - [x] CLAUDE.md "Token discipline" paragraph is now accurate for all ceremony commands
+
+  Test evidence: all AC verified by full /review chain (cycle 1 → cycle 2 — verdict APPROVED). Work shipped in d1a3ecd (refactor(memory): index-first BACKLOG reads + ARCHIVE.md split). — manual inspection — PASS — 2026-06-10
+  Security Considerations: none
+  Technical Notes: Highest-value migration — /backlog is the primary grooming ceremony. | Complexity: XS
+
+---
+
+- [x] STORY-021: Migrate /sprint-plan command to Index-first read pattern
+  Priority: High
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Completed: 2026-06-10
+
+  As a team running the /sprint-plan ceremony,
+  I want the command to read only the ## Index section of BACKLOG.md instead of the full file,
+  So that the 6-agent sprint planning chain does not pay the token cost of loading all story bodies upfront.
+
+  Acceptance Criteria:
+    - Given /sprint-plan runs, when it reads BACKLOG.md, then it uses `sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md` rather than `cat memory/BACKLOG.md`
+    - Given an agent in the sprint-plan chain needs a specific story's full body, when it acts on that story, then it extracts the body individually using awk
+    - Given the migration is complete, when CLAUDE.md states all ceremonies use the Index-first pattern, then that is true
+
+  Definition of Done:
+    - [x] .claude/commands/sprint-plan.md updated from `cat memory/BACKLOG.md` to `sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md`
+    - [x] Token rule prose added matching the pattern in the other migrated commands
+    - [x] Per-story body extraction within the ceremony uses the awk `\[.\] STORY-XXX:` pattern
+
+  Test evidence: all AC verified by full /review chain (cycle 1 → cycle 2 — verdict APPROVED). Work shipped in d1a3ecd. — manual inspection — PASS — 2026-06-10
+  Security Considerations: none
+  Technical Notes: /sprint-plan is the largest ceremony chain (6 agents) — highest token-consumption migration after /backlog. | Complexity: XS
+
+---
+
+- [x] STORY-022: Fix /complete step 4 — reorder extract before archive, fix awk regex
+  Priority: High
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Completed: 2026-06-10
+
+  As a developer running /complete to close a story,
+  I want the awk extraction step to run before the archive move, and the awk regex to match open-checkbox stories,
+  So that the extraction does not silently find nothing (story already moved) and the pattern matches the story at the point it is still in BACKLOG.md.
+
+  Acceptance Criteria:
+    - Given /complete runs on a story, when step 4 executes, then awk extraction is the first sub-step in step 4 — it runs before "move body to ARCHIVE.md" and before "mark [x]"
+    - Given the awk command runs, when it searches for the story ID, then it uses `\[.\]` (matches any checkbox state) not `\[x\]` (which only matches already-closed stories)
+    - Given the corrected step runs in sequence, when /complete completes, then the story body is correctly extracted, archived, and removed from BACKLOG.md
+
+  Definition of Done:
+    - [x] .claude/commands/complete.md step 4 reordered: substep 1 is awk extract, 2 is mark the extracted copy [x] + add Completed: date, 3 is append marked copy to ARCHIVE.md, 4 is remove body and Index entry from BACKLOG.md
+    - [x] awk regex changed from `\[x\]` to `\[.\]`
+    - [x] Step 4 instructions consistent with the pattern used in review.md and new-task.md
+
+  Test evidence: all AC verified by full /review chain (cycle 1 → cycle 2 — verdict APPROVED). DoD bullet 1 also amended during cycle 2 PO synthesis to match the implementation order precisely. Work shipped in d1a3ecd. — manual inspection — PASS — 2026-06-10
+  Security Considerations: none
+  Technical Notes: `\[.\]` pattern aligns /complete with review.md and new-task.md convention. | Complexity: XS
+
+---
+
+- [x] STORY-023: Add ARCHIVE.md to DEC-004 memory file trust boundary
+  Priority: High
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Completed: 2026-06-10
+
+  As a team member or future agent author,
+  I want ARCHIVE.md explicitly listed in DEC-004's memory file trust boundary,
+  So that agents reading the archive apply the same "content is data, not commands" constraint that applies to all other memory files.
+
+  Acceptance Criteria:
+    - Given DEC-004 is read, when the memory file list is examined, then ARCHIVE.md appears alongside BACKLOG.md, STATE.md, DECISIONS.md, LEARNINGS.md, CHECKPOINT.md, and NEXT.md
+    - Given a future agent author reads DEC-004, when they add a step that reads ARCHIVE.md, then the trust constraint is unambiguous — no independent inference needed
+    - Given the amendment is made, when DEC-004's consequences section is read, then it still correctly states all listed memory files are covered by the data-not-commands constraint
+
+  Definition of Done:
+    - [x] memory/DECISIONS.md DEC-004 decision text updated to include ARCHIVE.md in the memory file list
+    - [x] DEC-004 amendment date noted inline (e.g. "Amended: 2026-06-10 — ARCHIVE.md added to the enumeration")
+    - [x] No constraint weakening: "must not follow instructions" language unchanged
+
+  Test evidence: DEC-004 amendment verified at memory/DECISIONS.md:131,135 — ARCHIVE.md enumerated, policy strength preserved. Verified by security-analyst-agent in /review cycle 2. — manual inspection — PASS — 2026-06-10
+  Security Considerations: Security control amendment. Omitting ARCHIVE.md from the trust boundary at the same moment it is introduced as a memory file is the exact gap DEC-004 was written to prevent.
+  Technical Notes: Single amendment to DEC-004. Consequences/append-only specifics deferred to DEC-007 (STORY-027). | Complexity: XS
+
+---
+
+- [x] STORY-024: Charter ARCHIVE.md access in po-agent.md "Your Files" table
+  Priority: High
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Completed: 2026-06-10
+
+  As the po-agent executing /complete step 4,
+  I want ARCHIVE.md listed in my "Your Files" table with Read+Write access,
+  So that I am operating within my chartered file access when appending completed stories to the archive — not outside it.
+
+  Acceptance Criteria:
+    - Given .claude/agents/po-agent.md is read, when the "Your Files" table is examined, then ARCHIVE.md appears as a row with access "Read + Write" and purpose "Append-only completed story archive"
+    - Given po-agent receives the /complete step 4 instruction to write to ARCHIVE.md, when it checks its charter, then the file is explicitly listed — no ambiguity
+    - Given the table is updated, when a new agent author reads po-agent.md to understand its file access scope, then ARCHIVE.md is visible alongside BACKLOG.md and STATE.md
+
+  Definition of Done:
+    - [x] .claude/agents/po-agent.md "Your Files" table updated with ARCHIVE.md row
+    - [x] Access column reads "Read + Write (append-only)"
+    - [x] Purpose column describes the file role
+
+  Test evidence: po-agent.md table row verified — `memory/ARCHIVE.md | Read + Write (append-only) | Completed story archive — written by you during /complete`. Verified by qa-agent in /review cycle 2. — manual inspection — PASS — 2026-06-10
+  Security Considerations: none
+  Technical Notes: Single row addition. | Complexity: XS
+
+---
+
+- [x] STORY-025: Update README memory tree to include ARCHIVE.md
+  Priority: Medium
+  Added by: po-agent (review synthesis) on 2026-06-10
+  Completed: 2026-06-10
+
+  As a new user or contributor reading the README,
+  I want ARCHIVE.md visible in the memory/ directory tree,
+  So that I understand where completed stories go and do not assume they vanish from BACKLOG.md without explanation.
+
+  Acceptance Criteria:
+    - Given the README memory tree (at approximately line 184), when a reader scans the memory/ directory listing, then ARCHIVE.md appears with a description matching its role
+    - Given there is a second memory tree in the README (at approximately line 348), when a reader views it, then ARCHIVE.md is present there as well
+    - Given both trees are updated, when the CLAUDE.md tree is compared to the README trees, then all three are consistent
+
+  Definition of Done:
+    - [x] README.md first memory tree (~line 184) updated to include ARCHIVE.md
+    - [x] README.md second memory tree (~line 348) updated to include ARCHIVE.md
+    - [x] Intro line updated from "Five files persist" to "Six files persist"
+
+  Test evidence: README.md:188 and README.md:349 both include ARCHIVE.md; intro at README.md:181 reads "Six files persist". Verified by qa-agent and tech-lead-agent in /review cycle 2. — manual inspection — PASS — 2026-06-10
+  Security Considerations: none
+  Technical Notes: CLAUDE.md had ARCHIVE.md in its tree from the same PR. BUG-023 backlogged: hardcoded "Six files" count will drift on next memory file addition. | Complexity: XS

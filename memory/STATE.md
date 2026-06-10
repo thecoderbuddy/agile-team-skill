@@ -27,13 +27,14 @@ No story work begins until this gate clears.
 ## Done This Sprint
 - [x] BUG-009: Fix relative .gitleaks.toml path in pre-commit.sh — APPROVED 2026-06-09 — full review chain (qa, pr-reviewer, security, tech-lead, po) — no required changes
 - [x] STORY-017: Tech-lead spec checklist — absolute paths + named constants — APPROVED 2026-06-09 — full review chain — 2 fixes in PR review round
+- [x] STORY-020..025: Token-discipline maintenance work (out-of-plan) — APPROVED 2026-06-10 — full /review chain (cycle 1 → 2) — 6 fixes applied in cycle 2; shipped in d1a3ecd
 
 ## Blockers
 [None]
 
 ## Velocity
 Stories planned: 6 (5 core + 1 flex)
-Stories done: 2
+Stories done: 2 planned + 6 out-of-plan maintenance (STORY-020..025) = 8 total
 Sprint capacity: ~1 working day (~2 hours active work)
 
 ## Agent Notes
