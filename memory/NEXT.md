@@ -3,37 +3,32 @@
 # Overwrite this at the end of every session with the single most specific next step.
 # Written precisely enough that zero context is needed to continue.
 
-Sprint: 2
+Sprint: 3
 Updated: 2026-06-09
 
-Type: CEREMONY
-Story: N/A
+Type: VERIFICATION
+Story: N/A (PROCESS-001 — blocking pre-sprint gate)
 
 ## Exact Next Step
-All 6 Sprint 2 stories are DONE. Run /sprint-close to formally close the sprint.
+BLOCKING GATE — run /security-review before any Sprint 3 story moves to IN_PROGRESS.
+This is PROCESS-001, the highest-priority retro action from Sprint 2. No story work starts
+until this gate clears.
 
-/sprint-close will:
-  1. Read velocity from STATE.md (6/6 — full sprint delivered)
-  2. Confirm all committed stories are in "Done This Sprint" — they are
-  3. Ask po-agent to confirm no stories need to be carried forward or dropped
-  4. Set STATE.md Status from ACTIVE to CLOSED
-  5. Write the sprint close summary (goal achieved, velocity, dates)
-  6. Reset STATE.md In Progress and Blockers sections for Sprint 3
-
-After /sprint-close, immediately run /retro:
-  - Each agent contributes one item per column (went well / improve / action items)
-  - pm-agent facilitates
-  - po-agent converts action items to BACKLOG.md entries
-  - Retro summary is appended to memory/LEARNINGS.md
-
-Do not start Sprint 3 planning until both /sprint-close and /retro are complete.
+Steps in order:
+1. Run /security-review now
+2. After it completes, pm-agent writes "Last Security Review: 2026-06-09" to STATE.md
+   and marks PROCESS-001 as CLEARED in STATE.md
+3. First story to start after gate clears: BUG-009
+   - Run /new-task for BUG-009
+   - The fix is a single line in .claude/hooks/pre-commit.sh: replace
+       --config .gitleaks.toml
+     with
+       --config "$(git rev-parse --show-toplevel)/.gitleaks.toml"
+   - This is ELEVATED RISK — it must ship before any other sprint story that involves
+     testing gitleaks behaviour
 
 ## Why
-Sprint 2 is fully delivered (6/6 stories, 100% velocity). Closing the sprint and running
-the retro unblocks Sprint 3 planning and captures process improvements before they are lost.
-
-## Sprint 2 Final Velocity
-Stories planned: 6 (5 core + 1 flex)
-Stories done: 6
-Pace: ON TRACK — full sprint delivered on day 1
-Sprint goal: ACHIEVED
+BUG-009 is a live defect: pre-commit.sh fails silently when git commit is run from any
+subdirectory of the repo, rendering the gitleaks scanner non-functional for those users.
+It is the first story in Sprint 3 execution order. PROCESS-001 gates everything because
+no hook changes should be tested before the security baseline scan is on record.
