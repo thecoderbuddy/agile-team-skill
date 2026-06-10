@@ -1,0 +1,23 @@
+{
+  "name": "agile-team-marketplace",
+  "owner": {
+    "name": "thecoderbuddy"
+  },
+  "metadata": {
+    "description": "AI-powered agile team for Claude Code — agents, ceremonies, and persistent team memory."
+  },
+  "plugins": [
+    {
+      "name": "agile-team",
+      "source": "./",
+      "description": "7 specialist agents + 30 slash commands for collaborative agile ceremonies with persistent team memory. Works with any language or framework.",
+      "version": "1.0.0",
+      "author": {
+        "name": "thecoderbuddy",
+        "url": "https://github.com/thecoderbuddy"
+      },
+      "homepage": "https://github.com/thecoderbuddy/agile-team-skill",
+      "keywords": ["agile", "scrum", "sprint", "agents", "team", "ceremonies"]
+    }
+  ]
+}
