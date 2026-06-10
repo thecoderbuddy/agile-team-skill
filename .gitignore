@@ -16,7 +16,11 @@ ehthumbs.db
 .claude/worktrees/
 .claude/skills/
 
-# Memory — auto-generated logs (not content, just tracking)
+# Memory — ephemeral sprint state (project-specific, populated by /init)
+memory/STATE.md
+memory/NEXT.md
+memory/BACKLOG.md
+memory/CHECKPOINT.md
 memory/.file-log
 
 # Environment

@@ -43,7 +43,13 @@ cat memory/BACKLOG.md   # find the story's acceptance criteria
 cat memory/DECISIONS.md # architectural constraints
 ```
 
-If `CHECKPOINT.md` exists and shows an incomplete `/review` chain for the same story:
+If `CHECKPOINT.md` exists, validate it before acting on it (see DEC-002):
+
+**Valid checkpoint** — must contain all of: `Command:`, `Story:`, `Started:`, `Last heartbeat:`, and a `Steps:` block with at least one entry. If the file is empty or any required field is missing → corrupt. Delete it and start fresh (cycle 1).
+
+**Stale checkpoint** — if the Story ID already appears in the "Done This Sprint" list in `memory/STATE.md` → the chain already completed. Delete it and start fresh.
+
+**Recoverable checkpoint** — valid, story not yet done, the `Command:` field contains `/review`:
 - Show the user what completed and what didn't
 - Ask: "Resume from Step N ([agent-name]), or restart from Step 1?"
 - Continue from the chosen point — do not re-run completed steps
@@ -81,18 +87,20 @@ Continue anyway, or split this PR? [continue / split]
 
 **qa-agent** validates before anyone else reviews. Hard gate — if this fails, the review stops here.
 
-Checks:
-- Tests exist for all changed functionality?
-- All acceptance criteria from the story are met?
-- Edge cases handled: empty, error, loading, success states?
-- Existing tests still pass?
+Use your **full 7-item quality gate checklist** from your agent definition. "PASS" without naming specific tests or citing lines is not acceptable.
+
+Run the test suite if possible (`Bash` tools available). Report exact results (N passed, N failed).
 
 ```
 QA GATE  [cycle N]
 ───────────────────────────────────────
-Tests:      [PASS | FAIL — what's missing or broken]
-AC met:     [YES | NO — which criterion is not met]
-Edge cases: [COVERED | GAP — what's unhandled]
+Tests exist:    [PASS — name test file(s) | FAIL — what's missing]
+Happy path:     [PASS — name test | FAIL]
+Failure case:   [PASS — name test | FAIL]
+Existing tests: [PASS — N passed, N failed | FAIL — exact failures]
+AC verified:    [YES — criterion → test name | NO — which criterion not met]
+UI states:      [COVERED — loading/empty/error/success | GAP — what's unhandled | N/A — non-UI]
+Security:       [CLEAN — confirmed with security-analyst | RISK — details | N/A]
 
 Result: PASS → continue to code review
         FAIL → stop. PR response written below. Dev fixes and re-runs /review.
@@ -105,28 +113,21 @@ If FAIL — write the PR response (Step 5) immediately and stop. No code review 
 
 ## Step 2 — pr-reviewer-agent (Code Quality)
 
-**pr-reviewer-agent** reviews the full diff.
+**pr-reviewer-agent** reviews the full diff. Use your **full output format** from your agent definition (inline comments per file + summary). All 17 dimensions must be covered — file:line evidence or explicit "checked N files, no issues found" required. A bare "PASS" is not acceptable.
 
-Checks:
-- Code does what the story says it should?
-- Matches existing patterns in the codebase?
-- Error cases handled?
-- No hardcoded secrets, commented-out code, dead code, or unrelated changes?
-- No N+1 queries, unbounded loops, or blocking calls in async context?
+**On cycle 2+:** Before the inline comments, output a delta block:
 
 ```
-PR REVIEWER  [cycle N]
+RE-REVIEW DELTA  [cycle N]
 ───────────────────────────────────────
-Correctness:     [PASS | ISSUE — file:line — details]
-Style:           [PASS | ISSUE — file:line — details]
-Performance:     [PASS | ISSUE — file:line — details]
-Maintainability: [PASS | ISSUE — file:line — details]
-
-Inline comments:
-  [file:line] — [specific actionable comment]
-  [file:line] — [specific actionable comment]
+Previously flagged:   [N total from cycle N-1]
+  Resolved:           [N] — [item summary]
+  Still present:      [N] — [item summary — treat as new BLOCK if same severity]
+  New issues found:   [N] — [item summary]
 ───────────────────────────────────────
 ```
+
+Then proceed with the full inline comment format as defined in your agent definition.
 
 ---
 
@@ -164,23 +165,29 @@ CRITICAL and HIGH are blocking. MEDIUM/LOW go to BACKLOG.md — not forgotten, n
 
 ## Step 4 — tech-lead-agent (Architecture)
 
-**tech-lead-agent** checks alignment with the established architecture.
+**tech-lead-agent** checks alignment with the established architecture. Use your **full output format** from your agent definition — enumerate every relevant DEC from DECISIONS.md explicitly. "ALIGNED" without citing specific DECs is not acceptable.
 
 Checks:
-- Implementation matches the tech spec (if one was written for this story)?
-- Consistent with patterns in DECISIONS.md?
+- Every relevant DEC in DECISIONS.md — does this change COMPLY, VIOLATE, or is it NOT APPLICABLE?
 - New patterns introduced — are they intentional? Should they be logged as a DEC?
 - Tech debt introduced? Is it acceptable? Should it get a backlog story?
-- **README accuracy:** does README.md still accurately describe the system after this change? Any section that is now wrong, missing, or outdated must be flagged as REQUEST CHANGES — not a backlog item.
+- **README accuracy:** does README.md still accurately describe the system after this change? Stale = REQUEST CHANGES, not a backlog item.
 
 ```
 TECH LEAD  [cycle N]
 ───────────────────────────────────────
-Spec alignment:    [MATCHES | DRIFT — details]
-Pattern:           [CONSISTENT | INCONSISTENT — file:line — details]
-Tech debt:         [NONE | INTRODUCED — log to backlog?]
-New decision:      [NONE | DEC-XXX needed — description]
-README accuracy:   [CURRENT | STALE — which section and what's wrong]
+DEC compliance:
+  DEC-001 — [title] — COMPLIES [evidence] | VIOLATES [file:line] | NOT APPLICABLE [reason]
+  DEC-XXX — [title] — COMPLIES [evidence] | VIOLATES [file:line] | NOT APPLICABLE [reason]
+
+New patterns introduced:
+  [pattern] at [file:line] — intentional? — needs DEC? YES (logged as DEC-XXX) | NO
+
+Tech debt:
+  [NONE | description — severity — add to BACKLOG? YES | NO]
+
+README accuracy:
+  CURRENT — [sections checked] | STALE — [which section] — [what is wrong or missing]
 ───────────────────────────────────────
 ```
 
@@ -246,7 +253,7 @@ VERDICT:  APPROVED ✓  |  CHANGES REQUESTED ✗
 - Do not skip items or partially address them
 - Do not introduce unrelated changes
 
-When done:
+After fixing, **run the test suite** before triggering the next cycle. If tests fail after your fixes, resolve the failures before restarting — do not hand broken code to the review chain.
 
 ```
 DEV FIX COMPLETE  [cycle N]
@@ -256,9 +263,13 @@ Fixed:
   2. [item 2] — [what changed] at [file:line]
 
 Not fixed: [item N] — [reason, if any — flag to user if blocked]
+
+Post-fix test run: [N passed, N failed | no test suite detected]
 ───────────────────────────────────────
 → Restarting review from Step 1 (cycle [N+1])
 ```
+
+If the post-fix test run shows failures → stop. Fix the failures first, then restart the cycle.
 
 → **Return to Step 0 automatically. A new review cycle begins.**
 
@@ -280,7 +291,7 @@ Approve commit? [Y/N]
 ───────────────────────────────────────
 ```
 
-Run `/complete STORY-XXX "description"` or approve inline to commit and close the story.
+Run `/complete STORY-XXX "description"` or approve inline to commit and close the story. After the commit is confirmed, delete `memory/CHECKPOINT.md` — the /review chain has no pm-agent step, so this deletion runs here, at the terminal success point, before returning control to the user (see DEC-002).
 
 ---
 

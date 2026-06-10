@@ -42,7 +42,13 @@ cat memory/NEXT.md
 cat memory/BACKLOG.md
 ```
 
-If `CHECKPOINT.md` exists and shows an incomplete `/new-task` chain:
+If `CHECKPOINT.md` exists, validate it before acting on it (see DEC-002):
+
+**Valid checkpoint** — must contain all of: `Command:`, `Story:`, `Started:`, `Last heartbeat:`, and a `Steps:` block with at least one entry. If the file is empty or any required field is missing → corrupt. Delete it and start fresh.
+
+**Stale checkpoint** — if the Story ID in the checkpoint already appears in the "Done This Sprint" list in `memory/STATE.md` → the chain already completed. Delete it and start fresh.
+
+**Recoverable checkpoint** — valid, story not yet done, the `Command:` field contains `/new-task`:
 - Show the user which steps completed and which didn't
 - Ask: "Resume from Step N ([agent-name]), or start a new task?"
 - If resuming: continue from the next uncompleted step, do not re-run completed steps
@@ -286,6 +292,7 @@ Approve commit? [Y/N]
 ```
 
 If approved → commit. Then:
+- pm-agent deletes `memory/CHECKPOINT.md` — the chain is complete (see DEC-002).
 - Sprint has more stories? → Automatically begin the next story from Step 1.
 - Sprint complete? → "All stories done. Run /sprint-close."
 

@@ -2,37 +2,43 @@
 # Owned by: pm-agent (Scrum Master)
 # Updated after every: standup, sprint-plan, sprint-close
 
-Sprint: 1
-Goal: Make agile-team-skill production-ready — reliable session continuity, clear positioning, and multi-model support.
+Sprint: 2
+Goal: Harden agile-team-skill's security posture — close the Write-tool leak gap,
+      add pre-commit secret scanning, track security review cadence, and lock in
+      two quick retro process fixes.
 Status: ACTIVE
-Started: 2026-05-16
-Ends: 2026-05-23
+Started: 2026-06-09
+Ends: 2026-06-16
 
 ## In Progress
-[Nothing — run /new-task to begin STORY-004]
+[None]
 
 ## Sprint Stories (execution order)
-- [x] STORY-002: Positioning — add "what makes this different" section — XS — High
-- [x] STORY-004: Multi-model — configurable model per agent — XS — Medium
-- [x] STORY-003: Max diff threshold — escalate to human — S — Medium
-- [ ] STORY-001: Session continuity — host sleep recovery — M — High
+- [x] STORY-015: Story readiness gate — implementation notes block — XS — High
+- [x] STORY-010: Security agent → opus default model — XS — Medium
+- [ ] STORY-016: Test evidence record on story close — XS — Medium [FLEX — drops if sprint runs long]
+- [ ] STORY-011: pre-tool-use.sh Write/Edit content secret scan — S — High
+- [ ] STORY-006: Pre-commit secret scanning with gitleaks — S — High
+- [ ] STORY-007: Security review scheduling — overdue flag in standup — S — High
 
 ## Done This Sprint
-- [x] STORY-002: Positioning — add "what makes this different" section (2026-05-16)
-- [x] STORY-004: Multi-model — configurable model per agent (2026-05-16)
-- [x] STORY-003: Max diff threshold — escalate to human (2026-05-19)
+- [x] STORY-015: Story readiness gate — implementation notes block (2026-06-09)
+- [x] STORY-010: Security agent → opus default model (2026-06-09)
 
 ## Blockers
 [None]
 
 ## Velocity
-Stories planned: 4
-Stories done: 3
+Stories planned: 6 (5 core + 1 flex)
+Stories done: 2
 
 ## Agent Notes
-- Tech: DEC-001 must be written before STORY-001 dev starts; --no-color flag on git diff stat (STORY-003)
-- Security: Shell injection guard on diff stat parsing in STORY-003
-- QA: All AC testable; medium test effort on STORY-001 only
+- Tech: DEC-003 (gitleaks selection) must be written before STORY-006 starts | STORY-011 uses existing hook infrastructure at line 61-87 of pre-tool-use.sh | Execution order: 015 → 010 → 016 → 011 → 006 → 007
+- Security: STORY-011 block message must never log matched secret value — test this explicitly | STORY-006 gitleaks version must be pinned, not "latest" | gitleaks config file needs security review before commit
+- QA: STORY-011 needs adversarial test of block output format | STORY-006 "tool not installed" path needs explicit test | STORY-016 is flex story
+
+## Last Security Review
+[Never run]
 
 ---
 

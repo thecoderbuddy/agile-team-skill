@@ -144,8 +144,47 @@ if [ "$SOURCE_MODE" = "local" ]; then
   fi
 
   if [ "$SKIP_MEMORY" != "true" ]; then
-    cp -r "$SOURCE_DIR/memory" "$TARGET_DIR/"
-    print_ok "memory/ installed (STATE, BACKLOG, NEXT, DECISIONS, LEARNINGS)"
+    mkdir -p "$TARGET_DIR/memory"
+
+    # Structural templates — copy from repo
+    for mf in DECISIONS LEARNINGS; do
+      [ -f "$SOURCE_DIR/memory/$mf.md" ] && cp "$SOURCE_DIR/memory/$mf.md" "$TARGET_DIR/memory/$mf.md"
+    done
+
+    # Ephemeral files — create blank templates; /init populates them
+    cat > "$TARGET_DIR/memory/STATE.md" << 'EOF'
+# Sprint State
+# Owned by: pm-agent
+# Updated at every ceremony. Source of truth for current sprint.
+
+Sprint: —
+Goal: —
+Status: NOT STARTED
+
+## Stories
+
+(none yet — run /init to get started)
+
+## Blockers
+
+(none)
+EOF
+
+    cat > "$TARGET_DIR/memory/NEXT.md" << 'EOF'
+# Next Action
+
+Run `/init` to onboard the team and populate the backlog.
+EOF
+
+    cat > "$TARGET_DIR/memory/BACKLOG.md" << 'EOF'
+# Product Backlog
+# Owned by: po-agent
+# Prioritized list of stories. Updated at every /backlog and /review.
+
+(empty — run /init to populate)
+EOF
+
+    print_ok "memory/ installed (DECISIONS, LEARNINGS + blank STATE, NEXT, BACKLOG)"
   fi
 
   if [ "$SKIP_CLAUDE_MD" != "true" ]; then
@@ -175,8 +214,10 @@ else
     "resume" "health-check" "logs" "po" "incident" "focus-group"
   )
 
-  MEMORY_FILES=(
-    "STATE" "NEXT" "BACKLOG" "DECISIONS" "LEARNINGS"
+  # DECISIONS and LEARNINGS are structural templates shipped with the repo.
+  # STATE, NEXT, BACKLOG are ephemeral sprint state — created fresh for each project.
+  MEMORY_TEMPLATE_FILES=(
+    "DECISIONS" "LEARNINGS"
   )
 
   HOOKS=("post-tool-use" "stop")
@@ -207,9 +248,44 @@ else
 
   if [ "$SKIP_MEMORY" != "true" ]; then
     mkdir -p "$TARGET_DIR/memory"
-    for mf in "${MEMORY_FILES[@]}"; do
+
+    for mf in "${MEMORY_TEMPLATE_FILES[@]}"; do
       curl -fsSL "$REPO_URL/memory/$mf.md" -o "$TARGET_DIR/memory/$mf.md"
     done
+
+    # Ephemeral files — create blank templates; /init populates them
+    cat > "$TARGET_DIR/memory/STATE.md" << 'EOF'
+# Sprint State
+# Owned by: pm-agent
+# Updated at every ceremony. Source of truth for current sprint.
+
+Sprint: —
+Goal: —
+Status: NOT STARTED
+
+## Stories
+
+(none yet — run /init to get started)
+
+## Blockers
+
+(none)
+EOF
+
+    cat > "$TARGET_DIR/memory/NEXT.md" << 'EOF'
+# Next Action
+
+Run `/init` to onboard the team and populate the backlog.
+EOF
+
+    cat > "$TARGET_DIR/memory/BACKLOG.md" << 'EOF'
+# Product Backlog
+# Owned by: po-agent
+# Prioritized list of stories. Updated at every /backlog and /review.
+
+(empty — run /init to populate)
+EOF
+
     print_ok "memory/ installed"
   fi
 

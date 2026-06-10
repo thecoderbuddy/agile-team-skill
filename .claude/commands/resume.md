@@ -11,7 +11,13 @@ Restores full context and recovers any incomplete agent chain automatically.
 cat memory/CHECKPOINT.md 2>/dev/null
 ```
 
-If `CHECKPOINT.md` exists:
+If `CHECKPOINT.md` exists, validate it before acting on it (see DEC-002):
+
+**Valid checkpoint** — must contain all of: `Command:`, `Story:`, `Started:`, `Last heartbeat:`, and a `Steps:` block with at least one entry. If the file is empty or any required field is missing → corrupt. Delete it and proceed to Step 2 (normal resume).
+
+**Stale checkpoint** — if the Story ID already appears in the "Done This Sprint" list in `memory/STATE.md` → the chain already completed. Delete it and proceed to Step 2.
+
+**Recoverable checkpoint** — valid, story not yet done:
 
 ```
 INCOMPLETE CHAIN DETECTED
