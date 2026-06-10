@@ -124,6 +124,30 @@ cat memory/STATE.md    # sprint status
 
 ---
 
+## Security Hook Configuration
+
+### Secret scan override
+The `pre-tool-use.sh` hook scans every Write and Edit tool call for known secret
+patterns (OpenAI keys, GitHub tokens, AWS keys, Bearer tokens, PEM private keys).
+
+If you hit a false positive on a legitimate code constant (e.g. a test fixture
+with a placeholder key pattern), you can bypass the scan for a single session:
+
+```bash
+export SKIP_SECRET_SCAN=1
+```
+
+**Rules:**
+- Document the reason in your commit message when bypassing
+- Unset after use: `unset SKIP_SECRET_SCAN`
+- Do not set this permanently in your shell profile
+- Do not commit files with real secrets even with the override active
+
+The override bypasses the scan only — it does not disable the `.env` write block
+or the DEC-001 payload check. Those run regardless.
+
+---
+
 ## Iron Rules
 
 1. **Tests first.** `qa-agent` has a hard veto. No story is done without passing tests.

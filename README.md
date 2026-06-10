@@ -333,7 +333,7 @@ agile-team-skill/
 │   │   ├── standup.md                /standup
 │   │   ├── review.md                 /review
 │   │   └── ...
-│   └── hooks/                        ← session tracking
+│   └── hooks/                        ← safety gates + secret scanning
 └── memory/                           ← persistent team state
     ├── NEXT.md
     ├── STATE.md

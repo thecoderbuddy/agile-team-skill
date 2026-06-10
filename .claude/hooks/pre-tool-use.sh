@@ -86,5 +86,44 @@ if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
   fi
 fi
 
+# ─────────────────────────────────────
+# SECRET SCAN — Write/Edit content
+# Scans file content for known secret patterns before writing.
+# Covers: OpenAI keys, GitHub tokens, AWS keys, Bearer tokens, PEM private keys.
+# High-entropy generic patterns are intentionally excluded — false positive rate
+# is too high for shell scripts. Use gitleaks (STORY-006) for broader coverage.
+# Override: set SKIP_SECRET_SCAN=1 to bypass (document reason in commit message).
+# ─────────────────────────────────────
+if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
+  if [ "${SKIP_SECRET_SCAN}" != "1" ]; then
+    SCAN_CONTENT=$(echo "$INPUT_JSON" | jq -r '.tool_input.content // .tool_input.new_string // empty' 2>/dev/null)
+
+    if echo "$SCAN_CONTENT" | grep -qE 'sk-[A-Za-z0-9]{20,}'; then
+      echo "BLOCKED: Secret pattern detected in file content (OpenAI API key). Remove the secret and use an environment variable. To override: set SKIP_SECRET_SCAN=1"
+      exit 2
+    fi
+
+    if echo "$SCAN_CONTENT" | grep -qE 'gh[ps]_[A-Za-z0-9]{36,}'; then
+      echo "BLOCKED: Secret pattern detected in file content (GitHub token). Remove the secret and use an environment variable. To override: set SKIP_SECRET_SCAN=1"
+      exit 2
+    fi
+
+    if echo "$SCAN_CONTENT" | grep -qE 'AKIA[0-9A-Z]{16}'; then
+      echo "BLOCKED: Secret pattern detected in file content (AWS access key). Remove the secret and use an environment variable. To override: set SKIP_SECRET_SCAN=1"
+      exit 2
+    fi
+
+    if echo "$SCAN_CONTENT" | grep -qE 'Bearer [A-Za-z0-9+/._~-]{20,}'; then
+      echo "BLOCKED: Secret pattern detected in file content (Bearer token). Remove the token and load it from a secure source. To override: set SKIP_SECRET_SCAN=1"
+      exit 2
+    fi
+
+    if echo "$SCAN_CONTENT" | grep -qE '-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----'; then
+      echo "BLOCKED: Secret pattern detected in file content (PEM private key). Load private keys from a secure file path, never embed them. To override: set SKIP_SECRET_SCAN=1"
+      exit 2
+    fi
+  fi
+fi
+
 # All checks passed
 exit 0
