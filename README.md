@@ -249,7 +249,26 @@ Edit each agent's `.md` file individually — there is no single config file.
 
   The installer will warn if gitleaks is missing and skip scanning until it's available. Everything else works without it.
 
-### 1. Install inside your project
+### 1. Install
+
+Two paths — pick one:
+
+#### Option A: Claude Code plugin (recommended)
+
+Works in any Claude Code surface (CLI, desktop app, claude.ai/code in browser, or VS Code / JetBrains extension). Run these **inside Claude Code**:
+
+```
+/plugin marketplace add thecoderbuddy/agile-team-skill
+/plugin install agile-team@agile-team-marketplace
+```
+
+That's it. The 7 agents, 30 commands, and safety hooks are available immediately. No files are written into your project — Claude Code holds the plugin centrally, and updates come through the marketplace.
+
+Skip to **step 3** below to onboard a project.
+
+#### Option B: Local install via script
+
+Writes `.claude/` and the hooks directly into your project. Pick this if you want a tracked-in-repo install you can commit and customize per-project.
 
 ```bash
 cd your-project
