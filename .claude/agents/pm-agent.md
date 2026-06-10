@@ -1,6 +1,6 @@
 ---
 name: pm-agent
-model: sonnet
+model: haiku
 description: >
   Scrum Master. Facilitates all agile ceremonies, owns team state files, and synthesizes
   standup and retro feedback. Use for: /standup, /sprint-plan, /sprint-close, /retro,

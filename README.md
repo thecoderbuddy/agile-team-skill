@@ -200,30 +200,36 @@ Each agent has a `model:` field in its frontmatter. Edit the agent file directly
 # .claude/agents/security-analyst-agent.md
 ---
 name: security-analyst-agent
-model: opus    # change this to: sonnet | opus | haiku | inherit
+model: sonnet    # change this to: sonnet | opus | haiku | inherit
 ---
 ```
 
 Valid values: `sonnet`, `opus`, `haiku`, `inherit` (inherits the session default)
 
-Most agents default to `sonnet`. The security analyst defaults to `opus` — it runs on every review and catches subtle vulnerabilities that lighter models miss. You can tune each agent independently:
+Most agents default to `sonnet`. `pm-agent` runs on `haiku` because its work is templated state writes — no deep reasoning needed. You can tune each agent independently:
 
-**Quality-first** (default install):
-
-| Agent file | Model | Why |
-|---|---|---|
-| `security-analyst-agent.md` | `opus` | **default** — catches what lighter models miss |
-| `tech-lead-agent.md` | `opus` | architecture decisions need depth |
-| everything else | `sonnet` | solid default |
-
-**Cost-optimised** — Haiku for ceremony agents, Sonnet where quality matters:
+**Default install** (balanced — calibrated for cost without losing review quality):
 
 | Agent file | Model | Why |
 |---|---|---|
-| `pm-agent.md` | `haiku` | standup synthesis, state updates |
+| `pm-agent.md` | `haiku` | templated STATE.md / NEXT.md writes — frequent and lightweight |
+| everything else | `sonnet` | code review, security checks, synthesis — sonnet is the right tier |
+
+**Quality-first override** — bump the deep-reasoning agents to Opus for high-stakes projects:
+
+| Agent file | Model | Why |
+|---|---|---|
+| `security-analyst-agent.md` | `opus` | catches subtle vulnerabilities sonnet may miss |
+| `tech-lead-agent.md` | `opus` | architecture decisions where depth pays off |
+
+**Cost-optimised** — Haiku across more roles, only review agents stay on Sonnet:
+
+| Agent file | Model | Why |
+|---|---|---|
+| `pm-agent.md` | `haiku` | already default |
 | `dev-agent.md` | `haiku` | capacity estimates, status reports |
 | `po-agent.md` | `haiku` | backlog updates, ceremony output |
-| `security-analyst-agent.md` | `sonnet` | **⚠ tradeoff:** sonnet misses subtle issues — only use for low-risk projects |
+| `security-analyst-agent.md` | `sonnet` | already default — keep here, don't push to haiku |
 | everything else | `sonnet` | review agents need the quality |
 
 Edit each agent's `.md` file individually — there is no single config file.
