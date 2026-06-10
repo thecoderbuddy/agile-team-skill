@@ -205,13 +205,13 @@ model: opus    # change this to: sonnet | opus | haiku | inherit
 
 Valid values: `sonnet`, `opus`, `haiku`, `inherit` (inherits the session default)
 
-By default all agents run on `sonnet`. You can tune each one independently:
+Most agents default to `sonnet`. The security analyst defaults to `opus` — it runs on every review and catches subtle vulnerabilities that lighter models miss. You can tune each agent independently:
 
-**Quality-first** — Opus for the agents that make the highest-stakes calls:
+**Quality-first** (default install):
 
 | Agent file | Model | Why |
 |---|---|---|
-| `security-analyst-agent.md` | `opus` | catches what lighter models miss |
+| `security-analyst-agent.md` | `opus` | **default** — catches what lighter models miss |
 | `tech-lead-agent.md` | `opus` | architecture decisions need depth |
 | everything else | `sonnet` | solid default |
 
@@ -222,7 +222,8 @@ By default all agents run on `sonnet`. You can tune each one independently:
 | `pm-agent.md` | `haiku` | standup synthesis, state updates |
 | `dev-agent.md` | `haiku` | capacity estimates, status reports |
 | `po-agent.md` | `haiku` | backlog updates, ceremony output |
-| everything else | `sonnet` | review and security need the quality |
+| `security-analyst-agent.md` | `sonnet` | **⚠ tradeoff:** sonnet misses subtle issues — only use for low-risk projects |
+| everything else | `sonnet` | review agents need the quality |
 
 Edit each agent's `.md` file individually — there is no single config file.
 
