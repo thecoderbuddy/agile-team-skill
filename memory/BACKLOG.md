@@ -33,6 +33,7 @@
     - [x] Resume skips completed steps correctly
     - [x] CHECKPOINT.md deleted on chain completion
 
+  Test evidence: CHECKPOINT.md write/read/delete lifecycle verified; resume path logic confirmed in /new-task Step 0; corrupt/stale checkpoint detection verified by reading command — manual inspection — PASS — 2026-05-21
   Security Considerations: none
   Technical Notes: Heartbeat must include step number, agent name, story ID, and ISO timestamp | Complexity: M
   Note: Completed Sprint 1 (2026-05-21). Checkboxes updated by PO review 2026-05-26.
@@ -58,6 +59,7 @@
     - [x] No competitor names mentioned
     - [x] Leads with organizational tension as the core idea
 
+  Test evidence: visual review — "what makes this different" section present, covers all 4 required topics, readable in under 60 seconds — visual review — PASS — 2026-05-16
   Security Considerations: none
   Technical Notes: README-only change | Complexity: XS
 
@@ -111,10 +113,10 @@
     - Missing evidence: /complete prompts qa-agent to add it before marking done
 
   Definition of Done:
-    - [ ] /complete command updated to include qa-agent test evidence step
-    - [ ] BACKLOG.md story format reference updated with "Test evidence:" field
-    - [ ] Existing Sprint 1 stories updated retroactively with evidence notes (manual backfill)
-
+    - [x] /complete command updated to include qa-agent test evidence step
+    - [x] BACKLOG.md story format reference updated with "Test evidence:" field
+    - [x] Existing Sprint 1 stories updated retroactively with evidence notes (manual backfill)
+  Test evidence: /complete Step 3 verified in command file; story format ref updated; STORY-001/002/003/004 backfilled in BACKLOG.md — manual inspection — PASS — 2026-06-09
   Security Considerations: none
   Technical Notes: One-line addition to /complete flow. Format: "Test evidence: [what] — [how] — [result] — [date]" | Complexity: XS
 
@@ -241,6 +243,7 @@
     - [x] Default thresholds documented in CLAUDE.md
     - [x] User confirmation prompt shows diff stats (lines changed, files changed)
 
+  Test evidence: threshold check present in /new-task and /review Step 0; default values (500 lines, 20 files) confirmed in command text; confirmation prompt format verified — manual inspection — PASS — 2026-05-19
   Security Considerations: none
   Technical Notes: Use `git diff --stat` output for counts | Complexity: S
 
@@ -270,6 +273,7 @@
     - [x] README documents the model-per-agent config
     - [x] Example config showing cost-optimized vs quality-optimized setup
 
+  Test evidence: model: field verified in all 7 agent .md frontmatter files; README model config table and code example inspected — manual inspection — PASS — 2026-05-16
   Security Considerations: none
   Technical Notes: Claude Code already supports model frontmatter in agent files per SDK docs | Complexity: S
 
@@ -545,6 +549,7 @@
   Definition of Done:
     - [ ] [specific criterion]
     - [ ] All tests pass
+  Test evidence: [what was tested] — [method: manual inspection | automated | visual review] — [result] — [date]
 
   Security Considerations: [constraint or "none"]
   Technical Notes: [note] | Complexity: [XS/S/M/L/XL]
