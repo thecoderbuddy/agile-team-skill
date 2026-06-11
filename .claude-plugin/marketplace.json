@@ -4,20 +4,20 @@
     "name": "thecoderbuddy"
   },
   "metadata": {
-    "description": "AI-powered agile team for Claude Code — agents, ceremonies, and persistent team memory."
+    "description": "An AI-powered agile team for any software project. Ship with the discipline of a senior team — even when you're building alone."
   },
   "plugins": [
     {
       "name": "agile-team",
       "source": "./",
       "description": "7 specialist agents + 30 slash commands for collaborative agile ceremonies with persistent team memory. Works with any language or framework.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "thecoderbuddy",
         "url": "https://github.com/thecoderbuddy"
       },
       "homepage": "https://github.com/thecoderbuddy/agile-team-skill",
-      "keywords": ["agile", "scrum", "sprint", "agents", "team", "ceremonies"]
+      "keywords": ["agile", "scrum", "sprint", "agents", "team", "ceremonies", "standup", "retro", "code-review", "security", "claude-code", "vscode", "jetbrains", "po-agent", "qa-agent", "tech-lead", "scrum-master"]
     }
   ]
 }

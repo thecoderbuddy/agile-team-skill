@@ -238,16 +238,27 @@ Edit each agent's `.md` file individually — there is no single config file.
 
 ## Setup
 
-### Prerequisites
+### Prerequisites — install Claude Code
 
-- [Claude Code](https://claude.ai/code) CLI or desktop app
-- [gitleaks](https://github.com/gitleaks/gitleaks) (optional but recommended) — activates pre-commit secret scanning
+Works on any [Claude Code](https://claude.ai/code) surface. Pick whichever fits your workflow:
 
-  ```bash
-  brew install gitleaks   # macOS
-  ```
+| Surface | How to install |
+|---|---|
+| **Terminal CLI** | [`claude.ai/code`](https://claude.ai/code) → "Install CLI" |
+| **Desktop app** (Mac / Windows) | [`claude.ai/code`](https://claude.ai/code) → "Download" |
+| **VS Code** | Extensions panel → search **"Claude Code"** (by Anthropic) → Install |
+| **JetBrains** (IntelliJ, PyCharm, GoLand, …) | Plugins → search **"Claude Code"** → Install |
+| **Web** | open [`claude.ai/code`](https://claude.ai/code) in any browser |
 
-  The installer will warn if gitleaks is missing and skip scanning until it's available. Everything else works without it.
+The `/plugin` commands below work identically on every surface — they're a Claude Code feature, not surface-specific.
+
+**Optional:** [gitleaks](https://github.com/gitleaks/gitleaks) for pre-commit secret scanning.
+
+```bash
+brew install gitleaks   # macOS
+```
+
+The installer warns if gitleaks is missing and skips scanning until it's available. Everything else works without it.
 
 ### 1. Install
 
@@ -285,12 +296,15 @@ bash /path/to/agile-team-skill/install.sh
 
 The installer asks before overwriting anything — safe to run on existing projects.
 
-### 2. Open Claude Code
+### 2. Open your project in Claude Code
 
-```bash
-cd your-project
-claude
-```
+| Surface | How |
+|---|---|
+| **CLI** | `cd your-project && claude` |
+| **Desktop app** | Launch Claude Code → File → Open Folder → select your project |
+| **VS Code** | Open the project in VS Code → click the Claude Code icon in the sidebar (or `Cmd/Ctrl+Shift+P` → **"Claude Code: Open"**) |
+| **JetBrains** | Open the project → Tool Windows → **Claude Code** |
+| **Web** | Open [`claude.ai/code`](https://claude.ai/code) → New session → connect your GitHub repo |
 
 ### 3. Onboard the team
 

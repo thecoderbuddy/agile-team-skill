@@ -1,6 +1,6 @@
 {
   "name": "agile-team",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "7 specialist agents (PO, Scrum Master, Dev, QA, PR Reviewer, Security, Tech Lead) + 30 slash commands for collaborative agile ceremonies with persistent team memory. Works with any language or framework.",
   "author": {
     "name": "thecoderbuddy",
@@ -8,7 +8,7 @@
   },
   "homepage": "https://github.com/thecoderbuddy/agile-team-skill",
   "repository": "https://github.com/thecoderbuddy/agile-team-skill",
-  "keywords": ["agile", "scrum", "sprint", "agents", "team", "ceremonies", "standup", "retro", "code-review", "security"],
+  "keywords": ["agile", "scrum", "sprint", "agents", "team", "ceremonies", "standup", "retro", "code-review", "security", "claude-code", "vscode", "jetbrains", "po-agent", "qa-agent", "tech-lead", "scrum-master", "pre-commit", "gitleaks"],
   "agents": "./.claude/agents/",
   "commands": "./.claude/commands/",
   "hooks": "./.claude/hooks/hooks.json"
