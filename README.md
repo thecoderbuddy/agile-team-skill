@@ -260,6 +260,32 @@ brew install gitleaks   # macOS
 
 The installer warns if gitleaks is missing and skips scanning until it's available. Everything else works without it.
 
+### Quick Start (brand-new project — copy/paste)
+
+In your terminal:
+
+```bash
+mkdir my-project && cd my-project
+git init
+claude              # or open this folder in VS Code / Claude Code Desktop / claude.ai/code
+```
+
+Then inside Claude Code, type these slash commands one by one:
+
+```
+/plugin marketplace add thecoderbuddy/agile-team-skill
+/plugin install agile-team@agile-team-marketplace
+/init "I'm building a REST API for expense tracking"
+/sprint-plan
+/standup
+```
+
+That's the full zero-to-running flow. After `/init`, you'll see `memory/` and `CLAUDE.md` created in your project. After `/sprint-plan`, the team has a sprint goal and you're ready to ship.
+
+The detailed sections below walk through each step — including the VS Code / JetBrains / web variants and the alternative `install.sh` path.
+
+---
+
 ### 1. Install
 
 Two paths — pick one:
