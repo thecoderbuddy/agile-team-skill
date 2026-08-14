@@ -1,3 +1,7 @@
+---
+description: Sprint retrospective chain — all agents reflect, pm facilitates and logs learnings, po converts action items to backlog stories
+---
+
 # /retro — Sprint Retrospective (Collaborative Chain)
 
 All agents reflect. PM facilitates. PO converts action items to backlog. Learnings logged.
@@ -8,7 +12,9 @@ All agents reflect. PM facilitates. PO converts action items to backlog. Learnin
 
 ```bash
 cat memory/STATE.md
-cat memory/LEARNINGS.md
+# LEARNINGS.md is append-only and unbounded — read last sprint's learnings only, never the full file.
+# Take the current sprint number from STATE.md, then:
+awk '/^## Sprint \[current\]/,0' memory/LEARNINGS.md   # substitute the actual sprint number
 git log --oneline -20
 ```
 
@@ -59,7 +65,7 @@ tech-lead-agent
 
 **pm-agent** collects all reflections and:
 - Groups related items (don't repeat the same thing from multiple agents)
-- Votes on action items — which ones are highest impact?
+- Selects the top 2-3 action items by expected impact — the rest are noted but not carried forward
 - Calculates velocity: stories planned vs completed vs carried over
 - Identifies patterns across retros (check LEARNINGS.md for recurring themes)
 

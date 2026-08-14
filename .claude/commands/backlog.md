@@ -1,3 +1,7 @@
+---
+description: Backlog grooming chain — po reprioritizes, tech-lead corrects estimates, qa validates AC, security flags risk; writes prioritized BACKLOG.md
+---
+
 # /backlog — Backlog Grooming (Collaborative Chain)
 
 PO leads. Tech Lead estimates. QA validates AC. Security flags risk. Backlog exits with real priorities.
@@ -25,7 +29,8 @@ Agents in this chain do not re-read the full BACKLOG.md.
 
 ## Step 1 — po-agent leads prioritization
 
-**po-agent** reads BACKLOG.md and for each item asks:
+**po-agent** works from the `## Index` content passed in by the orchestrator — it does not
+read BACKLOG.md itself. For each item in the Index, po-agent asks:
 - "What user problem does this solve?"
 - "Is this more or less important than the item above it?"
 - "Is this still relevant, or has the world changed?"
@@ -53,7 +58,9 @@ Icebox (no near-term value):
 
 ## Step 2 — tech-lead-agent reviews for effort accuracy
 
-**tech-lead-agent** checks each story for:
+The orchestrator extracts each story body needing an estimate check (the awk pattern from
+Step 0) and passes the bodies in tech-lead-agent's prompt — tech-lead does not read
+BACKLOG.md. **tech-lead-agent** checks each story for:
 - Are complexity estimates still accurate? (Things change as you build)
 - Are there hidden dependencies between stories?
 - Any stories that can be split to deliver earlier value?
@@ -65,7 +72,9 @@ tech-lead flags corrections and po-agent adjusts.
 
 ## Step 3 — qa-agent validates acceptance criteria
 
-**qa-agent** checks each story:
+The orchestrator extracts each story body needing AC validation (same awk pattern) and
+passes the bodies in qa-agent's prompt — qa does not read BACKLOG.md. **qa-agent** checks
+each story:
 - Does it have testable acceptance criteria?
 - Stories without criteria get flagged — po-agent must add before they can enter a sprint
 - Stories with criteria that are too vague get sent back for refinement

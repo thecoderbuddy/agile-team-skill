@@ -1,3 +1,8 @@
+---
+description: Tech-lead + security architecture review before a complex build, with verdict and backlogged recommendations
+argument-hint: [feature or area]
+---
+
 # /arch-review — Architecture Review Before Complex Build
 
 Usage: `/arch-review [feature or area]`
@@ -8,11 +13,13 @@ tech-lead-agent + security-analyst-agent review before complex builds.
 
 ## Steps
 
-1. Read architectural context:
+1. Read architectural context (bounded — never cat all of LEARNINGS.md):
    ```bash
    cat memory/DECISIONS.md
-   cat memory/LEARNINGS.md
+   grep -i -A 3 -E 'architect|design|stack|dependency|performance' memory/LEARNINGS.md | head -60
    ```
+   If the grep yields nothing useful, read only the most recent sprint's section of
+   LEARNINGS.md instead.
 
 2. Read relevant code in the area being reviewed.
 
@@ -59,3 +66,10 @@ VERDICT: [APPROVED / NEEDS CHANGES / BLOCKED]
 ```
 
 7. If new DEC-XXX decision needed, append to memory/DECISIONS.md.
+
+8. **Persist the outcome (Iron Rule 4 — backlog everything):**
+   - Every RECOMMENDATIONS item, and every item behind a NEEDS CHANGES or BLOCKED
+     verdict, is written to memory/BACKLOG.md as a story (next STORY number from the
+     `## Index`, standard story format with priority and complexity).
+   - Add a matching line to the `## Index` for each story added.
+   - The review output on screen is not the artifact — the BACKLOG.md entries are.

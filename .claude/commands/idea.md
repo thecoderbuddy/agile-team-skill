@@ -1,10 +1,17 @@
-# /idea — Turn a Rough Idea Into Backlog Tasks
+---
+description: Lightweight triage of a rough idea — evaluate, decompose into stories, prioritise, backlog
+argument-hint: [describe the idea]
+---
+
+# /idea — Turn a Rough Idea Into Backlog Stories
 
 Usage: `/idea [describe the idea]`
 
 Arguments: $ARGUMENTS
 
 Takes a raw idea and runs it through the product pipeline: evaluate, decompose, prioritise.
+
+> Not sure which command? `/idea` = lightweight triage of a rough idea; `/discover` = deep structured discovery before writing stories.
 
 ## Steps
 
@@ -30,8 +37,8 @@ Takes a raw idea and runs it through the product pipeline: evaluate, decompose, 
    - Does it introduce any security surface?
    - Any data privacy implications?
 
-5. **Decompose into tasks** (if approved):
-   - Break into TASK-XXX items
+5. **Decompose into stories** (if approved):
+   - Break into STORY-XXX items
    - Define acceptance criteria
    - Estimate complexity
 
@@ -49,8 +56,8 @@ Phase:    [which phase it fits in]
 USER STORY
   As a [persona], I want [action], so that [benefit].
 
-TASKS (if approved)
-  - TASK-XXX: [title] — [agent] — [S/M/L]
+STORIES (if approved)
+  - STORY-XXX: [title] — [agent] — [S/M/L]
   ...
 
 CONCERNS
@@ -58,4 +65,12 @@ CONCERNS
 ═══════════════════════════════════════
 ```
 
-7. If approved, ask: "Add these tasks to the backlog? [Y/N]"
+7. If approved, ask: "Add these stories to the backlog? [Y/N]"
+
+8. **On [Y], write to memory/BACKLOG.md:**
+   - Read the `## Index` to find the highest existing STORY number; new stories
+     take the next numbers.
+   - Append each story below the Index in the standard story format (title,
+     priority, user story, acceptance criteria, complexity).
+   - Add one line per new story to the `## Index` so it stays in sync.
+   - Confirm: "Added STORY-XXX..STORY-YYY to BACKLOG.md."

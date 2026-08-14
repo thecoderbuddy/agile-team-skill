@@ -1,3 +1,7 @@
+---
+description: Full project picture — pm reads state, all agents report sprint/backlog/quality/security/architecture health
+---
+
 # /status — Full Project Picture
 
 Use at the start of every session. Reads state, checks git, shows what's next.
@@ -23,9 +27,14 @@ git status
 - Stories in progress vs done vs not started
 - Velocity so far (stories done / stories planned)
 
-**po-agent** reads BACKLOG.md and reports backlog health:
+**dev-agent** reports implementation health:
+- Current story progress (what's built, what remains)
+- Uncommitted or work-in-progress changes (from git status)
+- Anything slowing implementation down
+
+**po-agent** works from the BACKLOG.md Index (read in Step 1) and reports backlog health:
 - Stories ready to pull into sprint (have AC, estimated, not blocked)
-- Stories needing grooming (no AC, no estimate)
+- Stories flagged for grooming: po flags stories whose Index entry lacks an estimate marker; the orchestrator extracts bodies only for those flagged stories (awk pattern) to confirm missing AC or estimates
 - Backlog size trend (growing / stable / shrinking)
 
 **qa-agent** reports quality health:

@@ -1,3 +1,8 @@
+---
+description: Clear a blocker — tech-lead confirms resolution, pm removes it from STATE.md BLOCKERS and updates NEXT.md
+argument-hint: "STORY-XXX \"what was blocking and how it's resolved\""
+---
+
 # /unblock — Clear a Blocker
 
 Usage: `/unblock STORY-XXX "what was blocking and how it's resolved"`
@@ -44,3 +49,11 @@ NEXT.md:    [exact next step for dev]
 
 Ready to continue → Run `/new-task` to re-confirm the assignment, or continue directly if context is clear.
 If a decision was made → Run `/adr` to document it properly.
+
+## Error States
+
+| Situation | Action |
+|---|---|
+| Story not found in STATE.md BLOCKERS | List the current blockers from STATE.md and stop. |
+| Empty $ARGUMENTS | Ask which story to unblock (show the BLOCKERS list). |
+| Story was blocked before it ever started | Return it to the Sprint Backlog section instead of "In Progress". |

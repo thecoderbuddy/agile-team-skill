@@ -1,3 +1,7 @@
+---
+description: Daily standup — each agent reports done/doing/blocked, pm-agent synthesizes blockers and focus, po-agent notes scope risk
+---
+
 # /standup — Daily Standup (Collaborative Chain)
 
 All agents report. PM synthesizes. PO notes. Use at the start of every session.
@@ -11,6 +15,10 @@ cat memory/STATE.md
 cat memory/NEXT.md
 git log --oneline -5
 ```
+
+**Error check before the chain:** if `memory/STATE.md` is missing, or it contains no active
+sprint (no sprint number/goal, or the sprint is marked CLOSED) — stop here. Say so and
+suggest `/init` (no memory files yet) or `/sprint-plan` (no active sprint).
 
 ---
 
@@ -34,7 +42,9 @@ qa-agent
 
 **security-analyst-agent** reports:
 
-Before reporting, read `memory/STATE.md` and evaluate security review cadence:
+Before this report, the orchestrator passes the relevant lines from the Step 0 read of
+`memory/STATE.md` (the `## Last Security Review` section) into the security-analyst prompt —
+the agent does not re-read STATE.md. Evaluate security review cadence from those lines:
 
 - Security review threshold: **30 days**  <!-- CONFIGURABLE: Edit only this value to change the threshold everywhere in this block -->
 - Use `currentDate` from session context for date arithmetic — do NOT shell out for the date.

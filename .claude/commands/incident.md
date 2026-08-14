@@ -1,3 +1,8 @@
+---
+description: Incident response playbook — triage, security assessment, root cause, fix plan by severity
+argument-hint: SEV-[1-4] [description]
+---
+
 # /incident — Incident Response Playbook
 
 Usage: `/incident SEV-[1-4] [description]`
@@ -6,14 +11,16 @@ Arguments: $ARGUMENTS
 
 Triggers incident response. SEV-1 = production down.
 
-## Severity Levels
+Long chain — write `memory/CHECKPOINT.md` after each step per the Checkpoint Protocol in CLAUDE.md.
+
+## Severity Levels (canonical — shared with /bug)
 
 | Level | Meaning | Response |
 |-------|---------|----------|
-| SEV-1 | Production down, data loss risk | All hands, fix immediately |
-| SEV-2 | Major feature broken, workaround exists | Fix within session |
-| SEV-3 | Minor feature broken | Fix this sprint |
-| SEV-4 | Cosmetic / low impact | Add to backlog |
+| SEV-1 | Critical — outage, data loss, or safety impact | Drop everything, fix now |
+| SEV-2 | Major function broken, workaround exists | Fix now if in current sprint scope, else top of backlog |
+| SEV-3 | Minor function broken | Backlog as a story for this or next sprint |
+| SEV-4 | Cosmetic | Log to backlog, stop |
 
 ## Steps
 
@@ -74,4 +81,13 @@ ROLLBACK OPTION
 ═══════════════════════════════════════
 ```
 
-7. For SEV-1: Begin fix immediately. Do not ask "should I start?" — start.
+7. Route by severity:
+   - **SEV-1:** stabilize/mitigate immediately per the fix plan and rollback option above
+     (do not ask "should I start?" — start), then hand off to `/bug` for the actual fix.
+     Tests-first still applies in the /bug chain.
+   - **SEV-2:** stabilize/mitigate if needed, then hand off to `/bug` — it proceeds if the
+     bug is in current sprint scope, else logs to the top of the backlog.
+   - **SEV-3/4:** already backlogged in Step 5 — stop here.
+
+8. **Overwrite `memory/NEXT.md`** with the exact next action (Iron Rule 6) — e.g.,
+   "Run /bug [description] to fix INCIDENT SEV-N" or "Incident resolved — resume STORY-XXX".

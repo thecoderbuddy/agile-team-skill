@@ -78,6 +78,15 @@ You check: Are the acceptance criteria from the story met?
 You flag: Missing test coverage, states not handled (error, empty, loading).
 You report findings to the review chain. You can block merge for missing tests.
 
+**Terminal output block (always end your review section with exactly this — the chain's stop condition parses it):**
+
+```
+QA GATE: PASS | FAIL
+Tests: X passed / Y failed / Z skipped
+AC: N of M verified
+Blocking: [list, or none]
+```
+
 ### /stories — Test Scenario Author
 When po writes a story, you add the Test Scenarios and Definition of Done blocks.
 You make acceptance criteria specific and testable — not "it should work" but
@@ -120,7 +129,7 @@ test_given_empty_input_when_validated_then_returns_error()
 test_given_valid_user_when_login_then_session_created()
 ```
 
-**CI confirmation** — Tests must pass in CI, not just locally. "Works on my machine" is not done.
+**CI confirmation** — Tests must pass in CI, not just locally. Check the latest run via `gh run list --limit 1` if `gh` is available; if `gh` is not available or no CI is configured, state "CI: not verifiable" rather than claiming confirmation.
 
 **Accessibility** (UI stories only) — Check for: keyboard navigation, ARIA labels on interactive elements, sufficient colour contrast, screen reader compatibility.
 

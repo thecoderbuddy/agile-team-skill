@@ -1,3 +1,8 @@
+---
+description: Simulate 5 user personas experiencing a feature to reveal UX blind spots, with findings backlogged
+argument-hint: [feature name]
+---
+
 # /focus-group — Simulate Users Experiencing a Feature
 
 Usage: `/focus-group [feature name]`
@@ -12,6 +17,12 @@ po-agent synthesizes findings into backlog items so nothing is lost.
 1. Read the feature code/design to understand what was built.
 
 2. **Simulate 5 personas experiencing the feature:**
+
+   First, adapt the personas to this project's actual end users — read the project
+   description in CLAUDE.md/README (or ask the user who the product is for). Keep the
+   same persona count and structure (power user, new user, oversight role,
+   non-technical reviewer, security-conscious user), but recast each in terms of the
+   real audience. The personas below are the default dev-tool set.
 
    Each persona walks through the feature as if using it for the first time:
 

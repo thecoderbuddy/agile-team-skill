@@ -1,3 +1,8 @@
+---
+description: Fix a bug end to end — investigate, diagnose, fix, test, review, and commit in one chain
+argument-hint: [describe the issue]
+---
+
 # /bug — Fix a Bug End to End
 
 Usage: `/bug [describe the issue]`
@@ -24,10 +29,15 @@ Steps:
   [DONE] Step 2 — tech-lead-agent — [root cause]
   [DONE] Step 3 — dev-agent — fix complete
   [IN_PROGRESS] Step 4 — qa-agent (validation)
-  [PENDING] Step 5 — security-analyst-agent
+  [SKIPPED] Step 5 — security-analyst-agent (not security-adjacent)
   [PENDING] Step 6 — pr-reviewer-agent
   [PENDING] Step 7 — po-agent
 ```
+
+Format and lifecycle: see Checkpoint Protocol in CLAUDE.md (accepts `Story:` or `Bug:`).
+
+Skipped steps (e.g., Step 5 when the bug is not security-adjacent) must be written to the
+checkpoint as `[SKIPPED] ... (reason)` — never left `[PENDING]`, or /resume will try to run them.
 
 On chain completion (commit approved), delete `memory/CHECKPOINT.md`.
 
@@ -54,7 +64,14 @@ If `CHECKPOINT.md` exists and shows an incomplete `/bug` chain:
 **qa-agent** reproduces and classifies the bug:
 - Reproduce the issue by reading the relevant code and tests
 - Classify: bug (broken) vs gap (missing) vs regression (worked before)
-- Severity: SEV-1 (blocking users) / SEV-2 (painful) / SEV-3 (cosmetic) / SEV-4 (minor)
+- Severity (canonical — shared with /incident):
+
+| Level | Meaning | Response |
+|-------|---------|----------|
+| SEV-1 | Critical — outage, data loss, or safety impact | Drop everything, fix now |
+| SEV-2 | Major function broken, workaround exists | Fix now if in current sprint scope, else top of backlog |
+| SEV-3 | Minor function broken | Backlog as a story for this or next sprint |
+| SEV-4 | Cosmetic | Log to backlog, stop |
 
 ```
 QA INVESTIGATION
@@ -89,8 +106,16 @@ Risk:       [low | medium — what to watch]
 ```
 
 If SEV-1 → proceed immediately regardless of sprint state.
-If SEV-2 → proceed if in current sprint scope, else log to BACKLOG.md and stop.
-If SEV-3/4 → log to BACKLOG.md and stop (don't interrupt sprint flow).
+If SEV-2 → proceed if in current sprint scope, else log to the top of BACKLOG.md and stop.
+"In current sprint scope" means: the bug affects a story in the current sprint — check the
+stories listed in `memory/STATE.md` (In Progress / Done This Sprint / sprint plan).
+If SEV-3 → log to BACKLOG.md as a story for this or next sprint and stop.
+If SEV-4 → log to BACKLOG.md and stop (don't interrupt sprint flow).
+
+When logging a bug ticket to BACKLOG.md, the ticket follows the **(bug)** sections of the
+"PR & Ticket Description Structure" in CLAUDE.md — Description with file:line + snippet,
+Severity, Impact (what-user-sees vs what-happened), Root cause, Repro, Expected vs Actual,
+Fix + follow-ups as separate stories, AC, Monitoring.
 
 ---
 
@@ -140,7 +165,8 @@ If FAIL → back to Step 3. dev-agent fixes again. QA re-validates.
 **security-analyst-agent** reviews the fix if the bug was security-adjacent
 (auth, input handling, data exposure, dependency issue).
 
-Skip this step for purely functional or UI bugs.
+Skip this step for purely functional or UI bugs — and record it in the checkpoint as
+`[SKIPPED] Step 5 — security-analyst-agent (reason)`, not `[PENDING]`.
 
 ```
 SECURITY CHECK

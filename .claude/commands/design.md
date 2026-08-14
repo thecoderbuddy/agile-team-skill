@@ -1,3 +1,8 @@
+---
+description: Full pre-code design — empathy map, user flow, component/interface spec, agent review, persisted to the story
+argument-hint: [feature name]
+---
+
 # /design — Full Design: Flow + Spec + Agent Review
 
 Usage: `/design [feature name]`
@@ -27,6 +32,7 @@ Complete design process before any code is written.
    - ASCII flow diagram
 
    **Step C — Component Spec:**
+   *(For backend/CLI features with no UI, replace this with an interface spec: API shape, inputs/outputs, error surface.)*
    - Which UI components are needed
    - Layout at key breakpoints (mobile, tablet, desktop)
    - State management — what state does this feature need?
@@ -74,3 +80,13 @@ AGENT REVIEW
 ═══════════════════════════════════════
 Approved to build? [Y/N]
 ```
+
+6. **Persist the approved design (a session drop must not lose it):**
+   - If approved, write the design summary (flow, components/interface, technical
+     spec) into the corresponding story's body in memory/BACKLOG.md under a
+     `### Design` heading. If no story exists yet, note that /stories should create
+     one and attach this design.
+   - If the design involved any architectural choice, log it to memory/DECISIONS.md
+     as a DEC-XXX entry.
+   - The terminal output alone is not the artifact — BACKLOG.md (and DECISIONS.md
+     where applicable) is.

@@ -6,7 +6,7 @@ description: >
   DECISIONS.md. The bridge between product requirements and implementation. Use for:
   /review (architecture lens), /stories (add technical notes), /sprint-plan (complexity
   estimates), tech spec writing, architecture decisions, and unblocking developers.
-tools: Read, Write, Glob, Grep, Bash
+tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 You are the Tech Lead on this agile team.
@@ -104,7 +104,7 @@ README accuracy:
   CURRENT — [sections checked, no changes needed]
   STALE   — [which section] — [what is now wrong or missing] → REQUEST CHANGES
 
-My recommendation: APPROVE | REQUEST CHANGES
+My recommendation: APPROVE | REQUEST CHANGES | BLOCK
 ─────────────────────────────────────────
 ```
 
@@ -133,6 +133,8 @@ Implementation Notes:
 ───────────────────────────────────────
 ```
 
+Canonical copy — /new-task and /stories reference this list.
+
 **Sanitisation required** must be explicitly answered for any story that:
 - Reads shell command output (e.g. git diff, ls, env vars)
 - Uses filenames from git output or user input
@@ -149,11 +151,9 @@ If NO: state why (e.g. "pure prompt edit, no execution surface").
 - If a constant is required: name it explicitly in the spec (e.g. `SECURITY_REVIEW_THRESHOLD_DAYS=30`). Dev must define it as a named variable, not inline the literal.
 - If N/A: confirm no thresholds are introduced.
 
-Historical examples:
-- STORY-003 (diff threshold): sanitisation required — git diff --stat output could contain injected filenames; also required --no-color flag to avoid ANSI escape codes in parsing
-- STORY-001 (checkpoint): env var validation — CHECKPOINT.md field parsing; corrupt/missing fields must be detected at Step 0, not silently trusted
-- BUG-009 (pre-commit.sh): paths — relative .gitleaks.toml path failed from subdirectory; fix required `REPO_ROOT=$(git rev-parse --show-toplevel)` pattern
-- BUG-010 (30-day threshold): named constants — threshold inline in HTML comment; risk of drift across files if one is updated and another missed
+Examples of what these checks catch:
+- An unvalidated ID param from a request reached a database query unsanitised — sanitisation check would have named the input source and required an allowlist/parameterised approach before dev started
+- A shell script referenced a config file by relative path and broke when invoked from a subdirectory — the paths check requires resolving via `git rev-parse --show-toplevel` up front
 
 ---
 

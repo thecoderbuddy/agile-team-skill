@@ -1,3 +1,7 @@
+---
+description: Restore context after a rate limit or session drop — recover any incomplete agent chain from CHECKPOINT.md
+---
+
 # /resume — Pick Up After Rate Limit or Session Drop
 
 **First command after any interruption** — rate limit reset, session drop, or context loss.
@@ -11,11 +15,25 @@ Restores full context and recovers any incomplete agent chain automatically.
 cat memory/CHECKPOINT.md 2>/dev/null
 ```
 
-If `CHECKPOINT.md` exists, validate it before acting on it (see DEC-002):
+If `CHECKPOINT.md` exists, validate it before acting on it (see DEC-002 and the
+Checkpoint Protocol section in CLAUDE.md — the canonical format):
 
-**Valid checkpoint** — must contain all of: `Command:`, `Story:`, `Started:`, `Last heartbeat:`, and a `Steps:` block with at least one entry. If the file is empty or any required field is missing → corrupt. Delete it and proceed to Step 2 (normal resume).
+**Valid checkpoint** — must contain `Command:` and either `Story:` OR `Bug:` (`/bug` chains write `Bug: [slug]` instead of `Story:`), plus `Started:`, `Last heartbeat:`, and a `Steps:` block with at least one entry. If the file is empty or any required field is missing → corrupt.
 
-**Stale checkpoint** — if the Story ID already appears in the "Done This Sprint" list in `memory/STATE.md` → the chain already completed. Delete it and proceed to Step 2.
+**Corrupt checkpoint** — do NOT delete silently. Show the file contents to the user and ask:
+
+```
+CORRUPT CHECKPOINT
+─────────────────────────────────────────
+[contents of memory/CHECKPOINT.md]
+─────────────────────────────────────────
+This checkpoint is missing required fields and cannot be resumed.
+Delete it and proceed with a normal resume? [Y / N — keep the file]
+```
+
+On Y → delete and proceed to Step 2. On N → keep the file and proceed to Step 2.
+
+**Stale checkpoint** — for `Story:` checkpoints: if the Story ID already appears in the "Done This Sprint" list in `memory/STATE.md` → the chain already completed. For `Bug:` checkpoints, this check does not apply — instead check whether the bug's fix commit already exists (`git log --oneline -10 | grep -i fix`); if inconclusive, treat as recoverable. If stale, show it and ask [Y/N] before deleting (same prompt as corrupt), then proceed to Step 2.
 
 **Recoverable checkpoint** — valid, story not yet done:
 
@@ -23,7 +41,7 @@ If `CHECKPOINT.md` exists, validate it before acting on it (see DEC-002):
 INCOMPLETE CHAIN DETECTED
 ─────────────────────────────────────────
 Command:   [/review | /new-task | /bug]
-Story:     STORY-XXX
+Story:     STORY-XXX   (or Bug: [slug] for /bug chains)
 Started:   [timestamp]
 Last heartbeat: [timestamp] — Step N — [agent-name]
 Interruption:  [rate limit | host sleep suspected (gap > 5 min) | unknown]

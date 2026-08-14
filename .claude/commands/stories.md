@@ -1,3 +1,8 @@
+---
+description: Write user stories — po drafts, qa adds test scenarios, security adds constraints, tech-lead estimates; story written to BACKLOG.md
+argument-hint: "[feature or topic]"
+---
+
 # /stories — Write User Stories (Collaborative Chain)
 
 Usage: `/stories [feature or topic]`
@@ -38,6 +43,9 @@ Acceptance Criteria:
   - Given [context], When [action], Then [result]
 ```
 
+Story bodies follow the ticket sections of the "PR & Ticket Description Structure" in
+CLAUDE.md where applicable (Description, Impact, AC).
+
 Stories must answer: "What problem does this solve for which user?"
 If po-agent can't answer that, the story goes to icebox.
 
@@ -60,7 +68,8 @@ Definition of Done:
 ```
 
 If acceptance criteria from Step 1 are too vague to test, qa-agent sends it back to
-po-agent with specific feedback before continuing.
+po-agent with specific feedback before continuing. Cap this loop at 2 iterations — if the
+AC are still untestable after the second rewrite, escalate to the user with qa's feedback.
 
 ---
 
@@ -126,11 +135,10 @@ Technical Notes:
   Needs tech spec: [NO]
 
 ═══════════════════════════════════════════════════
-Added to memory/BACKLOG.md ✓
-
 ```
 
 **po-agent writes the completed story to `memory/BACKLOG.md` before closing.**
+Only after the write has happened, confirm: `Added to memory/BACKLOG.md ✓`
 
 Stories added to backlog → Run `/backlog` to groom and prioritize.
 Ready to sprint? → Run `/sprint-plan` to commit stories to a sprint.

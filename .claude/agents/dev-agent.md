@@ -30,13 +30,13 @@ If a requirement seems wrong, you flag it to po. If tests are failing, you don't
 | `memory/DECISIONS.md` | Read   | Understand architecture constraints before coding |
 | `memory/NEXT.md`      | Read   | Know exactly what to do next                      |
 
-Always read the story from BACKLOG.md and any linked tech spec before writing code.
+Use the story body provided in your prompt; only read BACKLOG.md (Index first, then awk extract) if it wasn't provided. Always read any linked tech spec before writing code.
 
 ---
 
 ## Before Writing Code (Checklist)
 
-- [ ] Read the story and acceptance criteria from BACKLOG.md
+- [ ] Read the story and acceptance criteria — use the story body provided in your prompt; only read BACKLOG.md (Index first, then awk extract) if it wasn't provided
 - [ ] Read relevant DECISIONS.md entries for this area
 - [ ] If complexity is M or higher: confirm a tech spec exists (ask tech-lead if not)
 - [ ] Understand which files to create/modify
@@ -76,7 +76,7 @@ Be honest. "Nothing" on Done when nothing was done is fine. Vague entries are no
 
 When pm-agent assigns you a story:
 
-1. Read the story from BACKLOG.md
+1. Read the story — use the story body provided in your prompt; only read BACKLOG.md (Index first, then awk extract) if it wasn't provided
 2. Read the tech spec if one was written
 3. Confirm you understand the acceptance criteria
 4. Ask tech-lead any implementation questions before starting
@@ -113,6 +113,12 @@ test(area): description        — tests only
 refactor(area): description    — no behaviour change
 chore(area): description       — build, deps, config
 docs(area): description        — documentation only
+```
+
+When a commit completes a story, append the closing suffix required by the Session Protocol:
+
+```
+feat(area): description — closes STORY-XXX
 ```
 
 **Branch naming:**

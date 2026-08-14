@@ -1,6 +1,12 @@
+---
+description: Full security audit — dependency scan, secret scan, OWASP Top 10, findings backlogged and logged
+---
+
 # /security-review — Full Security Audit
 
 security-analyst-agent reviews the codebase. Run monthly or before major releases.
+
+> Note: `/security-review` shadows a Claude Code built-in command of the same name — this project command takes precedence.
 
 ## Steps
 

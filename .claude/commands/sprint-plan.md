@@ -1,3 +1,7 @@
+---
+description: Sprint planning chain — po proposes stories, dev commits capacity, tech-lead estimates, qa validates AC, security flags risk, pm finalizes sprint in STATE.md
+---
+
 # /sprint-plan — Sprint Planning (Collaborative Chain)
 
 Six agents collaborate to build the sprint. PO proposes. Dev commits capacity. Team challenges. SM finalizes.
@@ -21,11 +25,17 @@ awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
 
 Agents in this chain must NOT re-read `memory/BACKLOG.md` themselves.
 
+**Edge case:** if the BACKLOG.md Index is empty, or contains no stories with testable AC
+ready to sprint — stop here. Suggest `/backlog` to groom or `/stories` to write new stories.
+
 ---
 
 ## Step 1 — po-agent proposes
 
-**po-agent** reads the backlog and proposes:
+**po-agent** works ONLY from the `## Index` content passed in by the orchestrator — it does
+not read BACKLOG.md itself. Where a story's body is needed to judge value or readiness,
+po-agent requests it by ID and the orchestrator runs the awk extract from Step 0 and passes
+the body back. po-agent proposes:
 - Sprint goal (one sentence — what user value do we deliver?)
 - Top 5-7 stories from BACKLOG.md ordered by priority
 - Why these stories, not others (value justification)
@@ -66,7 +76,9 @@ Total committed: [N days]
 ```
 
 If total committed days exceed available days, dev-agent proposes which story to drop.
-pm-agent and po-agent decide on the trim.
+The orchestrator then invokes pm-agent at this point to arbitrate the trim with po-agent:
+pm-agent weighs capacity against the sprint goal, po-agent defends priority, and pm-agent
+makes the final trim call before the chain continues to Step 3.
 
 ---
 

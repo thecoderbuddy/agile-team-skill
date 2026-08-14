@@ -1,3 +1,8 @@
+---
+description: Commit the approved story and close it — archive to ARCHIVE.md, update STATE.md and NEXT.md
+argument-hint: STORY-XXX "description"
+---
+
 # /complete — Commit and Close Story
 
 Usage: `/complete STORY-XXX "description"`
@@ -16,11 +21,18 @@ This step commits the code and closes the story in STATE.md.
 
 1. Parse the story ID and description from arguments.
 
-2. Confirm the story was reviewed and approved:
+2. Confirm the story was reviewed and approved — look for evidence, not vibes:
    ```bash
    git status
    git diff --stat
+   cat memory/CHECKPOINT.md 2>/dev/null   # should be gone — /review deletes it on APPROVED
+   cat memory/NEXT.md
    ```
+   Evidence of an APPROVED verdict: `memory/CHECKPOINT.md` no longer exists AND
+   `memory/STATE.md` or `memory/NEXT.md` notes the story as APPROVED / ready to complete.
+   If there is no evidence of an APPROVED `/review` verdict — warn the user
+   ("No record of an APPROVED /review verdict for STORY-XXX") and ask them to explicitly
+   confirm before continuing.
    If there are unexpected changes beyond what was reviewed — STOP and re-run `/review`.
 
 3. **qa-agent records test evidence:**
@@ -65,11 +77,25 @@ This step commits the code and closes the story in STATE.md.
    - Updates velocity count (stories done / stories planned)
    - Overwrites `memory/NEXT.md` with the next logical action
 
-6. Stage and commit:
+6. Stage, get approval, and commit:
+
+   Stage the code changes AND the memory/ file updates from Steps 3-5 (STATE.md, NEXT.md,
+   ARCHIVE.md, BACKLOG.md) — they all go in the same story commit.
+
+   Show the staged diff summary and ask before committing (Iron Rule 3):
    ```bash
-   git add [relevant files]
+   git add [relevant files + memory/STATE.md memory/NEXT.md memory/ARCHIVE.md memory/BACKLOG.md]
+   git diff --stat --cached
+   ```
+   > "Approve commit? [Y/N]"
+
+   Only on Y:
+   ```bash
    git commit -m "feat(area): description — closes STORY-XXX"
    ```
+   The commit body / PR description follows the **(PR)** sections of the
+   "PR & Ticket Description Structure" in CLAUDE.md — test plan & evidence,
+   risk & rollback, out of scope, links.
 
 7. Show confirmation:
 

@@ -1,3 +1,8 @@
+---
+description: Draft, review, and record an Architecture Decision Record (DEC-XXX) in DECISIONS.md
+argument-hint: [decision topic]
+---
+
 # /adr — Write an Architecture Decision Record
 
 Usage: `/adr [decision topic]`
@@ -8,9 +13,9 @@ Creates a new DEC-XXX entry in DECISIONS.md. Used when architectural choices nee
 
 ## Steps
 
-1. Read existing decisions to get next DEC number:
+1. Get the next DEC number (do not cat the full file):
    ```bash
-   cat memory/DECISIONS.md
+   grep -o 'DEC-[0-9]*' memory/DECISIONS.md | sort -V | tail -1
    ```
 
 2. **tech-lead-agent drafts the ADR:**
@@ -50,3 +55,10 @@ Approve this decision? [Y/N]
 
 5. If approved:
    - Append to memory/DECISIONS.md
+   - If this decision replaces an earlier one, mark the old entry by appending a status
+     line to it: `Status: SUPERSEDED by DEC-XXX` — do not delete or edit its content.
+
+6. If the reviewers reject the decision:
+   - Still append the entry to memory/DECISIONS.md with `Status: REJECTED` and the
+     reason for rejection. Rejected decisions are knowledge too — they prevent the
+     same debate from being re-run later.

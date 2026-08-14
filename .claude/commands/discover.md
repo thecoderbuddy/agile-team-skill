@@ -1,3 +1,8 @@
+---
+description: Deep structured discovery of a problem space before writing stories — persona, scope, technical and security assessment
+argument-hint: [feature name]
+---
+
 # /discover — Discovery Session Before Writing Stories
 
 Usage: `/discover [feature name]`
@@ -5,6 +10,8 @@ Usage: `/discover [feature name]`
 Arguments: $ARGUMENTS
 
 Deep dive before committing to build. Understand the problem space first.
+
+> Not sure which command? `/idea` = lightweight triage of a rough idea; `/discover` = deep structured discovery before writing stories.
 
 ## Steps
 
@@ -61,3 +68,10 @@ NEXT STEP
   [/stories or /design]
 ═══════════════════════════════════════
 ```
+
+6. **Persist the discovery output (survives session drops):**
+   - Save the discovery summary in memory/BACKLOG.md under a
+     `## Discovery Notes — [topic]` section, placed below the `## Index`.
+   - When /stories next runs for this topic, it appends the discovery summary
+     into the resulting story's body and removes the temporary
+     `## Discovery Notes — [topic]` section.

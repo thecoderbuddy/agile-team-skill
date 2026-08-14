@@ -1,3 +1,8 @@
+---
+description: One-time project onboarding — populate STATE.md, BACKLOG.md, and NEXT.md so the team can sprint
+argument-hint: ["describe your project"]
+---
+
 # /init — Project Onboarding
 
 Usage: `/init ["describe your project"]`
@@ -7,13 +12,30 @@ Arguments: $ARGUMENTS
 **Run this once when you first set up the agile team on a project.**
 Populates STATE.md, BACKLOG.md, and NEXT.md so the team is ready to sprint.
 
+Note: this `/init` shadows the Claude Code built-in `/init` (CLAUDE.md generator) — in this repo, `/init` means project onboarding.
+
 Two modes:
 - With argument: `"/init I'm building a CLI tool that converts markdown to PDF"`
 - No argument: agents scan the existing codebase and infer
 
 ---
 
-## Step 0 — Detect mode
+## Step 0 — Re-run guard
+
+Check whether memory is already initialized:
+```bash
+grep -c 'STORY-' memory/BACKLOG.md 2>/dev/null
+```
+
+If `memory/BACKLOG.md` already contains `STORY-` entries — **STOP** and warn:
+
+> "Memory already initialized — re-running /init overwrites STATE.md, BACKLOG.md, and NEXT.md. Proceed anyway? [Y/N]"
+
+Only continue with explicit user confirmation. On N, stop here.
+
+---
+
+## Step 0b — Detect mode
 
 If `$ARGUMENTS` is provided → **Description mode** (user told us what they're building).
 If `$ARGUMENTS` is empty → **Scan mode** (infer from existing codebase).

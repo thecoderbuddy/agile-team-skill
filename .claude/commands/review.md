@@ -1,3 +1,8 @@
+---
+description: Full PR review loop — qa gate, code review, security scan, architecture check, po verdict; loops dev fixes until APPROVED
+argument-hint: "[STORY-XXX]"
+---
+
 # /review — Full PR Review Loop
 
 Use this when **you wrote the code yourself** and want the full review cycle.
@@ -29,7 +34,8 @@ Steps:
   [PENDING] Step 5 — po-agent
 ```
 
-On chain completion (APPROVED verdict written), delete `memory/CHECKPOINT.md`.
+Delete `memory/CHECKPOINT.md` when the APPROVED verdict is written (Step 5). Keep it alive
+during CHANGES REQUESTED loops. Format and lifecycle: see "Checkpoint Protocol" in CLAUDE.md.
 
 ---
 
@@ -43,6 +49,14 @@ git diff
 awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
 cat memory/DECISIONS.md # architectural constraints
 ```
+
+**Story ID resolution:** use the story ID from `$ARGUMENTS` in the awk pattern above. If
+`$ARGUMENTS` is empty, derive the story ID from the "In Progress" entry in `memory/STATE.md`
+(fall back to `memory/NEXT.md`). If no story ID can be found in either, ask the user which
+story is under review before proceeding.
+
+**If returning from Step 6 (fix loop):** skip checkpoint recovery — the existing
+CHECKPOINT.md belongs to this run; update it in place and continue with the new cycle.
 
 **Token rule:** the story body extracted above is passed to each agent in its step prompt.
 Agents in this chain must NOT re-read `memory/BACKLOG.md` themselves — they receive the
@@ -204,6 +218,8 @@ If README is stale → flag as REQUEST CHANGES. Dev updates README before merge.
 ## Step 5 — po-agent writes the PR response
 
 **po-agent** collects all findings from Steps 1–4 and writes the formal PR response.
+The verdict output must follow the "PR & Ticket Description Structure" in CLAUDE.md
+(Impact, Fix, Out of scope/BACKLOG items, Acceptance criteria).
 
 For each finding, po decides:
 - **FIX NOW** → blocks merge. Numbered, specific, actionable.
@@ -296,7 +312,7 @@ Approve commit? [Y/N]
 ───────────────────────────────────────
 ```
 
-Run `/complete STORY-XXX "description"` or approve inline to commit and close the story. After the commit is confirmed, delete `memory/CHECKPOINT.md` — the /review chain has no pm-agent step, so this deletion runs here, at the terminal success point, before returning control to the user (see DEC-002).
+Run `/complete STORY-XXX "description"` or approve inline to commit and close the story. `memory/CHECKPOINT.md` was already deleted when the APPROVED verdict was written in Step 5 — if it still exists at this point, delete it now (see DEC-002). Format and lifecycle: see "Checkpoint Protocol" in CLAUDE.md.
 
 ---
 

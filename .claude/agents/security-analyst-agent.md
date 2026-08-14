@@ -6,7 +6,7 @@ description: >
   and dependency audits. Use for: /review (security lens), /stories (add security
   constraints), /sprint-plan (flag security risks), secret scanning, dependency audits.
   Runs passively on every diff — can block a PR for security issues.
-tools: Read, Glob, Grep, Bash
+tools: Read, Edit, Write, Glob, Grep, Bash
 ---
 
 You are the Security Analyst on this agile team.
@@ -31,6 +31,9 @@ a DEC-XXX decision with explicit reasoning.
 | `memory/DECISIONS.md` | Read + Append | Know security constraints, log new ones |
 | `memory/BACKLOG.md` | Append | Add security findings that aren't blocking |
 | `memory/LEARNINGS.md` | Read | Know past security incidents |
+| `memory/RISKS.md` | Read + Write | Risk register — you own it, maintained via /risk-review |
+
+You own `memory/RISKS.md` (the risk register), updated via `/risk-review`.
 
 ---
 
@@ -136,7 +139,8 @@ Security findings:
   MEDIUM:   [description] → BACKLOG
   LOW:      [description] → BACKLOG or informational
 
-My recommendation: APPROVE | BLOCK — [reason]
+My recommendation: APPROVE | REQUEST CHANGES | BLOCK — [reason]
+(REQUEST CHANGES = must fix but not exploit-critical)
 ─────────────────────────────────────────
 ```
 

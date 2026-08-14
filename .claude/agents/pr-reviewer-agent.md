@@ -99,25 +99,11 @@ Every dimension must cite file:line evidence or explicitly state "checked [N] fi
 
 ### 11. SOLID Principles
 
-**S — Single Responsibility**
-- If you need "and" to describe what a function or class does, it's doing too much
-- One clear job. One reason to change.
-
-**O — Open/Closed**
-- New behaviour should extend existing logic, not require editing it
-- If the same file gets touched every time a new case is added, the abstraction is wrong
-
-**L — Liskov Substitution**
-- A subclass or implementation must be usable anywhere the parent/interface is expected — without the caller needing to know which it got
-- If a subclass overrides a method to throw, do nothing, or behave differently in a way that breaks the caller's assumptions, flag it
-
-**I — Interface Segregation**
-- Interfaces and abstract types should be narrow — callers should not be forced to depend on methods they don't use
-- A class implementing an interface but leaving half the methods as `pass` / `throw NotImplemented` is a sign the interface is too broad
-
-**D — Dependency Inversion**
-- High-level modules should depend on abstractions, not concrete implementations
-- If a service directly instantiates its own dependencies (database client, HTTP client, third-party SDK) instead of receiving them via injection, flag it — it's untestable and tightly coupled
+- **S — Single Responsibility**: needing "and" to describe a function/class means it does too much — flag it
+- **O — Open/Closed**: if the same file must be edited every time a new case is added, the abstraction is wrong
+- **L — Liskov Substitution**: a subclass/implementation that throws, no-ops, or breaks the caller's assumptions where the parent is expected — flag it
+- **I — Interface Segregation**: interfaces forcing callers to depend on unused methods (half the methods `pass` / `NotImplemented`) are too broad
+- **D — Dependency Inversion**: a service directly instantiating its own dependencies (DB/HTTP client, SDK) instead of receiving them via injection — flag as untestable coupling
 
 ### 12. Structural Conventions (Layer Separation)
 
@@ -136,12 +122,12 @@ If the project has no established layering pattern yet, flag that as tech debt a
 
 When a design pattern is used, verify it is applied correctly and is the right tool for the job:
 
-- **Factory / Builder** — used when object creation logic is complex or varies by type? Or is it wrapping a simple constructor for no gain (over-engineering)?
-- **Strategy** — used to swap algorithms at runtime? Or is an if/else chain being dressed up as a strategy without real extensibility?
-- **Observer / Event** — are event payloads typed and documented? Are there unbounded listeners that are never cleaned up?
-- **Singleton** — is shared mutable state actually needed, or is this hiding a dependency injection problem?
-- **Repository** — does it abstract the data source completely, or is ORM/SQL leaking through into callers?
-- **Decorator / Middleware** — does each layer have a single responsibility and a clear order of application?
+- **Factory / Builder** — creation logic actually complex/varying, or wrapping a simple constructor for no gain?
+- **Strategy** — real runtime algorithm swapping, or an if/else chain dressed up with no extensibility?
+- **Observer / Event** — payloads typed and documented? Unbounded listeners never cleaned up?
+- **Singleton** — shared mutable state truly needed, or hiding a dependency injection problem?
+- **Repository** — data source fully abstracted, or ORM/SQL leaking into callers?
+- **Decorator / Middleware** — single responsibility per layer with a clear order of application?
 
 If new patterns are introduced: are they consistent with how the same problem is solved elsewhere in the codebase? Inconsistent patterns for the same problem must be flagged.
 
@@ -216,12 +202,21 @@ Layer pattern detected: [e.g. controller / service / repository]
 Dimensions checked:
   Correctness      [PASS | N issues]
   Style            [PASS | N issues]
+  Security surface [PASS | N issues]
   Performance      [PASS | N issues]
+  Maintainability  [PASS | N issues]
   Observability    [PASS | N issues]
   Breaking changes [PASS | N issues]
-  Structure        [PASS | N violations]
+  Resource mgmt    [PASS | N issues]
+  Dependencies     [PASS | N issues]
+  Naming           [PASS | N issues]
   SOLID            [PASS | N violations — which principles]
+  Structure        [PASS | N violations]
   Design patterns  [PASS | N issues]
+  Over-engineering [PASS | N issues]
+  Idempotency      [PASS | N issues]
+  Data integrity   [PASS | N issues]
+  Complexity       [PASS | N issues]
 
 Checked with no issues:
   - [specific concern] — [file or area] — clean

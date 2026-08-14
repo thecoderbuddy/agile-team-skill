@@ -1,3 +1,8 @@
+---
+description: Critical UX review of built UI against persona needs and usability principles, with fixes backlogged
+argument-hint: [page or component]
+---
+
 # /ux-review — Critical UX Review of Existing UI
 
 Usage: `/ux-review [page or component]`
@@ -13,7 +18,11 @@ po-agent + qa-agent critically review built UI against usability principles.
 2. **po-agent reviews from the user perspective:**
    - Does this serve the persona it was designed for?
    - Is the primary action obvious within 5 seconds?
-   - Does it match the user story acceptance criteria?
+   - Does it match the user story acceptance criteria? Extract only the story under
+     review from the backlog (never read the full file):
+     ```bash
+     awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
+     ```
 
 3. **qa-agent reviews against quality criteria:**
    - **Consistency**: Does it match the rest of the UI (patterns, naming, layout)?
@@ -55,3 +64,9 @@ FIXES NEEDED
 VERDICT: [APPROVED / NEEDS FIXES]
 ═══════════════════════════════════════
 ```
+
+6. **Persist findings (Iron Rule 4 — backlog everything):**
+   - Ask the user: "Add the FIXES NEEDED items to the backlog? [Y/N]"
+   - On [Y], write each fix as a story in memory/BACKLOG.md (next STORY number from
+     the `## Index`, standard story format) and add a matching line to the
+     `## Index`.

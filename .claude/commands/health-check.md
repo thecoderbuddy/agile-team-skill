@@ -1,3 +1,7 @@
+---
+description: Mid-sprint health check — velocity, stalled stories, quality risk, descope recommendation
+---
+
 # /health-check — Mid-Sprint Check
 
 Are we on track? Should we descope? Run at sprint midpoint.
@@ -14,7 +18,10 @@ Are we on track? Should we descope? Run at sprint midpoint.
 2. **pm-agent assesses velocity:**
    - Stories completed vs planned (compare git log against STATE.md)
    - Velocity: on track / behind / ahead
-   - Any story stalled more than 2 days with no commits?
+   - Stalled stories — use observable signals only: a story is stalled if it is
+     IN_PROGRESS in STATE.md with no STATE.md change and no commits since it started
+     (`git log --since="[start date]"` if STATE.md records a start date; if no start
+     date is recorded, flag as "cannot determine — ask dev")
    - Scope: still achievable this sprint?
 
 3. **po-agent assesses value delivery:**
@@ -41,7 +48,7 @@ VELOCITY
   Status:  [on track / behind / ahead]
 
 STALLED
-  [stories with no commits in 2+ days or "none"]
+  [IN_PROGRESS stories with no STATE.md change and no commits since start, "cannot determine — ask dev", or "none"]
 
 QUALITY
   [qa-agent findings or "clean"]

@@ -1,3 +1,8 @@
+---
+description: Full autonomous story pipeline — po selects, tech-lead specs, pm assigns, dev implements, full review chain, pm closes and commits
+argument-hint: "[STORY-XXX]"
+---
+
 # /new-task — Full Autonomous Story Pipeline
 
 One command. Agents plan, implement, review, and commit — end to end.
@@ -11,7 +16,8 @@ Arguments: $ARGUMENTS (optional story ID — skips selection if provided)
 
 After **every agent step completes**, write to `memory/CHECKPOINT.md` before moving to the next step. This ensures recovery is possible if the session drops mid-chain.
 
-Format:
+Format and lifecycle: see "Checkpoint Protocol" in CLAUDE.md. This chain's step list:
+
 ```
 Command: /new-task
 Story: STORY-XXX
@@ -21,6 +27,7 @@ Last heartbeat: [timestamp] — Step N — [agent-name]
 Steps:
   [DONE] Step 1 — po-agent — selected STORY-XXX
   [DONE] Step 2 — tech-lead-agent — spec written | not needed (S)
+  [DONE] Step 2b — pm-agent — marked IN_PROGRESS in STATE.md
   [DONE] Step 3 — dev-agent — implementation complete
   [DONE] Step 4 — qa-agent — PASS | FAIL
   [IN_PROGRESS] Step 5 — pr-reviewer-agent
@@ -106,6 +113,22 @@ If spec is written, log any new architectural decisions as DEC-XXX in `memory/DE
 
 ---
 
+## Step 2b — pm-agent assigns the story
+
+**pm-agent** records the assignment before dev confirms and starts:
+- Marks STORY-XXX as IN_PROGRESS in the "In Progress" section of `memory/STATE.md`
+- Updates `memory/NEXT.md` to point at this story's implementation
+
+```
+PM ASSIGNMENT
+───────────────────────────────────────
+STATE.md: STORY-XXX → In Progress ✓
+NEXT.md:  updated → [next implementation step]
+───────────────────────────────────────
+```
+
+---
+
 ## Step 3 — dev-agent implements
 
 **dev-agent** reads the story, acceptance criteria, and tech spec, then writes the code.
@@ -165,9 +188,9 @@ Continue anyway, or split this PR? [continue / split]
 
 **qa-agent** validates the implementation. This is a hard gate — nothing proceeds if it fails.
 
-Checks:
+Checks (canonical gate definition lives in /review — this is the pre-implementation subset):
 - Tests exist for all new functionality?
-- All acceptance criteria met (from the story in BACKLOG.md)?
+- All acceptance criteria met? AC come from the story body passed in the prompt by the orchestrator — qa does not re-read BACKLOG.md.
 - Edge cases covered: empty, error, loading, success states?
 - Existing tests still pass?
 
