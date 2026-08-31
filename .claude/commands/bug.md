@@ -47,6 +47,7 @@ On chain completion (commit approved), delete `memory/CHECKPOINT.md`.
 
 ```bash
 cat memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
+cat memory/TEAM.md                    # roster — senior-engineer takes hard diagnosis if ACTIVE
 cat memory/STATE.md
 git log --oneline -5
 ```
@@ -104,6 +105,11 @@ Fix:        [what needs to change]
 Risk:       [low | medium — what to watch]
 ───────────────────────────────────────
 ```
+
+**Hard-diagnosis routing:** if tech-lead cannot isolate the root cause on the first
+investigation and senior-engineer-agent is ACTIVE in the roster, senior-engineer takes
+over the diagnosis (reproduce → isolate → name the cause), records the lesson in
+LEARNINGS.md, and hands back — dev still implements the fix in Step 3.
 
 If SEV-1 → proceed immediately regardless of sprint state.
 If SEV-2 → proceed if in current sprint scope, else log to the top of BACKLOG.md and stop.

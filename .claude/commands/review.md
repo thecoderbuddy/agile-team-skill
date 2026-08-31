@@ -43,12 +43,16 @@ during CHANGES REQUESTED loops. Format and lifecycle: see "Checkpoint Protocol" 
 
 ```bash
 cat memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
+cat memory/TEAM.md                    # roster — which extended lenses join Step 4b
 git diff --stat --no-color
 git diff
 # Extract ONLY the story under review — do not read the full backlog:
 awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
 cat memory/DECISIONS.md # architectural constraints
 ```
+
+**Roster check:** note which extended agents are ACTIVE in `memory/TEAM.md` — they run in
+Step 4b. If none are ACTIVE, Step 4b is skipped entirely.
 
 **Story ID resolution:** use the story ID from `$ARGUMENTS` in the awk pattern above. If
 `$ARGUMENTS` is empty, derive the story ID from the "In Progress" entry in `memory/STATE.md`
@@ -215,9 +219,28 @@ If README is stale → flag as REQUEST CHANGES. Dev updates README before merge.
 
 ---
 
+## Step 4b — Extended lenses (roster-gated — skip if no extended agent is ACTIVE)
+
+Run only the lenses whose agent is marked ACTIVE in `memory/TEAM.md` **and** whose surface
+the diff touches. Each lens outputs findings in its agent-definition format; a lens whose
+surface isn't touched outputs one line ("AI surface: not touched — skipped") and stands down.
+
+- **ai-engineer-agent** (if ACTIVE, diff touches prompts/model calls/AI pipelines):
+  run the 10-item AI review checklist. Blocking: prompt injection, PII to providers,
+  unvalidated output execution, prompt change with zero eval evidence.
+- **design-lead-agent** (if ACTIVE, diff touches UI):
+  run the 7 UX dimensions. Blocking: task cannot be completed, a11y failure.
+- **senior-engineer-agent** (if ACTIVE, only when pr-reviewer or po explicitly requests
+  a depth pass on an L+ diff): implementation-depth consult — feeds findings, no verdict.
+
+Record each lens in CHECKPOINT.md as `Step 4b — [agent] — [run | skipped (reason)]`.
+
+---
+
 ## Step 5 — po-agent writes the PR response
 
-**po-agent** collects all findings from Steps 1–4 and writes the formal PR response.
+**po-agent** collects all findings from Steps 1–4 (and Step 4b extended lenses, if any)
+and writes the formal PR response.
 The verdict output must follow the "PR & Ticket Description Structure" in CLAUDE.md
 (Impact, Fix, Out of scope/BACKLOG items, Acceptance criteria).
 
@@ -238,6 +261,8 @@ REVIEW SUMMARY
   Code:      [PASS | N issues]
   Security:  [CLEAN | N findings]
   Arch:      [ALIGNED | N concerns]
+  AI lens:   [PASS | N findings | skipped — not ACTIVE or no AI surface]
+  UX lens:   [PASS | N findings | skipped — not ACTIVE or no UI surface]
 
 ──────────────────────────────────────────────────
 REQUIRED CHANGES  (fix all before merge)
@@ -321,3 +346,11 @@ Run `/complete STORY-XXX "description"` or approve inline to commit and close th
 - If the same finding appears in 3 consecutive cycles → pause and flag to user. Something is structurally wrong.
 - If QA fails twice in a row → pause and show the user the exact failing criteria. Ask: "Fix manually or rewrite the approach?"
 - Security CRITICAL on any cycle → pause before dev fixes. Show finding and ask user to confirm the fix approach.
+
+## Escalation
+
+- po cannot override a security block or qa hard veto — only **cto-agent** can approve
+  that exception (invoke it explicitly), and only with a compensating control + follow-up
+  story. Default is NO.
+- If pr-reviewer and tech-lead reach opposite verdicts on an architectural question and
+  po cannot resolve it → consult **principal-engineer-agent** as tie-breaker before cto.

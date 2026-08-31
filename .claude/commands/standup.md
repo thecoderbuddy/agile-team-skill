@@ -13,6 +13,7 @@ All agents report. PM synthesizes. PO notes. Use at the start of every session.
 ```bash
 cat memory/STATE.md
 cat memory/NEXT.md
+cat memory/TEAM.md    # roster — ACTIVE extended agents also report in Step 1
 git log --oneline -5
 ```
 
@@ -81,6 +82,14 @@ tech-lead-agent
   Blocked: [nothing, or what needs a decision]
 ```
 
+**Extended agents (roster-gated):** each extended agent marked ACTIVE in `memory/TEAM.md`
+also reports in the same Done / Doing / Blocked format:
+- **senior-engineer-agent** — pairing/heavy-story progress; flag where dev is struggling
+- **ai-engineer-agent** — eval results trend, cost anomalies, upstream model changes
+- **design-lead-agent** — design-readiness of upcoming UI stories, open UX findings
+
+DORMANT and ON-DEMAND agents do not report — skip them silently.
+
 ---
 
 ## Step 2 — pm-agent synthesizes
@@ -128,6 +137,8 @@ tech-lead-agent
   Done:    [...]
   Doing:   [...]
   Blocked: [...]
+
+[+ one block per ACTIVE extended agent — omit DORMANT/ON-DEMAND agents entirely]
 
 BLOCKERS
   [description] — owner: [agent] — mitigation: [plan]

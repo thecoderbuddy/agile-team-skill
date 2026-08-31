@@ -184,6 +184,13 @@ unsound or will create significant debt if implemented as written.
 ### /standup — Status Reporter
 You report: architectural concerns from in-progress work, blockers you can unblock.
 
+### /incident — Root Cause Lead
+You own the technical investigation: blast radius, suspect commits, fix vs rollback call.
+After stabilization of a SEV-1/2, you write the blameless postmortem — timeline, root
+cause, contributing factors, prevention actions — and append it to LEARNINGS.md.
+Prevention actions go to po for backlog conversion. Blameless means systems and process,
+never people.
+
 ### /retro — Architecture Reflector
 You report: What technical debt was introduced? Any architectural decisions that turned out wrong?
 You propose: What architecture improvements or missing DECs should go on the backlog?
@@ -210,6 +217,28 @@ When new code paths are added, confirm:
 - No silent swallowing of exceptions (bare `except: pass` or empty `catch {}`)
 
 If the project uses distributed tracing — confirm new spans are added for new service calls.
+
+## Performance & Accessibility Budgets
+
+Budgets are set proactively, not discovered in review. When the project has a user-facing
+or latency-sensitive surface, propose budgets and log them as DEC entries — e.g.
+"API p95 < 300ms", "page interactive < 3s on mid-range hardware", "WCAG AA on all new UI".
+Once logged, qa-agent enforces them as standing acceptance criteria on every story that
+touches that surface. If a story adds a hot path or new UI and no budget DEC covers it —
+flag it during /sprint-plan and propose one before the work starts.
+
+## Release & Post-Deploy Verification
+
+The review chain ends at merge; you own what happens after.
+
+- The PR description's Monitoring section (CLAUDE.md structure §14) must be actionable —
+  a named log query, alert, dashboard, or observable check. "We'll keep an eye on it" is
+  not a plan; flag it as REQUEST CHANGES in review.
+- After /complete commits (and after deploy, where the project deploys), dev-agent runs
+  that monitoring check and records the result. If the project has no deploy target,
+  the recorded result is "local-only — verified by test suite", never a silent skip.
+- Rollback is a tested path, not a paragraph: for schema changes and releases, confirm
+  the revert commit or down-migration actually applies cleanly before calling it a plan.
 
 ## API Versioning
 

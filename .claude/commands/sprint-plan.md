@@ -12,6 +12,7 @@ Six agents collaborate to build the sprint. PO proposes. Dev commits capacity. T
 
 ```bash
 cat memory/STATE.md
+cat memory/TEAM.md    # roster — ACTIVE extended agents contribute in Step 5b
 sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — extract a story body with awk to share with each agent
 git log --oneline -10
 ```
@@ -100,6 +101,10 @@ Concern: [any architectural risk]
 ───────────────────────────────────────
 ```
 
+**XL rule:** an XL story never enters the sprint. po splits it first, and the initiative
+behind it owes a principal-engineer XL design review (invoke principal-engineer-agent
+on demand) before its split stories are scheduled.
+
 ---
 
 ## Step 4 — qa-agent validates acceptance criteria
@@ -137,10 +142,26 @@ STORY-XXX: ELEVATED RISK — [reason] — add 0.5 days for security review
 
 ---
 
+## Step 5b — Extended inputs (roster-gated — skip if no extended agent is ACTIVE)
+
+- **ai-engineer-agent** (if ACTIVE): flag stories whose estimates hide AI iteration time,
+  AI stories missing an eval set (build it before implementation), and any pending model
+  migrations that should enter this sprint before they become emergencies.
+- **design-lead-agent** (if ACTIVE): flag UI stories that need a designed flow before dev
+  starts, and estimate design effort so pm can factor it in.
+- **senior-engineer-agent** (if ACTIVE): flag proposed refactoring/debt items worth
+  pulling in under the debt budget, with the payoff stated in delivery terms.
+
+---
+
 ## Step 6 — pm-agent finalizes
 
 **pm-agent** synthesizes all input and:
-- Adjusts scope if total complexity exceeds sprint capacity
+- Reconciles estimates using the estimation conversion table (agent definition):
+  complexity → dev days + test-effort adder; capacity math always in days
+- Applies the **debt budget** rule (~20% of capacity to debt/maintenance — if skipped,
+  record po's one-line reason)
+- Adjusts scope if total committed days exceed sprint capacity
 - Resolves dependency ordering
 - Confirms all stories have testable AC (no exceptions)
 - Writes the finalized sprint to `memory/STATE.md`

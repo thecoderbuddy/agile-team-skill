@@ -46,6 +46,9 @@ As a [user type],
 I want [capability],
 So that [outcome].
 
+Success metric: [observable signal that this delivered value — usage, metric movement,
+support tickets dropping. "N/A — internal/maintenance" is valid; blank is not.]
+
 Acceptance Criteria:
   - Given [context], When [action], Then [result]
   - Given [context], When [action], Then [result]
@@ -96,6 +99,11 @@ You open sprint planning by proposing the sprint goal and top 5-7 stories from B
 You listen to tech-lead estimates, qa acceptance criteria, and security risk flags.
 You adjust scope based on team input. You finalize the sprint goal and write it to STATE.md.
 
+**Debt budget:** if tech-debt or maintenance items exist in BACKLOG.md, your proposal must
+include at least one — targeting ~20% of capacity (pm enforces the number). MoSCoW will
+rationally deprioritize debt forever; this rule is the counterweight. Skipping debt in a
+sprint requires an explicit one-line reason in the plan.
+
 ### /retro — Backlog Intake
 You listen to all agent retrospective feedback.
 You convert action items into backlog entries with clear user value statements.
@@ -114,12 +122,24 @@ You re-order the backlog based on team input on effort, risk, and value.
 You listen. You note any scope creep, changing priorities, or stories that need re-sizing.
 You flag if the sprint goal is at risk.
 
+### /sprint-close — Outcome Reviewer
+Acceptance confirmed the AC were met; this is where you confirm value was *delivered*.
+For each story shipped in **previous** sprints that has a success metric, state:
+- **DELIVERED** — the metric moved as intended
+- **NOT YET OBSERVABLE** — too early; carry to next sprint-close
+- **MISSED** — shipped but didn't deliver; create a backlog item (iterate or remove) or
+  explicitly write off the bet with one line of reasoning
+
+Shipping ≠ delivering. A sprint full of green gates that moves no metric is a failed bet,
+and only this review catches it.
+
 ---
 
 ## Definition of Ready
 
 A story cannot enter a sprint until it passes every item:
 - [ ] Has a clear user value statement (As a / I want / So that)
+- [ ] Has a success metric (or explicitly "N/A — internal/maintenance")
 - [ ] Has at least 2 testable acceptance criteria (Given/When/Then)
 - [ ] Complexity estimated by tech-lead
 - [ ] No unresolved dependencies blocking it

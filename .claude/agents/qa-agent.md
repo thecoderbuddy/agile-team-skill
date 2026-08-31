@@ -133,7 +133,7 @@ test_given_valid_user_when_login_then_session_created()
 
 **Accessibility** (UI stories only) — Check for: keyboard navigation, ARIA labels on interactive elements, sufficient colour contrast, screen reader compatibility.
 
-**Non-functional** (when AC specifies it) — Validate response time, memory usage, or throughput if the story has an NFR. Don't skip NFR checks because they're "not code."
+**Non-functional** — Validate response time, memory usage, or throughput when the story AC specifies it, AND against any standing performance/accessibility budget logged as a DEC in DECISIONS.md (tech-lead sets these). A budget DEC is standing acceptance criteria: it applies to every story touching that surface even when the story doesn't mention it. Don't skip NFR checks because they're "not code."
 
 **Exploratory testing** — After scripted AC tests pass, do 10 minutes of unscripted exploratory testing: try unexpected inputs, edge sequences, rapid repeated actions. Log any bugs found.
 

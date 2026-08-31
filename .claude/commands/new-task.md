@@ -33,6 +33,7 @@ Steps:
   [IN_PROGRESS] Step 5 — pr-reviewer-agent
   [PENDING] Step 6 — security-analyst-agent
   [PENDING] Step 7 — tech-lead-agent (arch review)
+  [PENDING] Step 7b — extended lenses (roster-gated — run | skipped)
   [PENDING] Step 8 — po-agent (verdict)
 ```
 
@@ -44,11 +45,15 @@ On chain completion (commit approved and written), delete `memory/CHECKPOINT.md`
 
 ```bash
 cat memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
+cat memory/TEAM.md                    # roster — implementer routing + extended lenses
 cat memory/STATE.md
 cat memory/NEXT.md
 # Read the backlog index only — not the full file:
 sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md
 ```
+
+**Roster check:** note which extended agents are ACTIVE — this decides the implementer
+in Step 3 (senior-engineer for L stories) and the extended lenses in Step 7b.
 
 **Token rule:** select the story from the index. Once selected (Step 1), extract just that
 story's body and pass it to every subsequent agent in its step prompt:
@@ -111,12 +116,21 @@ Files:        [list of files to create or modify]
 
 If spec is written, log any new architectural decisions as DEC-XXX in `memory/DECISIONS.md` before dev starts.
 
+**Complexity routing:**
+- **XL** → stop. XL is never scheduled directly: po splits it first, and if
+  principal-engineer's XL design review gate hasn't run on the initiative, flag that
+  it's owed. Re-run /new-task on a split story.
+- **L** → if senior-engineer-agent is ACTIVE in the roster, it implements Step 3
+  (or pairs with dev); otherwise dev-agent proceeds with the spec mandatory.
+- **XS–M** → dev-agent, always — senior does not absorb work dev can grow on.
+
 ---
 
 ## Step 2b — pm-agent assigns the story
 
-**pm-agent** records the assignment before dev confirms and starts:
-- Marks STORY-XXX as IN_PROGRESS in the "In Progress" section of `memory/STATE.md`
+**pm-agent** records the assignment before the implementer confirms and starts:
+- Marks STORY-XXX as IN_PROGRESS in the "In Progress" section of `memory/STATE.md`,
+  noting the implementer (dev-agent or senior-engineer-agent per Step 2 routing)
 - Updates `memory/NEXT.md` to point at this story's implementation
 
 ```
@@ -131,7 +145,8 @@ NEXT.md:  updated → [next implementation step]
 
 ## Step 3 — dev-agent implements
 
-**dev-agent** reads the story, acceptance criteria, and tech spec, then writes the code.
+**dev-agent** (or **senior-engineer-agent**, per the Step 2 complexity routing) reads the
+story, acceptance criteria, and tech spec, then writes the code.
 
 - Follow the approach from Step 2
 - Implement ALL acceptance criteria — not just the happy path
@@ -279,9 +294,21 @@ Recommendation: APPROVE | REQUEST CHANGES
 
 ---
 
+## Step 7b — Extended lenses (roster-gated — skip if no extended agent is ACTIVE)
+
+Same rule as /review Step 4b: run only lenses whose agent is ACTIVE in `memory/TEAM.md`
+and whose surface the diff touches.
+
+- **ai-engineer-agent** — AI checklist on diffs touching prompts/model calls/AI pipelines
+- **design-lead-agent** — UX dimensions on diffs touching UI
+
+A lens with no surface outputs one skip line and stands down. Findings feed Step 8.
+
+---
+
 ## Step 8 — po-agent verdict
 
-**po-agent** collects all findings from Steps 5–7 and makes the final call.
+**po-agent** collects all findings from Steps 5–7 (and 7b, if run) and makes the final call.
 
 For each finding:
 - **FIX NOW** → blocks merge, dev fixes, chain reruns from Step 4

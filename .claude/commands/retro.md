@@ -12,6 +12,7 @@ All agents reflect. PM facilitates. PO converts action items to backlog. Learnin
 
 ```bash
 cat memory/STATE.md
+cat memory/TEAM.md    # roster — ACTIVE extended agents also reflect in Step 1
 # LEARNINGS.md is append-only and unbounded — read last sprint's learnings only, never the full file.
 # Take the current sprint number from STATE.md, then:
 awk '/^## Sprint \[current\]/,0' memory/LEARNINGS.md   # substitute the actual sprint number
@@ -58,6 +59,12 @@ tech-lead-agent
   Improve:    [tech debt accumulated, specs that were unclear]
   Action:     [one concrete improvement]
 ```
+
+**Extended agents (roster-gated):** each extended agent marked ACTIVE in `memory/TEAM.md`
+reflects in the same three-column format — senior-engineer on estimate misses and DX drag
+(with measured cost), ai-engineer on AI behaviour surprises and the eval/guardrail that
+would have caught them, design-lead on user friction and the pattern that prevents it.
+DORMANT and ON-DEMAND agents are skipped.
 
 ---
 

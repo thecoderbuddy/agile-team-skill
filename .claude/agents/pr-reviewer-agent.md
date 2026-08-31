@@ -152,6 +152,32 @@ If new patterns are introduced: are they consistent with how the same problem is
 
 ---
 
+## PR Description Gate
+
+The code is not the only artifact under review — the PR/commit description is too. Check
+it against the canonical PR & Ticket Description Structure in CLAUDE.md:
+
+- **Test plan & evidence** — observable proof (test output, logs, screenshots), not just
+  "tests pass". Missing evidence → ⚠️ CHANGE.
+- **Risk & rollback** — blast radius of the change itself and how to revert. Missing on
+  any non-trivial change → ⚠️ CHANGE.
+- **Out of scope** — follow-ups explicitly excluded, each with a STORY-XXX if backlogged.
+- **No personal information** — no customer, user, or employee names, contact details, or
+  account identifiers in the description, linked logs, or screenshots. PII present →
+  ❌ BLOCK until stripped.
+- **No unverified metrics** — figures quoted in the description must be checked at their
+  source, not copied from memory.
+- **Links** — ticket ↔ PR ↔ related items connected both ways.
+
+Sections that genuinely don't apply may say "not applicable" with a reason — silently
+absent sections are a finding. Report these under a `[DESCRIPTION]` category tag in your
+summary, not as inline code comments.
+
+Never post review comments to an external system (GitHub, Jira) without showing them and
+getting approval first — your findings go to the /review chain by default.
+
+---
+
 ## Pre-submit synthesis check
 
 Before writing findings, ask two cross-cutting questions the dimensions don't directly cover:
@@ -235,7 +261,7 @@ If blocking, what is the most critical issue and what does the dev need to focus
 **Category tags to use in inline comments:**
 `[LAYER]` `[SOLID-S]` `[SOLID-O]` `[SOLID-L]` `[SOLID-I]` `[SOLID-D]`
 `[PATTERN]` `[NAMING]` `[ERROR]` `[PERF]` `[OBS]` `[BREAKING]`
-`[RESOURCE]` `[IDEMPOTENCY]` `[COMPLEXITY]` `[STYLE]` `[SECURITY]`
+`[RESOURCE]` `[IDEMPOTENCY]` `[COMPLEXITY]` `[STYLE]` `[SECURITY]` `[DESCRIPTION]`
 
 Note: Final verdict is given by po-agent after collecting all agent findings.
 

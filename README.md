@@ -9,7 +9,7 @@
   <a href="https://claude.ai/code">
     <img src="https://img.shields.io/badge/Claude_Code-compatible-blueviolet?logo=anthropic" alt="Claude Code compatible" />
   </a>
-  <img src="https://img.shields.io/badge/agents-7-orange" alt="7 agents" />
+  <img src="https://img.shields.io/badge/agents-13-orange" alt="13 agents" />
   <img src="https://img.shields.io/badge/commands-30-green" alt="30 commands" />
   <img src="https://img.shields.io/badge/stack-any-lightgrey" alt="Works with any stack" />
 </p>
@@ -43,7 +43,7 @@ This gives you that team. An AI agentic team designed around your agile workflow
 
 ## What it actually does
 
-Seven agents. Each one has a single job and won't budge from it. When you run `/review`, QA checks first — if your code doesn't meet the acceptance criteria, the review stops there. No code review of broken code. If it passes, four agents process your diff in sequence, then the PO collects all findings and gives you one verdict:
+Seven core agents — plus six extended specialists (Senior Engineer, Principal Engineer, AI Engineer, Design Lead, CTO, CEO) activated per project need via the `memory/TEAM.md` roster. Each one has a single job and won't budge from it. When you run `/review`, QA checks first — if your code doesn't meet the acceptance criteria, the review stops there. No code review of broken code. If it passes, four agents process your diff in sequence, then the PO collects all findings and gives you one verdict:
 
 ```
 You run:  /review
@@ -299,7 +299,7 @@ Works in any Claude Code surface (CLI, desktop app, claude.ai/code in browser, o
 /plugin install agile-team@agile-team-marketplace
 ```
 
-That's it. The 7 agents, 30 commands, and safety hooks are available immediately. No files are written into your project — Claude Code holds the plugin centrally, and updates come through the marketplace.
+That's it. The 13 agents, 30 commands, and safety hooks are available immediately. No files are written into your project — Claude Code holds the plugin centrally, and updates come through the marketplace.
 
 Skip to **step 3** below to onboard a project.
 
@@ -420,7 +420,7 @@ agile-team-skill/
 
 ## Multiple Projects
 
-Install once per project. Each project gets its own `memory/` — completely separate sprint state, backlog, and decisions. Same 7 agents, same 30 commands, different context.
+Install once per project. Each project gets its own `memory/` — completely separate sprint state, backlog, decisions, and team roster. Same 13 agents, same 30 commands, different context.
 
 ```
 ~/projects/

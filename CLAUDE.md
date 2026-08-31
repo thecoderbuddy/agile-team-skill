@@ -1,7 +1,8 @@
 # Agile Team — AI-Powered Scrum for Any Project
 
-Drop this into any codebase. You get 7 specialist agents, collaborative agile ceremonies,
-and persistent team memory. No lock-in. Works with any language or framework.
+Drop this into any codebase. You get 7 core specialist agents, 6 extended agents activated
+per project need, collaborative agile ceremonies, and persistent team memory. No lock-in.
+Works with any language or framework.
 
 ---
 
@@ -9,19 +10,26 @@ and persistent team memory. No lock-in. Works with any language or framework.
 
 ```
 .claude/
-├── agents/                    ← 7 specialist agents
-│   ├── po-agent.md            Product Owner
-│   ├── pm-agent.md            Scrum Master
-│   ├── dev-agent.md           Developer
-│   ├── qa-agent.md            QA Engineer
-│   ├── pr-reviewer-agent.md   PR Reviewer
-│   ├── security-analyst-agent.md  Security Analyst
-│   └── tech-lead-agent.md     Tech Lead
+├── agents/                    ← 7 core + 6 extended agents
+│   ├── po-agent.md            Product Owner            (core)
+│   ├── pm-agent.md            Scrum Master             (core)
+│   ├── dev-agent.md           Developer                (core)
+│   ├── qa-agent.md            QA Engineer              (core)
+│   ├── pr-reviewer-agent.md   PR Reviewer              (core)
+│   ├── security-analyst-agent.md  Security Analyst     (core)
+│   ├── tech-lead-agent.md     Tech Lead                (core)
+│   ├── senior-engineer-agent.md    Senior Engineer     (extended — roster-gated)
+│   ├── ai-engineer-agent.md        AI Engineer         (extended — roster-gated)
+│   ├── design-lead-agent.md        Design Lead UX/UI   (extended — roster-gated)
+│   ├── principal-engineer-agent.md Principal Engineer  (on-demand consult)
+│   ├── cto-agent.md                CTO                 (on-demand escalation)
+│   └── ceo-agent.md                CEO                 (on-demand escalation)
 └── commands/                  ← 30 slash commands
 
 memory/                        ← Persistent team state
 ├── NEXT.md                    Exact next action (session continuity)
 ├── STATE.md                   Current sprint
+├── TEAM.md                    Team roster — which extended agents are ACTIVE
 ├── BACKLOG.md                 Product backlog (## Index at top — read index first)
 ├── ARCHIVE.md                 Completed stories (append-only — moved here by /complete)
 ├── DECISIONS.md               Architecture decisions
@@ -32,7 +40,9 @@ memory/                        ← Persistent team state
 **Token discipline:** ceremonies read the BACKLOG.md `## Index` section first and extract a
 single story body (`awk '/^- \[.\] STORY-XXX:/,/^---$/'`) only when acting on it. In chains,
 the orchestrator extracts once and passes the story body in each agent's prompt — agents do
-not re-read BACKLOG.md. ARCHIVE.md is never read during ceremonies.
+not re-read BACKLOG.md. ARCHIVE.md is never read during ceremonies, with one bounded
+exception: the /sprint-close outcome review reads only the last 1–2 sprints' archived
+entries (extract the specific stories — never the full file).
 
 ---
 
@@ -47,6 +57,7 @@ perspective in sequence, then one agent synthesizes into a shared artifact.
   pr-reviewer  ──→  code quality findings
   security     ──→  vulnerability findings
   tech-lead    ──→  architecture findings
+  [extended]   ──→  roster-gated lenses (TEAM.md): ai-engineer (AI surface), design-lead (UI)
   po           ──→  [SYNTHESIZES ALL] → APPROVED / CHANGES REQUESTED + BACKLOG items
 ```
 
@@ -79,17 +90,42 @@ If blocked at any point: `/unblock STORY-XXX "what resolved it"`
 
 ---
 
-## The 7 Agents
+## The Agents
+
+### Core (always active)
 
 | Agent | Role | Owns | Hard Veto |
 |---|---|---|---|
 | `po-agent` | Product Owner | BACKLOG.md, sprint goal, user stories | No |
-| `pm-agent` | Scrum Master | STATE.md, NEXT.md, ceremonies | No |
+| `pm-agent` | Scrum Master | STATE.md, NEXT.md, TEAM.md, ceremonies | No |
 | `dev-agent` | Developer | Code, implementation, capacity estimates | No |
 | `qa-agent` | QA Engineer | Test strategy, acceptance criteria | YES — no ship without tests |
 | `pr-reviewer-agent` | PR Reviewer | Code review, merge gate | Soft — can block PR |
 | `security-analyst-agent` | Security | Vulnerability scan, risk register | Soft — can block PR |
 | `tech-lead-agent` | Tech Lead | DECISIONS.md, architecture, estimates | No |
+
+### Extended (roster-gated — see `memory/TEAM.md`)
+
+Extended agents join ceremonies only while `memory/TEAM.md` marks them `ACTIVE`.
+ON-DEMAND agents never join chains — they are invoked explicitly.
+
+| Agent | Role | Scope | Default |
+|---|---|---|---|
+| `senior-engineer-agent` | Senior Engineer | L/XL stories, hardest bugs, perf profiling, refactoring roadmap, DX, deep test strategy, /unblock pairing | DORMANT |
+| `ai-engineer-agent` | AI Engineer | AI review lens, eval infrastructure, AI architecture, model lifecycle, cost/latency observability, data hygiene, responsible AI | DORMANT |
+| `design-lead-agent` | Design Lead (UX/UI) | UX review lens, design system, personas & research, IA/journey maps, UX metrics, copy & tone, /ux-review, /focus-group, /design | DORMANT |
+| `principal-engineer-agent` | Principal Engineer | XL design gate, migrations, build-vs-buy, standards/golden paths, scalability & SLOs, consistency audits, spikes, tech radar, tie-breaks | ON-DEMAND |
+| `cto-agent` | CTO | Veto overrides, platform decisions, tech roadmap, eng health metrics, security posture, vendor/spend, due diligence, SEV-1 sign-off | ON-DEMAND |
+| `ceo-agent` | CEO | Vision/strategy, outcome framework, iterate/pivot/kill, priority deadlock, epic challenges, market signal, pricing, risk appetite | ON-DEMAND |
+
+**Roster rule:** before running any ceremony chain, the orchestrator reads
+`memory/TEAM.md`. Extended agents marked ACTIVE join the ceremonies listed in their
+roster row; DORMANT agents are skipped entirely (zero token cost). `/init` proposes the
+initial roster from the project scan; flip a Status in TEAM.md any time to change it.
+
+**Escalation path:** agent dispute → po-agent synthesizes (product) / tech-lead decides
+(technical) → principal-engineer (technical tie-break) → cto-agent (final technical) or
+ceo-agent (final product/business).
 
 ---
 
@@ -106,7 +142,16 @@ If blocked at any point: `/unblock STORY-XXX "what resolved it"`
 | `/backlog` | po leads → tech-lead estimates → qa validates AC → security flags risk | BACKLOG.md prioritized |
 | `/new-task` | po selects → tech-lead specs → pm assigns → dev confirms | IN_PROGRESS in STATE.md |
 | `/status` | pm reads state → dev/qa/security/tech-lead report health → po assesses backlog | Full project picture |
-| `/unblock` | tech-lead confirms resolution → pm clears STATE.md → NEXT.md updated | Blocker removed |
+| `/unblock` | tech-lead confirms resolution (senior-engineer pairs if ACTIVE) → pm clears STATE.md → NEXT.md updated | Blocker removed |
+
+**Roster-gated additions:** ceremonies read `memory/TEAM.md` in Step 0. Extended agents
+marked ACTIVE join at their designated hook: /review + /new-task get extended lenses
+(ai-engineer, design-lead) before po synthesis; /standup and /retro add their reports;
+/sprint-plan gets Step 5b inputs; /bug and /unblock route hard diagnosis to
+senior-engineer; L stories route to senior-engineer in /new-task. ON-DEMAND agents
+(principal-engineer, cto, ceo) are invoked explicitly at escalation points: XL design
+gate (/sprint-plan), veto overrides (/review), SEV-1 escalation + postmortem sign-off
+(/incident), MISSED-metric calls (/sprint-close).
 
 **Built-in name collisions:** `/init`, `/review`, and `/security-review` shadow Claude Code
 built-in skills of the same names. In this repo the project commands take precedence. If a

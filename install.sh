@@ -147,7 +147,7 @@ if [ "$SOURCE_MODE" = "local" ]; then
     mkdir -p "$TARGET_DIR/memory"
 
     # Structural templates — copy from repo
-    for mf in DECISIONS LEARNINGS; do
+    for mf in DECISIONS LEARNINGS TEAM; do
       [ -f "$SOURCE_DIR/memory/$mf.md" ] && cp "$SOURCE_DIR/memory/$mf.md" "$TARGET_DIR/memory/$mf.md"
     done
 
@@ -184,7 +184,7 @@ EOF
 (empty — run /init to populate)
 EOF
 
-    print_ok "memory/ installed (DECISIONS, LEARNINGS + blank STATE, NEXT, BACKLOG)"
+    print_ok "memory/ installed (DECISIONS, LEARNINGS, TEAM + blank STATE, NEXT, BACKLOG)"
   fi
 
   if [ "$SKIP_CLAUDE_MD" != "true" ]; then
@@ -204,6 +204,8 @@ else
   AGENTS=(
     "po-agent" "pm-agent" "dev-agent" "qa-agent"
     "pr-reviewer-agent" "security-analyst-agent" "tech-lead-agent"
+    "senior-engineer-agent" "principal-engineer-agent" "ai-engineer-agent"
+    "design-lead-agent" "cto-agent" "ceo-agent"
   )
 
   COMMANDS=(
@@ -214,10 +216,10 @@ else
     "resume" "health-check" "logs" "po" "incident" "focus-group"
   )
 
-  # DECISIONS and LEARNINGS are structural templates shipped with the repo.
+  # DECISIONS, LEARNINGS, and TEAM are structural templates shipped with the repo.
   # STATE, NEXT, BACKLOG are ephemeral sprint state — created fresh for each project.
   MEMORY_TEMPLATE_FILES=(
-    "DECISIONS" "LEARNINGS"
+    "DECISIONS" "LEARNINGS" "TEAM"
   )
 
   HOOKS=("post-tool-use" "stop")
@@ -347,7 +349,7 @@ echo -e "${BOLD}─────────────────────�
 echo -e "${GREEN}${BOLD}Agile team installed.${NC}"
 echo ""
 echo "  What's installed:"
-echo "    .claude/agents/    — 7 specialist agents"
+echo "    .claude/agents/    — 13 specialist agents (7 core + 6 roster-gated)"
 echo "    .claude/commands/  — 29 slash commands"
 echo "    .claude/hooks/     — safety gates + secret scanning
     .gitleaks.toml     — secret scanner config

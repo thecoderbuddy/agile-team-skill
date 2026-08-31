@@ -43,6 +43,9 @@ Long chain — write `memory/CHECKPOINT.md` after each step per the Checkpoint P
    - Read relevant code to understand the failure
    - Propose fix approach or rollback option
    - If architectural issue: log DEC-XXX in `memory/DECISIONS.md`
+   - **Escalation:** if a SEV-1 root cause resists this investigation, hand the technical
+     investigation to **principal-engineer-agent** (on-demand — invoke explicitly);
+     tech-lead stays on coordination of the fix
 
 5. **pm-agent logs and coordinates:**
    - Add incident to `memory/STATE.md` under INCIDENTS section:
@@ -89,5 +92,23 @@ ROLLBACK OPTION
      bug is in current sprint scope, else logs to the top of the backlog.
    - **SEV-3/4:** already backlogged in Step 5 — stop here.
 
-8. **Overwrite `memory/NEXT.md`** with the exact next action (Iron Rule 6) — e.g.,
+8. **Postmortem (SEV-1/2 only, after resolution):**
+   - **tech-lead-agent** writes a blameless postmortem and appends it to
+     `memory/LEARNINGS.md` under `## Postmortems`:
+     ```
+     ### POSTMORTEM — SEV-[N] — [date] — [one-line title]
+     Timeline: [detected → mitigated → resolved, with times if known]
+     Root cause: [systems and process — never people]
+     Contributing factors: [what made it possible or worse]
+     Prevention actions: [each becomes a BACKLOG.md item — list the STORY-XXX IDs]
+     ```
+   - **pm-agent** confirms every prevention action reached BACKLOG.md and marks the
+     incident `resolved` in STATE.md. An incident is not closed until the postmortem
+     is in LEARNINGS.md.
+   - **SEV-1 only:** invoke **cto-agent** (on-demand) to sign off the postmortem —
+     honesty check (blameless, root cause systemic) and confirmation that prevention
+     actions are scheduled into a sprint, not just backlogged. principal-engineer-agent
+     reviews it for technical depth if it was involved in the investigation.
+
+9. **Overwrite `memory/NEXT.md`** with the exact next action (Iron Rule 6) — e.g.,
    "Run /bug [description] to fix INCIDENT SEV-N" or "Incident resolved — resume STORY-XXX".

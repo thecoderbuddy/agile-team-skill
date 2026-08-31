@@ -101,6 +101,25 @@ One paragraph maximum. This is early signal, not a full audit.
 
 ---
 
+## Step 4b — pm-agent proposes the team roster
+
+Read `memory/TEAM.md`. The core 7 are fixed. For each roster-gated extended agent,
+propose ACTIVE or DORMANT from the scan/description:
+
+- **design-lead-agent** → ACTIVE if the project has a user-facing UI (web/mobile/desktop
+  frontend, templates, components)
+- **ai-engineer-agent** → ACTIVE if the project calls LLM/ML APIs (anthropic/openai/etc.
+  imports, prompt files, embeddings, vector stores, model code)
+- **senior-engineer-agent** → ACTIVE if the codebase is large/complex or the initial
+  stories include L/XL work; otherwise DORMANT (pm proposes activation later when the
+  criteria in TEAM.md appear)
+- **principal-engineer / cto / ceo** → always ON-DEMAND — never change these
+
+Show the proposed roster with one-line reasoning per agent and confirm with the user
+before writing statuses into `memory/TEAM.md`.
+
+---
+
 ## Step 5 — pm-agent writes the state files
 
 **pm-agent** takes all input and writes:
@@ -176,11 +195,19 @@ ARCHITECTURE
 SECURITY EARLY FLAGS
   [one paragraph or "none"]
 
+TEAM ROSTER
+  Core 7:        active
+  design-lead:   [ACTIVE | DORMANT] — [reason]
+  ai-engineer:   [ACTIVE | DORMANT] — [reason]
+  senior-eng:    [ACTIVE | DORMANT] — [reason]
+  principal/cto/ceo: ON-DEMAND (escalation only)
+
 FILES WRITTEN
   memory/STATE.md   ✓ Sprint 1 goal set
   memory/BACKLOG.md ✓ [n] stories ready
   memory/NEXT.md    ✓ → /sprint-plan
   memory/DECISIONS.md ✓ [n decision or "template only"]
+  memory/TEAM.md    ✓ roster set
 ═══════════════════════════════════════════════════
 Team is ready. Run /sprint-plan to begin Sprint 1.
 ```

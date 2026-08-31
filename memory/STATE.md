@@ -38,6 +38,13 @@ Stories planned: 6 (5 core + 1 flex)
 Stories done: 2 planned + 6 out-of-plan maintenance (STORY-020..025) = 8 total
 Sprint capacity: ~1 working day (~2 hours active work)
 
+## Out-of-Plan Work (recorded 2026-08-31)
+- ROSTER-EXPANSION: jira ticket-drafting (pm), CEO/CTO gap fixes (7 fixes across agents +
+  complete/sprint-close/incident), 6 extended agents (senior/principal/ai/design/cto/ceo),
+  memory/TEAM.md roster, roster hooks in 9 ceremony commands, CLAUDE.md + install.sh sync.
+  Status: UNCOMMITTED — has not been through /review. ~23 files, +530 lines.
+  /po consultation findings backlogged as STORY-034..039 + BUG-024.
+
 ## Agent Notes
 - Security: BUG-009 is ELEVATED RISK — ships before any gitleaks testing occurs on other stories. PROCESS-001 gate must clear first.
 - Tech: BUG-009 fix is single-line — replace relative .gitleaks.toml path with --config "$(git rev-parse --show-toplevel)/.gitleaks.toml". STORY-017 is prompt-only change to tech-lead-agent.md.

@@ -17,6 +17,7 @@ PO writes. QA tests it. Security constrains it. Tech Lead estimates it. Then it'
 
 ```bash
 cat memory/STATE.md
+cat memory/TEAM.md    # roster — ACTIVE extended agents enrich in Step 3b
 sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — for next STORY-XXX ID and duplicate check
 cat memory/DECISIONS.md
 ```
@@ -83,6 +84,26 @@ Security Considerations:
   - [threat to mitigate, e.g., "token must not appear in logs"]
   - [or: "no security concerns for this story"]
 ```
+
+---
+
+## Step 3b — Extended enrichment (roster-gated — skip if no extended agent is ACTIVE)
+
+- **ai-engineer-agent** (if ACTIVE, story has AI behaviour) adds:
+  ```
+  AI Criteria:
+    - Eval: [how quality is measured — golden set, rubric, threshold]
+    - Fallback: [defined behaviour on model failure/refusal/timeout]
+    - Cost ceiling: [max tokens / max calls per user action]
+  ```
+- **design-lead-agent** (if ACTIVE, story has UI) adds:
+  ```
+  UX Notes:
+    - Flow: [entry point → steps → completion signal]
+    - States: [loading / empty / error / success]
+    - Pattern: [existing component to reuse — or "new, needs DEC"]
+    - A11y: [specific requirements]
+  ```
 
 ---
 

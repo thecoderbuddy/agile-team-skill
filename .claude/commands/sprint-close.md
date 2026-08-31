@@ -29,6 +29,13 @@ CLOSED) — stop and say so. There is nothing to close.
    - **dev-agent:** Is the shipped work actually complete — no hidden TODOs, no uncommitted changes?
    - **qa-agent:** All tests passing? Any quality concerns before closing?
    - **po-agent:** Does what shipped match the sprint goal? For each carry-over story, po decides its disposition: back to backlog or straight into next sprint.
+   - **po-agent (outcome review):** For each story shipped in *previous* sprints with a
+     `Success metric:` line (check ARCHIVE.md entries from the last 1–2 sprints only),
+     state: DELIVERED / NOT YET OBSERVABLE / MISSED. MISSED → backlog item (iterate or
+     remove) or an explicit one-line write-off. Shipping ≠ delivering.
+     **Escalation:** if a MISSED metric belongs to a significant bet (an epic, or a
+     story po is unsure whether to iterate or kill), invoke **ceo-agent** (on-demand)
+     for the ITERATE / PIVOT / KILL call before writing the disposition.
    - **tech-lead-agent:** Any tech debt introduced that needs a story?
 
 4. **pm-agent closes the sprint:**
@@ -57,9 +64,15 @@ CARRIED OVER
 TECH DEBT INTRODUCED
   - [any shortcuts taken — or "none"]
 
+OUTCOMES (previous sprints' shipped stories)
+  - STORY-XXX: [success metric] — DELIVERED | NOT YET OBSERVABLE | MISSED → [action]
+
 QUALITY
   - Tests: [pass/fail]
   - Bugs found: [count]
+
+RELEASE NOTES (stakeholder-facing — plain language, no story IDs, forwardable verbatim)
+  - [what shipped and why it matters to users]
 
 SIGN-OFFS
   dev:      [complete / loose ends noted]

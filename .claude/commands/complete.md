@@ -97,15 +97,23 @@ This step commits the code and closes the story in STATE.md.
    "PR & Ticket Description Structure" in CLAUDE.md — test plan & evidence,
    risk & rollback, out of scope, links.
 
-7. Show confirmation:
+7. **dev-agent runs post-merge verification:**
+
+   Run the Monitoring check from the commit/PR description (§14 of the PR & Ticket
+   Description Structure) — the named log query, alert, dashboard, or test run.
+   If the project has no deploy target, the result is "local-only — verified by test
+   suite". Never skip silently — the result line always appears in the confirmation.
+
+8. Show confirmation:
 
 ```
 STORY COMPLETE
 ════════════════════════════════════════
-Story:    STORY-XXX — [title]
-Commit:   [hash]
-QA:       passed (in /review)
-Velocity: [n done] / [n planned]
+Story:      STORY-XXX — [title]
+Commit:     [hash]
+QA:         passed (in /review)
+Post-merge: [monitoring check + result | local-only — verified by test suite]
+Velocity:   [n done] / [n planned]
 ════════════════════════════════════════
 ```
 

@@ -129,6 +129,11 @@ fix/STORY-XXX-short-description
 chore/description
 ```
 
+**Post-merge verification:** After /complete commits a story, run the Monitoring check
+from the PR description (log query, alert, dashboard, or test run) and report the result.
+If the project has no deploy target, report "local-only — verified by test suite" — never
+skip silently.
+
 **Code coverage:** Before handing off to QA, new code should have ≥ 80% line coverage from tests you wrote. If you can't reach 80%, document why — don't silently skip it.
 
 **Adding a new dependency:** Before adding any package:

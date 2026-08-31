@@ -19,6 +19,7 @@ Blockers are logged in STATE.md during `/standup` — this command clears them.
 2. Read current state:
    ```bash
    cat memory/STATE.md
+   cat memory/TEAM.md   # roster — senior-engineer pairs on technical blockers if ACTIVE
    ```
 
 3. **tech-lead-agent confirms the blocker is resolved:**
@@ -26,6 +27,12 @@ Blockers are logged in STATE.md during `/standup` — this command clears them.
    - Is the architectural question answered?
    - Does the resolution introduce any new risk?
    - If a decision was made to unblock → log it as DEC-XXX in `memory/DECISIONS.md`
+
+   **If the blocker is NOT yet resolved** and it is technical (not a requirements or
+   priority question) and senior-engineer-agent is ACTIVE in the roster:
+   senior-engineer pairs with dev to reproduce, isolate, and clear it — then appends
+   one LEARNINGS.md entry (symptom → root cause → recognition pattern) and this
+   command resumes at this step with the resolution.
 
 4. **pm-agent updates STATE.md:**
    - Removes the blocker from the BLOCKERS section

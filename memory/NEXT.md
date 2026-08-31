@@ -3,24 +3,27 @@
 # Overwrite this at the end of every session with the single most specific next step.
 # Written precisely enough that zero context is needed to continue.
 
-Sprint: 3
-Updated: 2026-06-09
+Sprint: 3 (stale — 76 days past end date; close after step 2 below)
+Updated: 2026-08-31
 
-Type: STORY
-Story: STORY-019
+Type: VERIFICATION
+Story: N/A (out-of-plan ROSTER-EXPANSION)
 
 ## Exact Next Step
-Run /new-task for STORY-019 — Dev self-review checklist for shell hook stories.
+Resume the paused /review of the ROSTER-EXPANSION change set: answer the
+diff-size prompt (team recommends "continue"), run the full chain
+(qa → pr-reviewer → security → tech-lead → po), fix any FIX NOW items, commit.
+Scope: 6 modified agent files, 12 modified command files, 6 new agent files,
+CLAUDE.md, install.sh, memory/TEAM.md. EXCLUDE pre-existing unrelated changes:
+.claude/settings.json, .gitignore, memory/RISKS.md, office/, assets/characters/,
+.claude/hooks/office-event.sh.
 
-This is the next story in Sprint 3 execution order (after STORY-017 done).
-File to change: .claude/agents/dev-agent.md
-Change: add two-item shell hook self-review checklist to the pre-QA handoff step:
-  1. All paths in the hook are absolute or resolved via git rev-parse --show-toplevel — no CWD assumptions
-  2. Every regex pattern has been verified against at least one positive match and one negative match
-Checklist is scoped to shell hook files only; N/A for non-hook stories.
+## Then
+1. /security-review — clears PROCESS-001 gate AND the 83-day overdue flag
+2. /sprint-close — Sprint 3 is stale; carry STORY-019, STORY-018, BUG-007+008
+3. /sprint-plan — apply the new debt-budget rule and estimation conversion table
 
-## Sprint 3 remaining
-- [ ] STORY-019: Dev self-review checklist for shell hook stories — XS — High
-- [ ] STORY-018: QA boundary-value scenarios at /stories time — XS — High
-- [ ] BUG-007 + BUG-008: ghr_ pattern + Stripe comment in pre-tool-use.sh — XS — Medium
-- [ ] STORY-013: /summary command — XS — Low [FLEX]
+## Why
+An unreviewed, uncommitted ~660-line change to the team's own process files is
+the biggest current risk — every ceremony run before it's reviewed executes
+unreviewed instructions.
