@@ -16,7 +16,8 @@
 
 <p align="center">
   <a href="#setup">Quick Start</a> •
-  <a href="#the-7-agents">Agents</a> •
+  <a href="#the-13-agents">Agents</a> •
+  <a href="#the-pixel-office">Pixel Office</a> •
   <a href="#all-30-commands">Commands</a> •
   <a href="#contributing">Contributing</a>
 </p>
@@ -84,17 +85,32 @@ That's the pattern for every command. Multiple specialists. One synthesizer. One
 
 ---
 
-## The 7 Agents
+## The 13 Agents
+
+**The core seven** — on every project, in every ceremony:
 
 <table>
   <tr>
-    <td align="center" width="120"><img src=".claude/office/assets/characters/po-agent.png" width="80"/><br/><b>po-agent</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/characters/pm-agent.png" width="80"/><br/><b>pm-agent</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/characters/dev-agent.png" width="80"/><br/><b>dev-agent</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/characters/qa-agent.png" width="80"/><br/><b>qa-agent</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/characters/pr-reviewer-agent.png" width="80"/><br/><b>pr-reviewer</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/characters/security-analyst-agent.png" width="80"/><br/><b>security</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/characters/tech-lead-agent.png" width="80"/><br/><b>tech-lead</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/po-agent.png" width="70"/><br/><b>po-agent</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/pm-agent.png" width="70"/><br/><b>pm-agent</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/dev-agent.png" width="70"/><br/><b>dev-agent</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/qa-agent.png" width="70"/><br/><b>qa-agent</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/pr-reviewer-agent.png" width="70"/><br/><b>pr-reviewer</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/security-analyst-agent.png" width="70"/><br/><b>security</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/tech-lead-agent.png" width="70"/><br/><b>tech-lead</b></td>
+  </tr>
+</table>
+
+**The extended six** — activated per project need via the `.claude/memory/TEAM.md` roster:
+
+<table>
+  <tr>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/senior-engineer-agent.png" width="70"/><br/><b>senior-eng</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/principal-engineer-agent.png" width="70"/><br/><b>principal</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/ai-engineer-agent.png" width="70"/><br/><b>ai-engineer</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/design-lead-agent.png" width="70"/><br/><b>design-lead</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/cto-agent.png" width="70"/><br/><b>cto</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/ceo-agent.png" width="70"/><br/><b>ceo</b></td>
   </tr>
 </table>
 
@@ -107,6 +123,41 @@ That's the pattern for every command. Multiple specialists. One synthesizer. One
 | `pr-reviewer-agent` | Senior-level code review on every diff. Correctness, patterns, performance, maintainability. |
 | `security-analyst-agent` | Scans every diff for OWASP issues, secrets, CVEs, auth holes. **Soft veto** — can block a PR. |
 | `tech-lead-agent` | Tracks architecture decisions. Estimates complexity. Writes tech specs for complex work. Flags tech debt. |
+| `senior-engineer-agent` | Takes the hardest implementation work: L/XL stories, deep debugging, tricky refactors, spikes. Mentors dev. |
+| `principal-engineer-agent` | On-demand consult for high-stakes technical calls: XL design reviews, migrations, build-vs-buy, reliability audits. |
+| `ai-engineer-agent` | Owns AI feature quality when the project touches LLMs: model selection, prompt design, eval harnesses, AI cost budgets. |
+| `design-lead-agent` | UX/UI lens on user-facing work: flows, design-system consistency, interaction states, accessibility. |
+| `cto-agent` | Final technical escalation: veto overrides, platform/vendor adoption, SEV-1 postmortem sign-off. |
+| `ceo-agent` | Business-outcome escalation: missed success metrics, priority deadlocks, "should we build this at all". |
+
+---
+
+## The Pixel Office
+
+Your team isn't invisible. The office is a live visualization of everything the agents do —
+open it in a browser and watch the team work in real time:
+
+<p align="center">
+  <img src=".claude/docs/img/office-work.png" width="800" alt="The team at their desks — active agents have lit laptops, green status dots, and speech bubbles showing what they're doing" />
+</p>
+
+- The whole team sits at their desks; spawning an agent **lights up their laptop** and shows what they're working on in a speech bubble
+- Finished agents walk over to **report to the manager**, then grab a coffee in the lounge before returning to their desk
+- Ceremonies are real meetings: run `/standup`, `/retro`, or `/sprint-plan` and **everyone walks to the conference room** and takes a seat until the session ends
+- Execs have private cabins, there's a huddle room, a couch booth, and a whiteboard corner
+
+<p align="center">
+  <img src=".claude/docs/img/office-standup.png" width="800" alt="Sprint planning — the whole team gathered around the conference table" />
+</p>
+
+Start it with one command (it tails the event feed your hooks write automatically):
+
+```bash
+bash .claude/office/serve.sh     # prints the URL, e.g. http://localhost:8123
+```
+
+No build step, no dependencies beyond Python's built-in http.server. Try `bash .claude/office/demo.sh`
+for a scripted tour without running real ceremonies.
 
 ---
 
@@ -390,30 +441,30 @@ That's the difference between a team and a panel of assistants.
 
 ```
 agile-team-skill/
+├── README.md
 ├── install.sh                        ← one-command installer
-├── .claude/CLAUDE.md                 ← project constitution
-├── .claude/
-│   ├── agents/                       ← 7 specialist agents
-│   │   ├── po-agent.md
-│   │   ├── pm-agent.md
-│   │   ├── dev-agent.md
-│   │   ├── qa-agent.md
-│   │   ├── pr-reviewer-agent.md
-│   │   ├── security-analyst-agent.md
-│   │   └── tech-lead-agent.md
-│   ├── commands/                     ← 30 slash commands
-│   │   ├── init.md                   /init
-│   │   ├── standup.md                /standup
-│   │   ├── review.md                 /review
-│   │   └── ...
-│   └── hooks/                        ← safety gates + secret scanning
-└── .claude/memory/                           ← persistent team state
-    ├── NEXT.md
-    ├── STATE.md
-    ├── BACKLOG.md
-    ├── ARCHIVE.md
-    ├── DECISIONS.md
-    └── LEARNINGS.md
+└── .claude/                          ← everything lives here — clean project root
+    ├── CLAUDE.md                     ← project constitution (auto-loaded by Claude Code)
+    ├── agents/                       ← 13 specialist agents
+    │   ├── po-agent.md … tech-lead-agent.md        (7 core)
+    │   └── senior-engineer-agent.md … ceo-agent.md (6 extended)
+    ├── commands/                     ← 30 slash commands
+    │   ├── init.md                   /init
+    │   ├── standup.md                /standup
+    │   ├── review.md                 /review
+    │   └── ...
+    ├── hooks/                        ← safety gates + secret scanning + office events
+    ├── office/                       ← live pixel-office visualization
+    │   ├── index.html                the app (PixiJS)
+    │   ├── serve.sh                  bash .claude/office/serve.sh
+    │   └── events.jsonl              event feed written by hooks
+    └── memory/                       ← persistent team state
+        ├── NEXT.md
+        ├── STATE.md
+        ├── BACKLOG.md
+        ├── ARCHIVE.md
+        ├── DECISIONS.md
+        └── LEARNINGS.md
 ```
 
 ---
@@ -441,6 +492,7 @@ New agents, new ceremony commands, improvements to collaboration chains — all 
 
 ## Release History
 
+* **1.2.0** — The Pixel Office: live visualization of your agents (walk, work, meet, coffee breaks), 13-agent roster with custom character art, exec cabins + conference room + collab zones, everything relocated under `.claude/` for a clean project root.
 * **1.1.0** — Real scrum flow: dev capacity in sprint planning, QA gates code review, /unblock command, handoff lines throughout.
 * **1.0.0** — Initial release. 7 agents, 30 commands, full agile lifecycle.
 
