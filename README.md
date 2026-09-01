@@ -91,13 +91,13 @@ That's the pattern for every command. Multiple specialists. One synthesizer. One
 
 <table>
   <tr>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/po-agent.png" width="70"/><br/><b>po-agent</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/pm-agent.png" width="70"/><br/><b>pm-agent</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/dev-agent.png" width="70"/><br/><b>dev-agent</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/qa-agent.png" width="70"/><br/><b>qa-agent</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/pr-reviewer-agent.png" width="70"/><br/><b>pr-reviewer</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/security-analyst-agent.png" width="70"/><br/><b>security</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/tech-lead-agent.png" width="70"/><br/><b>tech-lead</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/po-agent.png" height="90"/><br/><b>po-agent</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/pm-agent.png" height="90"/><br/><b>pm-agent</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/dev-agent.png" height="90"/><br/><b>dev-agent</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/qa-agent.png" height="90"/><br/><b>qa-agent</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/pr-reviewer-agent.png" height="90"/><br/><b>pr-reviewer</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/security-analyst-agent.png" height="90"/><br/><b>security</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/tech-lead-agent.png" height="90"/><br/><b>tech-lead</b></td>
   </tr>
 </table>
 
@@ -105,12 +105,12 @@ That's the pattern for every command. Multiple specialists. One synthesizer. One
 
 <table>
   <tr>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/senior-engineer-agent.png" width="70"/><br/><b>senior-eng</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/principal-engineer-agent.png" width="70"/><br/><b>principal</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/ai-engineer-agent.png" width="70"/><br/><b>ai-engineer</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/design-lead-agent.png" width="70"/><br/><b>design-lead</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/cto-agent.png" width="70"/><br/><b>cto</b></td>
-    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/ceo-agent.png" width="70"/><br/><b>ceo</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/senior-engineer-agent.png" height="90"/><br/><b>senior-eng</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/principal-engineer-agent.png" height="90"/><br/><b>principal</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/ai-engineer-agent.png" height="90"/><br/><b>ai-engineer</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/design-lead-agent.png" height="90"/><br/><b>design-lead</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/cto-agent.png" height="90"/><br/><b>cto</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/custom-chars/ceo-agent.png" height="90"/><br/><b>ceo</b></td>
   </tr>
 </table>
 
