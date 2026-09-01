@@ -206,11 +206,11 @@ EOF
   # Pixel office (live agent visualization) — app + pre-baked assets only
   if [ -d "$SOURCE_DIR/.claude/office" ] && [ "$SOURCE_DIR" != "$TARGET_DIR" ]; then
     mkdir -p "$TARGET_DIR/.claude/office/assets"
-    for of in index.html logic.js pixi-legacy.min.js serve.sh demo.sh tiles.png agents.png map.json; do
+    for of in index.html logic.js pixi-legacy.min.js serve.sh demo.sh update.sh tiles.png agents.png map.json; do
       cp "$SOURCE_DIR/.claude/office/$of" "$TARGET_DIR/.claude/office/$of"
     done
     cp "$SOURCE_DIR/.claude/office/assets/CREDITS.md" "$TARGET_DIR/.claude/office/assets/CREDITS.md"
-    chmod +x "$TARGET_DIR/.claude/office/serve.sh" "$TARGET_DIR/.claude/office/demo.sh"
+    chmod +x "$TARGET_DIR/.claude/office/serve.sh" "$TARGET_DIR/.claude/office/demo.sh" "$TARGET_DIR/.claude/office/update.sh"
     print_ok ".claude/office/ installed (run: bash .claude/office/serve.sh)"
   fi
 
@@ -325,11 +325,11 @@ EOF
 
   # Pixel office (live agent visualization) — app + pre-baked assets only
   mkdir -p "$TARGET_DIR/.claude/office/assets"
-  for of in index.html logic.js pixi-legacy.min.js serve.sh demo.sh tiles.png agents.png map.json; do
+  for of in index.html logic.js pixi-legacy.min.js serve.sh demo.sh update.sh tiles.png agents.png map.json; do
     curl -fsSL "$REPO_URL/.claude/office/$of" -o "$TARGET_DIR/.claude/office/$of"
   done
   curl -fsSL "$REPO_URL/.claude/office/assets/CREDITS.md" -o "$TARGET_DIR/.claude/office/assets/CREDITS.md"
-  chmod +x "$TARGET_DIR/.claude/office/serve.sh" "$TARGET_DIR/.claude/office/demo.sh"
+  chmod +x "$TARGET_DIR/.claude/office/serve.sh" "$TARGET_DIR/.claude/office/demo.sh" "$TARGET_DIR/.claude/office/update.sh"
   print_ok ".claude/office/ installed (run: bash .claude/office/serve.sh)"
 fi
 
