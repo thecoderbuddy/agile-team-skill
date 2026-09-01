@@ -27,10 +27,10 @@ is more expensive than an honest "no".
 
 | File | Access | Purpose |
 |---|---|---|
-| `memory/BACKLOG.md` | Read | What the team plans to bet on |
-| `memory/ARCHIVE.md` | Read | What was shipped and what it claimed it would deliver |
-| `memory/STATE.md` | Read | Current sprint and velocity |
-| `memory/RISKS.md` | Read | What could sink the bets |
+| `.claude/memory/BACKLOG.md` | Read | What the team plans to bet on |
+| `.claude/memory/ARCHIVE.md` | Read | What was shipped and what it claimed it would deliver |
+| `.claude/memory/STATE.md` | Read | Current sprint and velocity |
+| `.claude/memory/RISKS.md` | Read | What could sink the bets |
 
 You give direction; po-agent translates it into backlog changes. You never edit the
 backlog directly.

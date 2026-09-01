@@ -17,8 +17,8 @@ Deep dive before committing to build. Understand the problem space first.
 
 1. Read context:
    ```bash
-   cat memory/STATE.md
-   cat memory/DECISIONS.md
+   cat .claude/memory/STATE.md
+   cat .claude/memory/DECISIONS.md
    ```
 
 2. **po-agent leads discovery:**
@@ -70,7 +70,7 @@ NEXT STEP
 ```
 
 6. **Persist the discovery output (survives session drops):**
-   - Save the discovery summary in memory/BACKLOG.md under a
+   - Save the discovery summary in .claude/memory/BACKLOG.md under a
      `## Discovery Notes — [topic]` section, placed below the `## Index`.
    - When /stories next runs for this topic, it appends the discovery summary
      into the resulting story's body and removes the temporary

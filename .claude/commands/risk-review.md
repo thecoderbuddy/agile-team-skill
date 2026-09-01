@@ -1,18 +1,18 @@
 ---
-description: Review the risk register (memory/RISKS.md) — update existing risks, append new ones, mark resolved
+description: Review the risk register (.claude/memory/RISKS.md) — update existing risks, append new ones, mark resolved
 ---
 
 # /risk-review — Review and Update Risk Register
 
 Review active risks, mitigations, and add new risks. Run monthly or before major releases.
-The risk register lives in `memory/RISKS.md` — this command reads it first and writes updates back.
+The risk register lives in `.claude/memory/RISKS.md` — this command reads it first and writes updates back.
 
 ## Steps
 
 1. Read the risk register and context:
    ```bash
-   cat memory/RISKS.md
-   cat memory/STATE.md
+   cat .claude/memory/RISKS.md
+   cat .claude/memory/STATE.md
    ```
 
 2. **tech-lead-agent identifies technical risks:**
@@ -59,12 +59,12 @@ RESOLVED SINCE LAST REVIEW
 ═══════════════════════════════════════
 ```
 
-7. **Write updates back to memory/RISKS.md:**
+7. **Write updates back to .claude/memory/RISKS.md:**
    - Append one table row per new RISK-XXX.
    - For existing rows, update Status (`Open` / `Mitigating` / `Resolved`) and the
      Last-reviewed date in place. Never delete rows — resolved risks stay in the
      table with `Status: Resolved`.
 
-Risks live in memory/RISKS.md, NOT in DECISIONS.md — DECISIONS.md is for
+Risks live in .claude/memory/RISKS.md, NOT in DECISIONS.md — DECISIONS.md is for
 architecture decisions only. Only if a risk mitigation causes an architecture
 decision does tech-lead-agent create a DEC-XXX entry for that decision.

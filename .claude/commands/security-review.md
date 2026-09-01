@@ -12,7 +12,7 @@ security-analyst-agent reviews the codebase. Run monthly or before major release
 
 1. Read architectural context:
    ```bash
-   cat memory/DECISIONS.md
+   cat .claude/memory/DECISIONS.md
    ```
 
 2. **security-analyst-agent scans:**
@@ -30,7 +30,7 @@ security-analyst-agent reviews the codebase. Run monthly or before major release
 
 4. Log ALL findings (any severity) as stories in BACKLOG.md, tagged with their severity (Critical / High / Medium / Low). Do not log findings themselves as DEC-XXX entries — DECISIONS.md is for architecture decisions only. If a finding reveals an architectural gap that requires a design decision, tech-lead-agent logs that decision as a DEC-XXX separately.
 
-5. **Record the review in memory/STATE.md:**
+5. **Record the review in .claude/memory/STATE.md:**
    Overwrite the `## Last Security Review` section (the line beneath it) with:
    ```
    Last security review: YYYY-MM-DD — Critical: N  High: N  Medium: N  Low: N  — Verdict: VERDICT
@@ -39,7 +39,7 @@ security-analyst-agent reviews the codebase. Run monthly or before major release
    - `N` values are the integer counts from the scan above
    - `VERDICT` must be exactly one of: `SECURE`, `NEEDS FIXES`, or `CRITICAL ISSUES`
 
-6. **Append a one-line summary to memory/LEARNINGS.md** under the `## Security Review Log` section.
+6. **Append a one-line summary to .claude/memory/LEARNINGS.md** under the `## Security Review Log` section.
    If the section does not exist, create it at the end of the file before appending.
    Format:
    ```

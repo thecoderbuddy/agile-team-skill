@@ -44,7 +44,7 @@ window.addEventListener("error", e => {
   if (s) s.textContent = "JS error: " + e.message + " @ " + (e.filename || "").split("/").pop() + ":" + e.lineno;
 });
 const AGENT_COLORS = {
-  "manager":"#d4b45e","cto-agent":"#4d7dd6",
+  "manager":"#d4b45e","ceo-agent":"#e8a63c","cto-agent":"#4d7dd6",
   "po-agent":"#b083f0","pm-agent":"#58a6ff","tech-lead-agent":"#9aa5b1",
   "principal-engineer-agent":"#7c8ff0","senior-engineer-agent":"#4fae7e",
   "dev-agent":"#7ee787","ai-engineer-agent":"#56c8d8","qa-agent":"#e3b341",
@@ -52,7 +52,7 @@ const AGENT_COLORS = {
   "security-analyst-agent":"#f85149","guest":"#c9a075",
 };
 const LABELS = {
-  "manager":"CEO","cto-agent":"CTO",
+  "manager":"CEO","ceo-agent":"CEO","cto-agent":"CTO",
   "po-agent":"PO","pm-agent":"SCRUM","tech-lead-agent":"TECHLEAD",
   "principal-engineer-agent":"PRINCIPAL","senior-engineer-agent":"SENIOR",
   "dev-agent":"DEV","ai-engineer-agent":"AI-ENG","qa-agent":"QA",
@@ -204,7 +204,7 @@ function mkView(name) {
 
   const bubble = new PIXI.Container();
   const bg = new PIXI.Graphics();
-  const btxt = new PIXI.Text("", { fontFamily: "Courier New, monospace", fontSize: 11, fill: 0x111111 });
+  const btxt = new PIXI.Text("", { fontFamily: "Courier New, monospace", fontSize: 14, fontWeight: "bold", fill: 0x0a0a0a, wordWrap: true, wordWrapWidth: 300 });
   btxt.resolution = 2;
   bubble.addChild(bg, btxt);
   bubble.visible = false;
@@ -215,11 +215,11 @@ function mkView(name) {
 
 // ── Per-frame render ─────────────────────────────────────────────────────
 function dotColor(a) {
-  if (a.state === "working" && a.present) return 0x3fb950;
+  if (a.state === "working" && a.busy) return 0x3fb950;
   if (a.state === "walking") return 0xe3b341;
   if (a.state === "meeting") return 0x58a6ff;
   if (a.state === "hangout") return 0xd4b45e;
-  return 0x6a7078;
+  return 0x6a7078;   // at desk, idle
 }
 function movingLeft(a) {
   if (!a.path.length) return false;
@@ -237,10 +237,11 @@ function render(now) {
     v.label.root.visible = visible;
 
     const atDesk = a.present && a.state === "working";
+    const active = atDesk && (a.busy || a.typing > now);
     const typingNow = atDesk && a.typing > now;
     if (gear) {
-      gear.laptop.texture = tileTex(atDesk ? "laptop_on" : "laptop_off");
-      gear.glow.alpha = typingNow ? 0.75 + 0.2 * Math.sin(now / 260) : (atDesk ? 0.22 : 0);
+      gear.laptop.texture = tileTex(active ? "laptop_on" : "laptop_off");
+      gear.glow.alpha = typingNow ? 0.75 + 0.2 * Math.sin(now / 260) : (active ? 0.22 : 0);
       if (typingNow && Math.random() < 0.08) spawnSpark(gear.laptop.x + 9, gear.laptop.y + 2);
     }
 
@@ -276,18 +277,39 @@ function render(now) {
       if (b.last !== a.bubble) {
         b.last = a.bubble;
         b.txt.text = a.bubble;
-        while (b.txt.width > 218 && b.txt.text.length > 2) b.txt.text = b.txt.text.slice(0, -2) + "…";
-        const tw = Math.ceil(b.txt.width) + 12;
-        b.bg.clear().lineStyle(1, 0x2b2b2b).beginFill(0xffffff)
-          .drawRoundedRect(0, 0, tw, 17, 4).endFill();
+        // wrap to 2 lines, then truncate on height
+        while (b.txt.height > 44 && b.txt.text.length > 2) b.txt.text = b.txt.text.slice(0, -2) + "…";
+        const tw = Math.ceil(Math.min(b.txt.width, 300)) + 16;
+        const bh = Math.ceil(b.txt.height) + 8;
+        const tint = parseInt((AGENT_COLORS[name] || "#2b2b2b").slice(1), 16);
+        b.bg.clear().lineStyle(2, tint, 0.95).beginFill(0xffffff)
+          .drawRoundedRect(0, 0, tw, bh, 6).endFill();
         b.bg.lineStyle(0).beginFill(0xffffff)
-          .moveTo(tw / 2 - 4, 17).lineTo(tw / 2 + 4, 17).lineTo(tw / 2, 22).closePath().endFill();
-        b.txt.position.set(6, 2.5);
-        b.w = tw;
+          .moveTo(tw / 2 - 5, bh).lineTo(tw / 2 + 5, bh).lineTo(tw / 2, bh + 6).closePath().endFill();
+        b.txt.position.set(8, 4);
+        b.w = tw; b.h = bh;
       }
-      const bx = Math.max(2, Math.min(sx - b.w / 2, CW - b.w - 2));
-      b.root.position.set(bx, sy - 40);
+      bubbleQueue.push({ b, sx, baseY: sy - 26 - (b.h || 22) });
     }
+  }
+  placeBubbles(bubbleQueue);
+  bubbleQueue.length = 0;
+}
+
+// lane-based placement: overlapping bubbles get pushed up a lane instead of stacking
+const bubbleQueue = [];
+function placeBubbles(q) {
+  const placed = [];
+  q.sort((m, n) => m.sx - n.sx);
+  for (const { b, sx, baseY } of q) {
+    const bx = Math.max(2, Math.min(sx - b.w / 2, CW - b.w - 2));
+    let by = baseY;
+    const hits = () => placed.some(p =>
+      bx < p.x + p.w + 6 && bx + b.w + 6 > p.x && by < p.y + p.h + 6 && by + b.h + 6 > p.y);
+    while (by > 2 && hits()) by -= (b.h + 10);
+    if (by < 2) by = 2;
+    b.root.position.set(bx, by);
+    placed.push({ x: bx, y: by, w: b.w, h: b.h });
   }
 }
 
@@ -344,6 +366,7 @@ async function poll() {
 async function init() {
   MAP = await (await fetch("map.json")).json();
   T = MAP.tile; SC = MAP.scale; FRW = MAP.charW; FRH = MAP.charH; FOOT = MAP.foot; CS = MAP.charScale || 1;
+  if (MAP.agents.includes("ceo-agent")) LABELS.manager = "MANAGER";   // dedicated manager art present
   CW = MAP.w * T * SC; CH = MAP.h * T * SC;
   app = new PIXI.Application({ width: CW, height: CH, background: 0x0b0c10, antialias: false });
   document.getElementById("stage").appendChild(app.view);
@@ -375,8 +398,9 @@ async function init() {
   setInterval(() => {
     office.housekeeping(performance.now());
     for (const k in office.agents) {
+      const a = office.agents[k];
       const chip = document.getElementById("chip-" + k);
-      if (chip) chip.classList.toggle("on", office.agents[k].present);
+      if (chip) chip.classList.toggle("on", a.busy || a.state === "meeting");
     }
   }, 500);
 

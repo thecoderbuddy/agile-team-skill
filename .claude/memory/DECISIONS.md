@@ -222,13 +222,13 @@ Consequences:
 
 ---
 
-## DEC-006 — Roster-gated agent activation (memory/TEAM.md)
+## DEC-006 — Roster-gated agent activation (.claude/memory/TEAM.md)
 Date: 2026-08-31
 Status: ACTIVE
 
 Decision:
   The team is split into 7 core agents (always active in their ceremonies) and 6
-  extended agents whose participation is gated by memory/TEAM.md. Roster-gated agents
+  extended agents whose participation is gated by .claude/memory/TEAM.md. Roster-gated agents
   (senior-engineer, ai-engineer, design-lead) join their listed ceremonies only while
   their Status is ACTIVE; ON-DEMAND agents (principal-engineer, cto, ceo) never join
   chains automatically and are invoked explicitly at documented escalation points.

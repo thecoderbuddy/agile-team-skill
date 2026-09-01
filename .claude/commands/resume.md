@@ -12,7 +12,7 @@ Restores full context and recovers any incomplete agent chain automatically.
 ## Step 1 — Check for incomplete chain
 
 ```bash
-cat memory/CHECKPOINT.md 2>/dev/null
+cat .claude/memory/CHECKPOINT.md 2>/dev/null
 ```
 
 If `CHECKPOINT.md` exists, validate it before acting on it (see DEC-002 and the
@@ -25,7 +25,7 @@ Checkpoint Protocol section in CLAUDE.md — the canonical format):
 ```
 CORRUPT CHECKPOINT
 ─────────────────────────────────────────
-[contents of memory/CHECKPOINT.md]
+[contents of .claude/memory/CHECKPOINT.md]
 ─────────────────────────────────────────
 This checkpoint is missing required fields and cannot be resumed.
 Delete it and proceed with a normal resume? [Y / N — keep the file]
@@ -33,7 +33,7 @@ Delete it and proceed with a normal resume? [Y / N — keep the file]
 
 On Y → delete and proceed to Step 2. On N → keep the file and proceed to Step 2.
 
-**Stale checkpoint** — for `Story:` checkpoints: if the Story ID already appears in the "Done This Sprint" list in `memory/STATE.md` → the chain already completed. For `Bug:` checkpoints, this check does not apply — instead check whether the bug's fix commit already exists (`git log --oneline -10 | grep -i fix`); if inconclusive, treat as recoverable. If stale, show it and ask [Y/N] before deleting (same prompt as corrupt), then proceed to Step 2.
+**Stale checkpoint** — for `Story:` checkpoints: if the Story ID already appears in the "Done This Sprint" list in `.claude/memory/STATE.md` → the chain already completed. For `Bug:` checkpoints, this check does not apply — instead check whether the bug's fix commit already exists (`git log --oneline -10 | grep -i fix`); if inconclusive, treat as recoverable. If stale, show it and ask [Y/N] before deleting (same prompt as corrupt), then proceed to Step 2.
 
 **Recoverable checkpoint** — valid, story not yet done:
 
@@ -70,8 +70,8 @@ If `CHECKPOINT.md` does not exist → proceed to Step 2 (normal resume).
 ## Step 2 — Read current state
 
 ```bash
-cat memory/NEXT.md
-cat memory/STATE.md
+cat .claude/memory/NEXT.md
+cat .claude/memory/STATE.md
 git log --oneline -5
 ```
 

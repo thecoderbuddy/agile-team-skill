@@ -11,16 +11,16 @@ PO leads. Tech Lead estimates. QA validates AC. Security flags risk. Backlog exi
 ## Step 0 — Read current state
 
 ```bash
-sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — extract a story body with awk when grooming a specific item
-cat memory/STATE.md
-cat memory/DECISIONS.md
+sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md   # index only — extract a story body with awk when grooming a specific item
+cat .claude/memory/STATE.md
+cat .claude/memory/DECISIONS.md
 ```
 
 **Token rule:** read the Index for the overview. When grooming a specific story (priority
 change, AC refinement, splitting), extract just that story's body:
 
 ```bash
-awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
+awk '/^- \[.\] STORY-XXX:/,/^---$/' .claude/memory/BACKLOG.md
 ```
 
 Agents in this chain do not re-read the full BACKLOG.md.
@@ -108,9 +108,9 @@ SECURITY FLAGS
   - STORY-XXX: elevated risk — [reason]
 
 ═══════════════════════════════════════════════════
-memory/BACKLOG.md updated ✓
+.claude/memory/BACKLOG.md updated ✓
 
 Ready to sprint plan? Run /sprint-plan
 ```
 
-**po-agent writes the updated priority order to `memory/BACKLOG.md` before closing.**
+**po-agent writes the updated priority order to `.claude/memory/BACKLOG.md` before closing.**

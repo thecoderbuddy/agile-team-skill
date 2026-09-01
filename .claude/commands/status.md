@@ -11,9 +11,9 @@ Use at the start of every session. Reads state, checks git, shows what's next.
 ## Step 1 — Read all state
 
 ```bash
-cat memory/STATE.md
-cat memory/NEXT.md
-sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — full bodies not needed for status
+cat .claude/memory/STATE.md
+cat .claude/memory/NEXT.md
+sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md   # index only — full bodies not needed for status
 git log --oneline -10
 git status
 ```

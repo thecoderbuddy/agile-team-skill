@@ -12,7 +12,7 @@ MEMORY_DIR="$PROJECT_ROOT/memory"
 if [ -d "$MEMORY_DIR" ]; then
   # Warn if NEXT.md is empty — session continuity at risk
   if [ ! -s "$MEMORY_DIR/NEXT.md" ]; then
-    echo "STATE WARNING: memory/NEXT.md is empty. Run /checkpoint to save session state."
+    echo "STATE WARNING: .claude/memory/NEXT.md is empty. Run /checkpoint to save session state."
   fi
 fi
 

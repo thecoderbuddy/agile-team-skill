@@ -21,7 +21,7 @@ po-agent + qa-agent critically review built UI against usability principles.
    - Does it match the user story acceptance criteria? Extract only the story under
      review from the backlog (never read the full file):
      ```bash
-     awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
+     awk '/^- \[.\] STORY-XXX:/,/^---$/' .claude/memory/BACKLOG.md
      ```
 
 3. **qa-agent reviews against quality criteria:**
@@ -67,6 +67,6 @@ VERDICT: [APPROVED / NEEDS FIXES]
 
 6. **Persist findings (Iron Rule 4 — backlog everything):**
    - Ask the user: "Add the FIXES NEEDED items to the backlog? [Y/N]"
-   - On [Y], write each fix as a story in memory/BACKLOG.md (next STORY number from
+   - On [Y], write each fix as a story in .claude/memory/BACKLOG.md (next STORY number from
      the `## Index`, standard story format) and add a matching line to the
      `## Index`.

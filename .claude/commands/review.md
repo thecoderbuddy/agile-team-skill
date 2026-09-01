@@ -16,7 +16,7 @@ Arguments: $ARGUMENTS (optional story ID for context)
 
 ## Checkpoint Protocol
 
-After **every agent step completes**, write to `memory/CHECKPOINT.md` before moving to the next step. This ensures recovery is possible if the session drops mid-chain.
+After **every agent step completes**, write to `.claude/memory/CHECKPOINT.md` before moving to the next step. This ensures recovery is possible if the session drops mid-chain.
 
 Format:
 ```
@@ -34,7 +34,7 @@ Steps:
   [PENDING] Step 5 — po-agent
 ```
 
-Delete `memory/CHECKPOINT.md` when the APPROVED verdict is written (Step 5). Keep it alive
+Delete `.claude/memory/CHECKPOINT.md` when the APPROVED verdict is written (Step 5). Keep it alive
 during CHANGES REQUESTED loops. Format and lifecycle: see "Checkpoint Protocol" in CLAUDE.md.
 
 ---
@@ -42,35 +42,35 @@ during CHANGES REQUESTED loops. Format and lifecycle: see "Checkpoint Protocol" 
 ## Step 0 — Check for incomplete chain + read context
 
 ```bash
-cat memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
-cat memory/TEAM.md                    # roster — which extended lenses join Step 4b
+cat .claude/memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
+cat .claude/memory/TEAM.md                    # roster — which extended lenses join Step 4b
 git diff --stat --no-color
 git diff
 # Extract ONLY the story under review — do not read the full backlog:
-awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
-cat memory/DECISIONS.md # architectural constraints
+awk '/^- \[.\] STORY-XXX:/,/^---$/' .claude/memory/BACKLOG.md
+cat .claude/memory/DECISIONS.md # architectural constraints
 ```
 
-**Roster check:** note which extended agents are ACTIVE in `memory/TEAM.md` — they run in
+**Roster check:** note which extended agents are ACTIVE in `.claude/memory/TEAM.md` — they run in
 Step 4b. If none are ACTIVE, Step 4b is skipped entirely.
 
 **Story ID resolution:** use the story ID from `$ARGUMENTS` in the awk pattern above. If
-`$ARGUMENTS` is empty, derive the story ID from the "In Progress" entry in `memory/STATE.md`
-(fall back to `memory/NEXT.md`). If no story ID can be found in either, ask the user which
+`$ARGUMENTS` is empty, derive the story ID from the "In Progress" entry in `.claude/memory/STATE.md`
+(fall back to `.claude/memory/NEXT.md`). If no story ID can be found in either, ask the user which
 story is under review before proceeding.
 
 **If returning from Step 6 (fix loop):** skip checkpoint recovery — the existing
 CHECKPOINT.md belongs to this run; update it in place and continue with the new cycle.
 
 **Token rule:** the story body extracted above is passed to each agent in its step prompt.
-Agents in this chain must NOT re-read `memory/BACKLOG.md` themselves — they receive the
+Agents in this chain must NOT re-read `.claude/memory/BACKLOG.md` themselves — they receive the
 story AC and the diff as input. Only po-agent (Step 5) touches BACKLOG.md, to append findings.
 
 If `CHECKPOINT.md` exists, validate it before acting on it (see DEC-002):
 
 **Valid checkpoint** — must contain all of: `Command:`, `Story:`, `Started:`, `Last heartbeat:`, and a `Steps:` block with at least one entry. If the file is empty or any required field is missing → corrupt. Delete it and start fresh (cycle 1).
 
-**Stale checkpoint** — if the Story ID already appears in the "Done This Sprint" list in `memory/STATE.md` → the chain already completed. Delete it and start fresh.
+**Stale checkpoint** — if the Story ID already appears in the "Done This Sprint" list in `.claude/memory/STATE.md` → the chain already completed. Delete it and start fresh.
 
 **Recoverable checkpoint** — valid, story not yet done, the `Command:` field contains `/review`:
 - Show the user what completed and what didn't
@@ -214,14 +214,14 @@ README accuracy:
 ───────────────────────────────────────
 ```
 
-If a new DEC is needed → tech-lead-agent writes it to `memory/DECISIONS.md` before closing.
+If a new DEC is needed → tech-lead-agent writes it to `.claude/memory/DECISIONS.md` before closing.
 If README is stale → flag as REQUEST CHANGES. Dev updates README before merge.
 
 ---
 
 ## Step 4b — Extended lenses (roster-gated — skip if no extended agent is ACTIVE)
 
-Run only the lenses whose agent is marked ACTIVE in `memory/TEAM.md` **and** whose surface
+Run only the lenses whose agent is marked ACTIVE in `.claude/memory/TEAM.md` **and** whose surface
 the diff touches. Each lens outputs findings in its agent-definition format; a lens whose
 surface isn't touched outputs one line ("AI surface: not touched — skipped") and stands down.
 
@@ -246,7 +246,7 @@ The verdict output must follow the "PR & Ticket Description Structure" in CLAUDE
 
 For each finding, po decides:
 - **FIX NOW** → blocks merge. Numbered, specific, actionable.
-- **BACKLOG** → valid but non-blocking. Written to `memory/BACKLOG.md` immediately.
+- **BACKLOG** → valid but non-blocking. Written to `.claude/memory/BACKLOG.md` immediately.
 - **WON'T FIX** → documented with reasoning so it's not raised again.
 
 ```
@@ -288,7 +288,7 @@ VERDICT:  APPROVED ✓  |  CHANGES REQUESTED ✗
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-**po-agent appends any BACKLOG items to `memory/BACKLOG.md` before handing off.**
+**po-agent appends any BACKLOG items to `.claude/memory/BACKLOG.md` before handing off.**
 
 ---
 
@@ -337,7 +337,7 @@ Approve commit? [Y/N]
 ───────────────────────────────────────
 ```
 
-Run `/complete STORY-XXX "description"` or approve inline to commit and close the story. `memory/CHECKPOINT.md` was already deleted when the APPROVED verdict was written in Step 5 — if it still exists at this point, delete it now (see DEC-002). Format and lifecycle: see "Checkpoint Protocol" in CLAUDE.md.
+Run `/complete STORY-XXX "description"` or approve inline to commit and close the story. `.claude/memory/CHECKPOINT.md` was already deleted when the APPROVED verdict was written in Step 5 — if it still exists at this point, delete it now (see DEC-002). Format and lifecycle: see "Checkpoint Protocol" in CLAUDE.md.
 
 ---
 

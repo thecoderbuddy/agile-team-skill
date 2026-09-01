@@ -10,8 +10,8 @@ po-agent does a comprehensive product review: gaps, personas, backlog health.
 
 1. Read product state:
    ```bash
-   cat memory/STATE.md
-   sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — extract a single story body with awk if a verdict requires it
+   cat .claude/memory/STATE.md
+   sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md   # index only — extract a single story body with awk if a verdict requires it
    ```
 
 2. Note the sprint goal from STATE.md and the backlog priorities from the Index (already read in Step 1).

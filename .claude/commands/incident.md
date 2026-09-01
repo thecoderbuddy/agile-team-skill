@@ -11,7 +11,7 @@ Arguments: $ARGUMENTS
 
 Triggers incident response. SEV-1 = production down.
 
-Long chain — write `memory/CHECKPOINT.md` after each step per the Checkpoint Protocol in CLAUDE.md.
+Long chain — write `.claude/memory/CHECKPOINT.md` after each step per the Checkpoint Protocol in CLAUDE.md.
 
 ## Severity Levels (canonical — shared with /bug)
 
@@ -42,20 +42,20 @@ Long chain — write `memory/CHECKPOINT.md` after each step per the Checkpoint P
    - Check recent commits — did a recent change cause this?
    - Read relevant code to understand the failure
    - Propose fix approach or rollback option
-   - If architectural issue: log DEC-XXX in `memory/DECISIONS.md`
+   - If architectural issue: log DEC-XXX in `.claude/memory/DECISIONS.md`
    - **Escalation:** if a SEV-1 root cause resists this investigation, hand the technical
      investigation to **principal-engineer-agent** (on-demand — invoke explicitly);
      tech-lead stays on coordination of the fix
 
 5. **pm-agent logs and coordinates:**
-   - Add incident to `memory/STATE.md` under INCIDENTS section:
+   - Add incident to `.claude/memory/STATE.md` under INCIDENTS section:
      ```
      INCIDENT — SEV-[N] — [date]
      Description: [what happened]
      Impact: [what's affected]
      Status: [investigating / fixing / resolved]
      ```
-   - For SEV-3/4: add story to `memory/BACKLOG.md` instead
+   - For SEV-3/4: add story to `.claude/memory/BACKLOG.md` instead
 
 6. Show incident report:
 
@@ -94,7 +94,7 @@ ROLLBACK OPTION
 
 8. **Postmortem (SEV-1/2 only, after resolution):**
    - **tech-lead-agent** writes a blameless postmortem and appends it to
-     `memory/LEARNINGS.md` under `## Postmortems`:
+     `.claude/memory/LEARNINGS.md` under `## Postmortems`:
      ```
      ### POSTMORTEM — SEV-[N] — [date] — [one-line title]
      Timeline: [detected → mitigated → resolved, with times if known]
@@ -110,5 +110,5 @@ ROLLBACK OPTION
      actions are scheduled into a sprint, not just backlogged. principal-engineer-agent
      reviews it for technical depth if it was involved in the investigation.
 
-9. **Overwrite `memory/NEXT.md`** with the exact next action (Iron Rule 6) — e.g.,
+9. **Overwrite `.claude/memory/NEXT.md`** with the exact next action (Iron Rule 6) — e.g.,
    "Run /bug [description] to fix INCIDENT SEV-N" or "Incident resolved — resume STORY-XXX".

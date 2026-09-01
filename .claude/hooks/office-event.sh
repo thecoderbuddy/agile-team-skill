@@ -4,9 +4,12 @@
 
 INPUT_JSON=$(cat /dev/stdin 2>/dev/null || echo '{}')
 PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
-EVENTS_FILE="$PROJECT_ROOT/office/events.jsonl"
+# canonical location is .claude/office/; fall back to legacy root-level office/
+OFFICE_DIR="$PROJECT_ROOT/.claude/office"
+[ -d "$OFFICE_DIR" ] || OFFICE_DIR="$PROJECT_ROOT/office"
+EVENTS_FILE="$OFFICE_DIR/events.jsonl"
 
-[ -d "$PROJECT_ROOT/office" ] || exit 0
+[ -d "$OFFICE_DIR" ] || exit 0
 command -v jq >/dev/null 2>&1 || exit 0
 
 echo "$INPUT_JSON" | jq -c --arg ts "$(date +%s)" '

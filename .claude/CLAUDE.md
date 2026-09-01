@@ -24,9 +24,11 @@ Works with any language or framework.
 │   ├── principal-engineer-agent.md Principal Engineer  (on-demand consult)
 │   ├── cto-agent.md                CTO                 (on-demand escalation)
 │   └── ceo-agent.md                CEO                 (on-demand escalation)
-└── commands/                  ← 30 slash commands
+├── commands/                  ← 30 slash commands
+├── office/                    ← live pixel-office visualization (bash .claude/office/serve.sh)
+└── memory/                    ← persistent team state (below)
 
-memory/                        ← Persistent team state
+.claude/memory/
 ├── NEXT.md                    Exact next action (session continuity)
 ├── STATE.md                   Current sprint
 ├── TEAM.md                    Team roster — which extended agents are ACTIVE
@@ -104,9 +106,9 @@ If blocked at any point: `/unblock STORY-XXX "what resolved it"`
 | `security-analyst-agent` | Security | Vulnerability scan, risk register | Soft — can block PR |
 | `tech-lead-agent` | Tech Lead | DECISIONS.md, architecture, estimates | No |
 
-### Extended (roster-gated — see `memory/TEAM.md`)
+### Extended (roster-gated — see `.claude/memory/TEAM.md`)
 
-Extended agents join ceremonies only while `memory/TEAM.md` marks them `ACTIVE`.
+Extended agents join ceremonies only while `.claude/memory/TEAM.md` marks them `ACTIVE`.
 ON-DEMAND agents never join chains — they are invoked explicitly.
 
 | Agent | Role | Scope | Default |
@@ -119,7 +121,7 @@ ON-DEMAND agents never join chains — they are invoked explicitly.
 | `ceo-agent` | CEO | Vision/strategy, outcome framework, iterate/pivot/kill, priority deadlock, epic challenges, market signal, pricing, risk appetite | ON-DEMAND |
 
 **Roster rule:** before running any ceremony chain, the orchestrator reads
-`memory/TEAM.md`. Extended agents marked ACTIVE join the ceremonies listed in their
+`.claude/memory/TEAM.md`. Extended agents marked ACTIVE join the ceremonies listed in their
 roster row; DORMANT agents are skipped entirely (zero token cost). `/init` proposes the
 initial roster from the project scan; flip a Status in TEAM.md any time to change it.
 
@@ -144,7 +146,7 @@ ceo-agent (final product/business).
 | `/status` | pm reads state → dev/qa/security/tech-lead report health → po assesses backlog | Full project picture |
 | `/unblock` | tech-lead confirms resolution (senior-engineer pairs if ACTIVE) → pm clears STATE.md → NEXT.md updated | Blocker removed |
 
-**Roster-gated additions:** ceremonies read `memory/TEAM.md` in Step 0. Extended agents
+**Roster-gated additions:** ceremonies read `.claude/memory/TEAM.md` in Step 0. Extended agents
 marked ACTIVE join at their designated hook: /review + /new-task get extended lenses
 (ai-engineer, design-lead) before po synthesis; /standup and /retro add their reports;
 /sprint-plan gets Step 5b inputs; /bug and /unblock route hard diagnosis to
@@ -162,7 +164,7 @@ built-in fires instead, invoke the project version explicitly by describing the 
 
 ## Checkpoint Protocol (canonical — referenced by /bug, /review, /new-task, /resume)
 
-Long chains write `memory/CHECKPOINT.md` after each completed step so `/resume` can recover
+Long chains write `.claude/memory/CHECKPOINT.md` after each completed step so `/resume` can recover
 a dropped session. Single source of truth for the format:
 
 ```
@@ -214,8 +216,8 @@ Skip sections that genuinely don't apply — never leave them empty.
 
 **Start of session:**
 ```
-cat memory/NEXT.md     # exact pickup point — always start here
-cat memory/STATE.md    # sprint status
+cat .claude/memory/NEXT.md     # exact pickup point — always start here
+cat .claude/memory/STATE.md    # sprint status
 ```
 
 **Then:**
@@ -226,7 +228,7 @@ cat memory/STATE.md    # sprint status
 - End of sprint → `/sprint-close` then `/retro`
 
 **End of session:**
-- Always overwrite `memory/NEXT.md` with the exact next action
+- Always overwrite `.claude/memory/NEXT.md` with the exact next action
 - One commit per completed story: `feat(area): description — closes STORY-XXX`
 
 ---
@@ -302,14 +304,14 @@ condition and flag message text both reference it as "the configured threshold".
 
 **What triggers the flag:**
 The `security-analyst-agent` standup block will set a `Blocked:` entry when either:
-- The `## Last Security Review` line in `memory/STATE.md` reads `[Never run]`
+- The `## Last Security Review` line in `.claude/memory/STATE.md` reads `[Never run]`
 - The date recorded there is more than the configured threshold (default: 30 days) before today
 
 When within threshold, no flag is raised and the standup stays clean.
 
 **Where review results are stored:**
-- `memory/STATE.md` — `## Last Security Review` line (overwritten each run)
-- `memory/LEARNINGS.md` — `## Security Review Log` section (append-only history)
+- `.claude/memory/STATE.md` — `## Last Security Review` line (overwritten each run)
+- `.claude/memory/LEARNINGS.md` — `## Security Review Log` section (append-only history)
 
 ---
 
@@ -323,4 +325,4 @@ claude
 
 Then run `/init` — agents scan your project (or use your description) and populate the memory files with real stories, a sprint goal, and your first next action.
 
-The team is ready when `/init` writes to `memory/BACKLOG.md`.
+The team is ready when `/init` writes to `.claude/memory/BACKLOG.md`.

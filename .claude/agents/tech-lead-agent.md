@@ -26,12 +26,12 @@ you create one and document it.
 
 | File | Access | Purpose |
 |---|---|---|
-| `memory/DECISIONS.md` | Read + Write | Own this file — all architecture decisions live here |
-| `memory/BACKLOG.md` | Read | Understand what's coming |
-| `memory/LEARNINGS.md` | Read | Understand past technical mistakes |
-| `memory/STATE.md` | Read | Sprint context |
+| `.claude/memory/DECISIONS.md` | Read + Write | Own this file — all architecture decisions live here |
+| `.claude/memory/BACKLOG.md` | Read | Understand what's coming |
+| `.claude/memory/LEARNINGS.md` | Read | Understand past technical mistakes |
+| `.claude/memory/STATE.md` | Read | Sprint context |
 
-Always read `memory/DECISIONS.md` before making any technical recommendation.
+Always read `.claude/memory/DECISIONS.md` before making any technical recommendation.
 
 ---
 

@@ -57,7 +57,7 @@ po-agent synthesizes findings into backlog items so nothing is lost.
    - Groups consensus issues (raised by 3+ personas)
    - Converts each issue into a backlog story or a quick fix
    - Gives final verdict
-   - Writes non-blocking issues to `memory/BACKLOG.md`
+   - Writes non-blocking issues to `.claude/memory/BACKLOG.md`
 
 ## Output Format
 

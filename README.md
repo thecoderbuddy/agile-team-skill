@@ -43,7 +43,7 @@ This gives you that team. An AI agentic team designed around your agile workflow
 
 ## What it actually does
 
-Seven core agents — plus six extended specialists (Senior Engineer, Principal Engineer, AI Engineer, Design Lead, CTO, CEO) activated per project need via the `memory/TEAM.md` roster. Each one has a single job and won't budge from it. When you run `/review`, QA checks first — if your code doesn't meet the acceptance criteria, the review stops there. No code review of broken code. If it passes, four agents process your diff in sequence, then the PO collects all findings and gives you one verdict:
+Seven core agents — plus six extended specialists (Senior Engineer, Principal Engineer, AI Engineer, Design Lead, CTO, CEO) activated per project need via the `.claude/memory/TEAM.md` roster. Each one has a single job and won't budge from it. When you run `/review`, QA checks first — if your code doesn't meet the acceptance criteria, the review stops there. No code review of broken code. If it passes, four agents process your diff in sequence, then the PO collects all findings and gives you one verdict:
 
 ```
 You run:  /review
@@ -88,13 +88,13 @@ That's the pattern for every command. Multiple specialists. One synthesizer. One
 
 <table>
   <tr>
-    <td align="center" width="120"><img src="assets/po-agent.png" width="80"/><br/><b>po-agent</b></td>
-    <td align="center" width="120"><img src="assets/pm-agent.png" width="80"/><br/><b>pm-agent</b></td>
-    <td align="center" width="120"><img src="assets/dev-agent.png" width="80"/><br/><b>dev-agent</b></td>
-    <td align="center" width="120"><img src="assets/qa-agent.png" width="80"/><br/><b>qa-agent</b></td>
-    <td align="center" width="120"><img src="assets/pr-reviewer-agent.png" width="80"/><br/><b>pr-reviewer</b></td>
-    <td align="center" width="120"><img src="assets/security-analyst-agent.png" width="80"/><br/><b>security</b></td>
-    <td align="center" width="120"><img src="assets/tech-lead-agent.png" width="80"/><br/><b>tech-lead</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/characters/po-agent.png" width="80"/><br/><b>po-agent</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/characters/pm-agent.png" width="80"/><br/><b>pm-agent</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/characters/dev-agent.png" width="80"/><br/><b>dev-agent</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/characters/qa-agent.png" width="80"/><br/><b>qa-agent</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/characters/pr-reviewer-agent.png" width="80"/><br/><b>pr-reviewer</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/characters/security-analyst-agent.png" width="80"/><br/><b>security</b></td>
+    <td align="center" width="120"><img src=".claude/office/assets/characters/tech-lead-agent.png" width="80"/><br/><b>tech-lead</b></td>
   </tr>
 </table>
 
@@ -169,7 +169,7 @@ End of sprint
 
 ## Session Continuity
 
-At the end of every session, `pm-agent` writes `memory/NEXT.md` — specific enough that zero context is needed to resume.
+At the end of every session, `pm-agent` writes `.claude/memory/NEXT.md` — specific enough that zero context is needed to resume.
 
 ```
 Next time you open Claude Code:
@@ -181,7 +181,7 @@ If a session drops mid-chain (rate limit, host sleep, lid close), the team write
 Six files persist your full project state across every session:
 
 ```
-memory/
+.claude/memory/
 ├── NEXT.md       Exact next step — specific file, function, outcome
 ├── STATE.md      Sprint goal, velocity, blockers, in-progress stories
 ├── BACKLOG.md    Open stories — Index at top, bodies below
@@ -280,7 +280,7 @@ Then inside Claude Code, type these slash commands one by one:
 /standup
 ```
 
-That's the full zero-to-running flow. After `/init`, you'll see `memory/` and `CLAUDE.md` created in your project. After `/sprint-plan`, the team has a sprint goal and you're ready to ship.
+That's the full zero-to-running flow. After `/init`, you'll see `.claude/memory/` and `.claude/CLAUDE.md` created in your project. After `/sprint-plan`, the team has a sprint goal and you're ready to ship.
 
 The detailed sections below walk through each step — including the VS Code / JetBrains / web variants and the alternative `install.sh` path.
 
@@ -391,7 +391,7 @@ That's the difference between a team and a panel of assistants.
 ```
 agile-team-skill/
 ├── install.sh                        ← one-command installer
-├── CLAUDE.md                         ← project constitution
+├── .claude/CLAUDE.md                 ← project constitution
 ├── .claude/
 │   ├── agents/                       ← 7 specialist agents
 │   │   ├── po-agent.md
@@ -407,7 +407,7 @@ agile-team-skill/
 │   │   ├── review.md                 /review
 │   │   └── ...
 │   └── hooks/                        ← safety gates + secret scanning
-└── memory/                           ← persistent team state
+└── .claude/memory/                           ← persistent team state
     ├── NEXT.md
     ├── STATE.md
     ├── BACKLOG.md
@@ -420,12 +420,12 @@ agile-team-skill/
 
 ## Multiple Projects
 
-Install once per project. Each project gets its own `memory/` — completely separate sprint state, backlog, decisions, and team roster. Same 13 agents, same 30 commands, different context.
+Install once per project. Each project gets its own `.claude/memory/` — completely separate sprint state, backlog, decisions, and team roster. Same 13 agents, same 30 commands, different context.
 
 ```
 ~/projects/
-├── api/       ← .claude/ + memory/ + CLAUDE.md (sprint 3)
-└── frontend/  ← .claude/ + memory/ + CLAUDE.md (sprint 1)
+├── api/       ← .claude/ (incl. memory + CLAUDE.md) (sprint 3)
+└── frontend/  ← .claude/ (incl. memory + CLAUDE.md) (sprint 1)
 ```
 
 ---

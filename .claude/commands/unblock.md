@@ -18,15 +18,15 @@ Blockers are logged in STATE.md during `/standup` — this command clears them.
 
 2. Read current state:
    ```bash
-   cat memory/STATE.md
-   cat memory/TEAM.md   # roster — senior-engineer pairs on technical blockers if ACTIVE
+   cat .claude/memory/STATE.md
+   cat .claude/memory/TEAM.md   # roster — senior-engineer pairs on technical blockers if ACTIVE
    ```
 
 3. **tech-lead-agent confirms the blocker is resolved:**
    - Is the blocking dependency now available?
    - Is the architectural question answered?
    - Does the resolution introduce any new risk?
-   - If a decision was made to unblock → log it as DEC-XXX in `memory/DECISIONS.md`
+   - If a decision was made to unblock → log it as DEC-XXX in `.claude/memory/DECISIONS.md`
 
    **If the blocker is NOT yet resolved** and it is technical (not a requirements or
    priority question) and senior-engineer-agent is ACTIVE in the roster:
@@ -37,7 +37,7 @@ Blockers are logged in STATE.md during `/standup` — this command clears them.
 4. **pm-agent updates STATE.md:**
    - Removes the blocker from the BLOCKERS section
    - Confirms STORY-XXX remains "In Progress"
-   - Overwrites `memory/NEXT.md` with the exact next implementation step
+   - Overwrites `.claude/memory/NEXT.md` with the exact next implementation step
 
 5. Show confirmation:
 

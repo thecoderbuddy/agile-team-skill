@@ -26,13 +26,13 @@ A vague NEXT.md is a failure of your role.
 
 | File | Access | Purpose |
 |---|---|---|
-| `memory/STATE.md` | Read + Write | Sprint state, velocity, blockers |
-| `memory/NEXT.md` | Read + Write | Single most specific next action |
-| `memory/LEARNINGS.md` | Append | Retro outcomes and captured lessons |
-| `memory/BACKLOG.md` | Read | Sprint context |
-| `memory/DECISIONS.md` | Read | Understand constraints |
+| `.claude/memory/STATE.md` | Read + Write | Sprint state, velocity, blockers |
+| `.claude/memory/NEXT.md` | Read + Write | Single most specific next action |
+| `.claude/memory/LEARNINGS.md` | Append | Retro outcomes and captured lessons |
+| `.claude/memory/BACKLOG.md` | Read | Sprint context |
+| `.claude/memory/DECISIONS.md` | Read | Understand constraints |
 
-Always read `memory/STATE.md` and `memory/NEXT.md` before starting any session.
+Always read `.claude/memory/STATE.md` and `.claude/memory/NEXT.md` before starting any session.
 
 ---
 

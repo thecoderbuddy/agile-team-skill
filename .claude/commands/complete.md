@@ -25,11 +25,11 @@ This step commits the code and closes the story in STATE.md.
    ```bash
    git status
    git diff --stat
-   cat memory/CHECKPOINT.md 2>/dev/null   # should be gone — /review deletes it on APPROVED
-   cat memory/NEXT.md
+   cat .claude/memory/CHECKPOINT.md 2>/dev/null   # should be gone — /review deletes it on APPROVED
+   cat .claude/memory/NEXT.md
    ```
-   Evidence of an APPROVED verdict: `memory/CHECKPOINT.md` no longer exists AND
-   `memory/STATE.md` or `memory/NEXT.md` notes the story as APPROVED / ready to complete.
+   Evidence of an APPROVED verdict: `.claude/memory/CHECKPOINT.md` no longer exists AND
+   `.claude/memory/STATE.md` or `.claude/memory/NEXT.md` notes the story as APPROVED / ready to complete.
    If there is no evidence of an APPROVED `/review` verdict — warn the user
    ("No record of an APPROVED /review verdict for STORY-XXX") and ask them to explicitly
    confirm before continuing.
@@ -38,7 +38,7 @@ This step commits the code and closes the story in STATE.md.
 3. **qa-agent records test evidence:**
 
    Before committing, append a `Test evidence:` line to the story's Definition of Done
-   in `memory/BACKLOG.md`. Format:
+   in `.claude/memory/BACKLOG.md`. Format:
 
    ```
    Test evidence: [what was tested] — [method: manual inspection | automated | visual review] — [result: PASS | FAIL] — [date]
@@ -59,32 +59,32 @@ This step commits the code and closes the story in STATE.md.
    Perform the substeps in this exact order — the ordering matters because each step
    depends on the prior state of BACKLOG.md.
 
-   1. Extract the story body from `memory/BACKLOG.md`:
+   1. Extract the story body from `.claude/memory/BACKLOG.md`:
       ```bash
-      awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
+      awk '/^- \[.\] STORY-XXX:/,/^---$/' .claude/memory/BACKLOG.md
       ```
       The `[.]` matches either `[ ]` or `[x]` so the extract works regardless of
       whether the checkbox has been marked yet.
    2. In the extracted text, change the leading `- [ ] STORY-XXX:` to `- [x] STORY-XXX:`
       and add a `Completed: [date]` line under the priority/added-by metadata.
-   3. Append the marked extract to the end of `memory/ARCHIVE.md` verbatim. ARCHIVE.md
+   3. Append the marked extract to the end of `.claude/memory/ARCHIVE.md` verbatim. ARCHIVE.md
       is append-only — never edit or delete existing entries.
    4. Remove the story body block and the corresponding line in the `## Index` section
-      from `memory/BACKLOG.md`.
+      from `.claude/memory/BACKLOG.md`.
 
 5. **pm-agent updates state:**
-   - Moves STORY-XXX from "In Progress" to "Done This Sprint" in `memory/STATE.md`
+   - Moves STORY-XXX from "In Progress" to "Done This Sprint" in `.claude/memory/STATE.md`
    - Updates velocity count (stories done / stories planned)
-   - Overwrites `memory/NEXT.md` with the next logical action
+   - Overwrites `.claude/memory/NEXT.md` with the next logical action
 
 6. Stage, get approval, and commit:
 
-   Stage the code changes AND the memory/ file updates from Steps 3-5 (STATE.md, NEXT.md,
+   Stage the code changes AND the .claude/memory/ file updates from Steps 3-5 (STATE.md, NEXT.md,
    ARCHIVE.md, BACKLOG.md) — they all go in the same story commit.
 
    Show the staged diff summary and ask before committing (Iron Rule 3):
    ```bash
-   git add [relevant files + memory/STATE.md memory/NEXT.md memory/ARCHIVE.md memory/BACKLOG.md]
+   git add [relevant files + .claude/memory/STATE.md .claude/memory/NEXT.md .claude/memory/ARCHIVE.md .claude/memory/BACKLOG.md]
    git diff --stat --cached
    ```
    > "Approve commit? [Y/N]"

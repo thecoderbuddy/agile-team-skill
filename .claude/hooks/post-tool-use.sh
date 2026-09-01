@@ -14,8 +14,8 @@ PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 if [ "$TOOL_NAME" = "Write" ] || [ "$TOOL_NAME" = "Edit" ]; then
   FILE_PATH=$(echo "$INPUT_JSON" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
 
-  # Log edited files to memory/ for session tracking
-  LOGFILE="$PROJECT_ROOT/memory/.file-log"
+  # Log edited files to .claude/memory/ for session tracking
+  LOGFILE="$PROJECT_ROOT/.claude/memory/.file-log"
   if [ -d "$PROJECT_ROOT/memory" ]; then
     echo "$(date '+%Y-%m-%d %H:%M') | $FILE_PATH" >> "$LOGFILE" 2>/dev/null
   fi

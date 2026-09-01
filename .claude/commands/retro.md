@@ -11,11 +11,11 @@ All agents reflect. PM facilitates. PO converts action items to backlog. Learnin
 ## Step 0 — Read sprint history
 
 ```bash
-cat memory/STATE.md
-cat memory/TEAM.md    # roster — ACTIVE extended agents also reflect in Step 1
+cat .claude/memory/STATE.md
+cat .claude/memory/TEAM.md    # roster — ACTIVE extended agents also reflect in Step 1
 # LEARNINGS.md is append-only and unbounded — read last sprint's learnings only, never the full file.
 # Take the current sprint number from STATE.md, then:
-awk '/^## Sprint \[current\]/,0' memory/LEARNINGS.md   # substitute the actual sprint number
+awk '/^## Sprint \[current\]/,0' .claude/memory/LEARNINGS.md   # substitute the actual sprint number
 git log --oneline -20
 ```
 
@@ -60,7 +60,7 @@ tech-lead-agent
   Action:     [one concrete improvement]
 ```
 
-**Extended agents (roster-gated):** each extended agent marked ACTIVE in `memory/TEAM.md`
+**Extended agents (roster-gated):** each extended agent marked ACTIVE in `.claude/memory/TEAM.md`
 reflects in the same three-column format — senior-engineer on estimate misses and DX drag
 (with measured cost), ai-engineer on AI behaviour surprises and the eval/guardrail that
 would have caught them, design-lead on user friction and the pattern that prevents it.
@@ -81,7 +81,7 @@ DORMANT and ON-DEMAND agents are skipped.
 ## Step 3 — po-agent converts actions to backlog
 
 **po-agent** takes every action item and either:
-- Adds it to `memory/BACKLOG.md` as a story (with user value statement)
+- Adds it to `.claude/memory/BACKLOG.md` as a story (with user value statement)
 - Flags it as a process change (no story needed — pm-agent owns implementation)
 - Explicitly drops it with reasoning (documented inline)
 
@@ -91,7 +91,7 @@ Nothing from the retro disappears — it either becomes a story or is consciousl
 
 ## Step 4 — pm-agent writes learnings
 
-**pm-agent** appends to `memory/LEARNINGS.md`:
+**pm-agent** appends to `.claude/memory/LEARNINGS.md`:
 
 ```
 ## Sprint [N] Retro — [date]
@@ -132,7 +132,7 @@ ACTION ITEMS → BACKLOG
   - Process change: [description] — owned by pm-agent
 
 LEARNINGS LOGGED
-  memory/LEARNINGS.md updated ✓
+  .claude/memory/LEARNINGS.md updated ✓
 ═══════════════════════════════════════════════════
 Run /sprint-plan to plan Sprint [N+1].
 ```

@@ -25,13 +25,13 @@ and ensure the team always builds the right thing next.
 
 | File | Access | Purpose |
 |---|---|---|
-| `memory/BACKLOG.md` | Read + Write | Your primary artifact |
-| `memory/ARCHIVE.md` | Read + Write (append-only) | Completed story archive — written by you during `/complete` |
-| `memory/STATE.md` | Read + Write (sprint goal section only) | Sprint context |
-| `memory/DECISIONS.md` | Read | Understand constraints |
-| `memory/LEARNINGS.md` | Read | Understand what went wrong before |
+| `.claude/memory/BACKLOG.md` | Read + Write | Your primary artifact |
+| `.claude/memory/ARCHIVE.md` | Read + Write (append-only) | Completed story archive — written by you during `/complete` |
+| `.claude/memory/STATE.md` | Read + Write (sprint goal section only) | Sprint context |
+| `.claude/memory/DECISIONS.md` | Read | Understand constraints |
+| `.claude/memory/LEARNINGS.md` | Read | Understand what went wrong before |
 
-Always read `memory/BACKLOG.md` and `memory/STATE.md` before starting any task — unless the story body/index/context is already provided in your prompt (in chains the orchestrator passes it — do not re-read).
+Always read `.claude/memory/BACKLOG.md` and `.claude/memory/STATE.md` before starting any task — unless the story body/index/context is already provided in your prompt (in chains the orchestrator passes it — do not re-read).
 
 ---
 
@@ -64,7 +64,7 @@ Notes: [tech constraints, security considerations, or design notes added by othe
 You receive findings from pr-reviewer, security, qa, and tech-lead.
 For each finding, you decide:
 - **FIX NOW** — blocks merge. Must be resolved before APPROVED.
-- **BACKLOG** — valid issue, not blocking. Add to `memory/BACKLOG.md` immediately.
+- **BACKLOG** — valid issue, not blocking. Add to `.claude/memory/BACKLOG.md` immediately.
 - **WON'T FIX** — explain why. Document the reasoning inline.
 
 You give the final verdict: **APPROVED** or **CHANGES REQUESTED**.

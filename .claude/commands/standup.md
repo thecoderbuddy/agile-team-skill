@@ -11,13 +11,13 @@ All agents report. PM synthesizes. PO notes. Use at the start of every session.
 ## Step 0 — Read current state
 
 ```bash
-cat memory/STATE.md
-cat memory/NEXT.md
-cat memory/TEAM.md    # roster — ACTIVE extended agents also report in Step 1
+cat .claude/memory/STATE.md
+cat .claude/memory/NEXT.md
+cat .claude/memory/TEAM.md    # roster — ACTIVE extended agents also report in Step 1
 git log --oneline -5
 ```
 
-**Error check before the chain:** if `memory/STATE.md` is missing, or it contains no active
+**Error check before the chain:** if `.claude/memory/STATE.md` is missing, or it contains no active
 sprint (no sprint number/goal, or the sprint is marked CLOSED) — stop here. Say so and
 suggest `/init` (no memory files yet) or `/sprint-plan` (no active sprint).
 
@@ -44,7 +44,7 @@ qa-agent
 **security-analyst-agent** reports:
 
 Before this report, the orchestrator passes the relevant lines from the Step 0 read of
-`memory/STATE.md` (the `## Last Security Review` section) into the security-analyst prompt —
+`.claude/memory/STATE.md` (the `## Last Security Review` section) into the security-analyst prompt —
 the agent does not re-read STATE.md. Evaluate security review cadence from those lines:
 
 - Security review threshold: **30 days**  <!-- CONFIGURABLE: Edit only this value to change the threshold everywhere in this block -->
@@ -82,7 +82,7 @@ tech-lead-agent
   Blocked: [nothing, or what needs a decision]
 ```
 
-**Extended agents (roster-gated):** each extended agent marked ACTIVE in `memory/TEAM.md`
+**Extended agents (roster-gated):** each extended agent marked ACTIVE in `.claude/memory/TEAM.md`
 also reports in the same Done / Doing / Blocked format:
 - **senior-engineer-agent** — pairing/heavy-story progress; flag where dev is struggling
 - **ai-engineer-agent** — eval results trend, cost anomalies, upstream model changes
@@ -96,8 +96,8 @@ DORMANT and ON-DEMAND agents do not report — skip them silently.
 
 **pm-agent** reads all reports and:
 1. Lists active blockers and assigns an owner + mitigation for each
-2. Confirms today's focus matches `memory/NEXT.md` — updates NEXT.md if it doesn't
-3. Updates the "In Progress" section of `memory/STATE.md`
+2. Confirms today's focus matches `.claude/memory/NEXT.md` — updates NEXT.md if it doesn't
+3. Updates the "In Progress" section of `.claude/memory/STATE.md`
 4. Flags any sprint goal risk (if velocity is off track)
 
 ---

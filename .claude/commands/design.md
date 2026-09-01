@@ -15,8 +15,8 @@ Complete design process before any code is written.
 
 1. Read context:
    ```bash
-   cat memory/STATE.md
-   cat memory/DECISIONS.md
+   cat .claude/memory/STATE.md
+   cat .claude/memory/DECISIONS.md
    ```
 
 2. **po-agent leads the process:**
@@ -83,10 +83,10 @@ Approved to build? [Y/N]
 
 6. **Persist the approved design (a session drop must not lose it):**
    - If approved, write the design summary (flow, components/interface, technical
-     spec) into the corresponding story's body in memory/BACKLOG.md under a
+     spec) into the corresponding story's body in .claude/memory/BACKLOG.md under a
      `### Design` heading. If no story exists yet, note that /stories should create
      one and attach this design.
-   - If the design involved any architectural choice, log it to memory/DECISIONS.md
+   - If the design involved any architectural choice, log it to .claude/memory/DECISIONS.md
      as a DEC-XXX entry.
    - The terminal output alone is not the artifact — BACKLOG.md (and DECISIONS.md
      where applicable) is.

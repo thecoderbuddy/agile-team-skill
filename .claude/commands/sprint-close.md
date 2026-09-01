@@ -6,15 +6,15 @@ description: Sprint close ceremony — pm tallies results, agents sign off, pm m
 
 Run when all sprint stories are done (or deciding to close with carryover).
 
-**Edge case:** if `memory/STATE.md` has no active sprint (none defined, or already marked
+**Edge case:** if `.claude/memory/STATE.md` has no active sprint (none defined, or already marked
 CLOSED) — stop and say so. There is nothing to close.
 
 ## Steps
 
 1. Read sprint state:
    ```bash
-   cat memory/STATE.md
-   sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — read a story's full body only if its carry-over disposition needs it
+   cat .claude/memory/STATE.md
+   sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md   # index only — read a story's full body only if its carry-over disposition needs it
    git log --oneline -20
    ```
 
@@ -39,10 +39,10 @@ CLOSED) — stop and say so. There is nothing to close.
    - **tech-lead-agent:** Any tech debt introduced that needs a story?
 
 4. **pm-agent closes the sprint:**
-   - Updates `memory/STATE.md` — mark sprint CLOSED, list carried-over stories
-   - Updates `memory/BACKLOG.md` per po's per-story disposition from step 3: stories po sent back to backlog move to the top of BACKLOG.md; stories po earmarked for next sprint stay flagged in STATE.md for `/sprint-plan`
-   - Appends velocity and lessons to `memory/LEARNINGS.md`
-   - Writes `memory/NEXT.md` → `/retro` then `/sprint-plan`
+   - Updates `.claude/memory/STATE.md` — mark sprint CLOSED, list carried-over stories
+   - Updates `.claude/memory/BACKLOG.md` per po's per-story disposition from step 3: stories po sent back to backlog move to the top of BACKLOG.md; stories po earmarked for next sprint stay flagged in STATE.md for `/sprint-plan`
+   - Appends velocity and lessons to `.claude/memory/LEARNINGS.md`
+   - Writes `.claude/memory/NEXT.md` → `/retro` then `/sprint-plan`
 
 5. Show sprint summary:
 

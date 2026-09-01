@@ -67,9 +67,9 @@ print_ok "Environment looks good"
 # Detect source: local (running from cloned repo) vs remote (curl)
 # ─────────────────────────────────────────────────────────────────────────────
 
-# If this script lives next to .claude/ and memory/, we're running locally
+# If this script lives next to .claude/ and .claude/memory/, we're running locally
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd)"
-if [ -d "$SCRIPT_DIR/.claude" ] && [ -d "$SCRIPT_DIR/memory" ]; then
+if [ -d "$SCRIPT_DIR/.claude" ] && [ -d "$SCRIPT_DIR/.claude/memory" ]; then
   SOURCE_MODE="local"
   SOURCE_DIR="$SCRIPT_DIR"
 else
@@ -93,28 +93,28 @@ if [ -d "$TARGET_DIR/.claude/agents" ]; then
   fi
 fi
 
-if [ -d "$TARGET_DIR/memory" ]; then
+if [ -d "$TARGET_DIR/.claude/memory" ]; then
   # Check if memory has real content (not just templates)
   MEMORY_HAS_CONTENT=false
-  if grep -q "Sprint: [0-9]" "$TARGET_DIR/memory/STATE.md" 2>/dev/null; then
+  if grep -q "Sprint: [0-9]" "$TARGET_DIR/.claude/memory/STATE.md" 2>/dev/null; then
     MEMORY_HAS_CONTENT=true
   fi
 
   if [ "$MEMORY_HAS_CONTENT" = true ]; then
-    print_warn "memory/ already has sprint data"
+    print_warn ".claude/memory/ already has sprint data"
     echo ""
     printf "  Overwrite memory files? This will reset your sprint state. [y/N] "
     read -r OVERWRITE_MEMORY
     if [ "$OVERWRITE_MEMORY" != "y" ] && [ "$OVERWRITE_MEMORY" != "Y" ]; then
-      echo "  Skipping memory/ — existing sprint state preserved."
+      echo "  Skipping .claude/memory/ — existing sprint state preserved."
       SKIP_MEMORY=true
     fi
   else
-    print_ok "memory/ exists but is empty — will overwrite templates"
+    print_ok ".claude/memory/ exists but is empty — will overwrite templates"
   fi
 fi
 
-if [ -f "$TARGET_DIR/CLAUDE.md" ]; then
+if [ -f "$TARGET_DIR/.claude/CLAUDE.md" ] || [ -f "$TARGET_DIR/CLAUDE.md" ]; then
   print_warn "CLAUDE.md already exists"
   echo ""
   printf "  Overwrite CLAUDE.md? [y/N] "
@@ -140,19 +140,30 @@ if [ "$SOURCE_MODE" = "local" ]; then
     rm -f "$TARGET_DIR/.claude/settings.local.json"
     rm -rf "$TARGET_DIR/.claude/worktrees"
     rm -rf "$TARGET_DIR/.claude/skills"
-    print_ok ".claude/ installed (agents + commands + hooks)"
+    # Office: ship only the app + pre-baked assets, not local pipeline sources
+    rm -rf "$TARGET_DIR/.claude/office/assets/lpc" \
+           "$TARGET_DIR/.claude/office/assets/.venv-img" \
+           "$TARGET_DIR/.claude/office/assets/rpg" \
+           "$TARGET_DIR/.claude/office/assets/indoor" \
+           "$TARGET_DIR/.claude/office/assets/chars" \
+           "$TARGET_DIR/.claude/office/assets/custom-chars"
+    rm -f "$TARGET_DIR/.claude/office/events.jsonl" \
+          "$TARGET_DIR/.claude/office/assets/events.jsonl" \
+          "$TARGET_DIR/.claude/office/assets/"z_*.png \
+          "$TARGET_DIR/.claude/office/assets/build_assets"*.py
+    print_ok ".claude/ installed (agents + commands + hooks + office)"
   fi
 
   if [ "$SKIP_MEMORY" != "true" ]; then
-    mkdir -p "$TARGET_DIR/memory"
+    mkdir -p "$TARGET_DIR/.claude/memory"
 
     # Structural templates — copy from repo
     for mf in DECISIONS LEARNINGS TEAM; do
-      [ -f "$SOURCE_DIR/memory/$mf.md" ] && cp "$SOURCE_DIR/memory/$mf.md" "$TARGET_DIR/memory/$mf.md"
+      [ -f "$SOURCE_DIR/.claude/memory/$mf.md" ] && cp "$SOURCE_DIR/.claude/memory/$mf.md" "$TARGET_DIR/.claude/memory/$mf.md"
     done
 
     # Ephemeral files — create blank templates; /init populates them
-    cat > "$TARGET_DIR/memory/STATE.md" << 'EOF'
+    cat > "$TARGET_DIR/.claude/memory/STATE.md" << 'EOF'
 # Sprint State
 # Owned by: pm-agent
 # Updated at every ceremony. Source of truth for current sprint.
@@ -170,13 +181,13 @@ Status: NOT STARTED
 (none)
 EOF
 
-    cat > "$TARGET_DIR/memory/NEXT.md" << 'EOF'
+    cat > "$TARGET_DIR/.claude/memory/NEXT.md" << 'EOF'
 # Next Action
 
 Run `/init` to onboard the team and populate the backlog.
 EOF
 
-    cat > "$TARGET_DIR/memory/BACKLOG.md" << 'EOF'
+    cat > "$TARGET_DIR/.claude/memory/BACKLOG.md" << 'EOF'
 # Product Backlog
 # Owned by: po-agent
 # Prioritized list of stories. Updated at every /backlog and /review.
@@ -184,23 +195,23 @@ EOF
 (empty — run /init to populate)
 EOF
 
-    print_ok "memory/ installed (DECISIONS, LEARNINGS, TEAM + blank STATE, NEXT, BACKLOG)"
+    print_ok ".claude/memory/ installed (DECISIONS, LEARNINGS, TEAM + blank STATE, NEXT, BACKLOG)"
   fi
 
   if [ "$SKIP_CLAUDE_MD" != "true" ]; then
-    cp "$SOURCE_DIR/CLAUDE.md" "$TARGET_DIR/CLAUDE.md"
-    print_ok "CLAUDE.md installed"
+    cp "$SOURCE_DIR/.claude/CLAUDE.md" "$TARGET_DIR/.claude/CLAUDE.md"
+    print_ok ".claude/CLAUDE.md installed"
   fi
 
   # Pixel office (live agent visualization) — app + pre-baked assets only
-  if [ -d "$SOURCE_DIR/office" ] && [ "$SOURCE_DIR" != "$TARGET_DIR" ]; then
-    mkdir -p "$TARGET_DIR/office/assets"
+  if [ -d "$SOURCE_DIR/.claude/office" ] && [ "$SOURCE_DIR" != "$TARGET_DIR" ]; then
+    mkdir -p "$TARGET_DIR/.claude/office/assets"
     for of in index.html logic.js pixi-legacy.min.js serve.sh demo.sh tiles.png agents.png map.json; do
-      cp "$SOURCE_DIR/office/$of" "$TARGET_DIR/office/$of"
+      cp "$SOURCE_DIR/.claude/office/$of" "$TARGET_DIR/.claude/office/$of"
     done
-    cp "$SOURCE_DIR/office/assets/CREDITS.md" "$TARGET_DIR/office/assets/CREDITS.md"
-    chmod +x "$TARGET_DIR/office/serve.sh" "$TARGET_DIR/office/demo.sh"
-    print_ok "office/ installed (run: bash office/serve.sh → http://localhost:8123)"
+    cp "$SOURCE_DIR/.claude/office/assets/CREDITS.md" "$TARGET_DIR/.claude/office/assets/CREDITS.md"
+    chmod +x "$TARGET_DIR/.claude/office/serve.sh" "$TARGET_DIR/.claude/office/demo.sh"
+    print_ok ".claude/office/ installed (run: bash .claude/office/serve.sh)"
   fi
 
 else
@@ -264,14 +275,14 @@ else
   fi
 
   if [ "$SKIP_MEMORY" != "true" ]; then
-    mkdir -p "$TARGET_DIR/memory"
+    mkdir -p "$TARGET_DIR/.claude/memory"
 
     for mf in "${MEMORY_TEMPLATE_FILES[@]}"; do
-      curl -fsSL "$REPO_URL/memory/$mf.md" -o "$TARGET_DIR/memory/$mf.md"
+      curl -fsSL "$REPO_URL/.claude/memory/$mf.md" -o "$TARGET_DIR/.claude/memory/$mf.md"
     done
 
     # Ephemeral files — create blank templates; /init populates them
-    cat > "$TARGET_DIR/memory/STATE.md" << 'EOF'
+    cat > "$TARGET_DIR/.claude/memory/STATE.md" << 'EOF'
 # Sprint State
 # Owned by: pm-agent
 # Updated at every ceremony. Source of truth for current sprint.
@@ -289,13 +300,13 @@ Status: NOT STARTED
 (none)
 EOF
 
-    cat > "$TARGET_DIR/memory/NEXT.md" << 'EOF'
+    cat > "$TARGET_DIR/.claude/memory/NEXT.md" << 'EOF'
 # Next Action
 
 Run `/init` to onboard the team and populate the backlog.
 EOF
 
-    cat > "$TARGET_DIR/memory/BACKLOG.md" << 'EOF'
+    cat > "$TARGET_DIR/.claude/memory/BACKLOG.md" << 'EOF'
 # Product Backlog
 # Owned by: po-agent
 # Prioritized list of stories. Updated at every /backlog and /review.
@@ -303,22 +314,23 @@ EOF
 (empty — run /init to populate)
 EOF
 
-    print_ok "memory/ installed"
+    print_ok ".claude/memory/ installed"
   fi
 
   if [ "$SKIP_CLAUDE_MD" != "true" ]; then
-    curl -fsSL "$REPO_URL/CLAUDE.md" -o "$TARGET_DIR/CLAUDE.md"
-    print_ok "CLAUDE.md installed"
+    mkdir -p "$TARGET_DIR/.claude"
+    curl -fsSL "$REPO_URL/.claude/CLAUDE.md" -o "$TARGET_DIR/.claude/CLAUDE.md"
+    print_ok ".claude/CLAUDE.md installed"
   fi
 
   # Pixel office (live agent visualization) — app + pre-baked assets only
-  mkdir -p "$TARGET_DIR/office/assets"
+  mkdir -p "$TARGET_DIR/.claude/office/assets"
   for of in index.html logic.js pixi-legacy.min.js serve.sh demo.sh tiles.png agents.png map.json; do
-    curl -fsSL "$REPO_URL/office/$of" -o "$TARGET_DIR/office/$of"
+    curl -fsSL "$REPO_URL/.claude/office/$of" -o "$TARGET_DIR/.claude/office/$of"
   done
-  curl -fsSL "$REPO_URL/office/assets/CREDITS.md" -o "$TARGET_DIR/office/assets/CREDITS.md"
-  chmod +x "$TARGET_DIR/office/serve.sh" "$TARGET_DIR/office/demo.sh"
-  print_ok "office/ installed (run: bash office/serve.sh → http://localhost:8123)"
+  curl -fsSL "$REPO_URL/.claude/office/assets/CREDITS.md" -o "$TARGET_DIR/.claude/office/assets/CREDITS.md"
+  chmod +x "$TARGET_DIR/.claude/office/serve.sh" "$TARGET_DIR/.claude/office/demo.sh"
+  print_ok ".claude/office/ installed (run: bash .claude/office/serve.sh)"
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -374,9 +386,9 @@ echo "    .claude/commands/  — 29 slash commands"
 echo "    .claude/hooks/     — safety gates + secret scanning
     .gitleaks.toml     — secret scanner config
     .git/hooks/        — pre-commit secret scan (active if gitleaks installed)"
-echo "    memory/            — persistent team state"
-echo "    office/            — live pixel-office visualization of your agents"
-echo "    CLAUDE.md          — project constitution"
+echo "    .claude/memory/            — persistent team state"
+echo "    .claude/office/    — live pixel-office visualization (bash .claude/office/serve.sh)"
+echo "    .claude/CLAUDE.md  — project constitution"
 echo ""
 echo -e "  ${BOLD}Next steps:${NC}"
 echo ""

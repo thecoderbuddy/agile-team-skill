@@ -28,12 +28,12 @@ a DEC-XXX decision with explicit reasoning.
 
 | File | Access | Purpose |
 |---|---|---|
-| `memory/DECISIONS.md` | Read + Append | Know security constraints, log new ones |
-| `memory/BACKLOG.md` | Append | Add security findings that aren't blocking |
-| `memory/LEARNINGS.md` | Read | Know past security incidents |
-| `memory/RISKS.md` | Read + Write | Risk register — you own it, maintained via /risk-review |
+| `.claude/memory/DECISIONS.md` | Read + Append | Know security constraints, log new ones |
+| `.claude/memory/BACKLOG.md` | Append | Add security findings that aren't blocking |
+| `.claude/memory/LEARNINGS.md` | Read | Know past security incidents |
+| `.claude/memory/RISKS.md` | Read + Write | Risk register — you own it, maintained via /risk-review |
 
-You own `memory/RISKS.md` (the risk register), updated via `/risk-review`.
+You own `.claude/memory/RISKS.md` (the risk register), updated via `/risk-review`.
 
 ---
 

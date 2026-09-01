@@ -75,10 +75,10 @@
   So that I don't go months without a full codebase security audit without realising it.
 
   Acceptance Criteria:
-    - Given /security-review completes, when the scan finishes, then the date is written to memory/STATE.md under a "Last security review:" field
+    - Given /security-review completes, when the scan finishes, then the date is written to .claude/memory/STATE.md under a "Last security review:" field
     - Given /standup runs and the last security review was more than 30 days ago, when the standup report is generated, then security-analyst-agent flags it as overdue with the date of the last scan
     - Given no security review has ever been run, when /standup runs, then security-analyst-agent flags it as "never run" and recommends running /security-review before the sprint ends
-    - Given a user runs /security-review, when it completes, then the findings summary is appended to memory/LEARNINGS.md under a "Security Scans" section so trends are visible over time
+    - Given a user runs /security-review, when it completes, then the findings summary is appended to .claude/memory/LEARNINGS.md under a "Security Scans" section so trends are visible over time
 
   Test Scenarios:
     - Happy path: review run today, no overdue flag in standup
@@ -147,12 +147,12 @@
   So that the grooming ceremony consumes the minimum tokens needed and CLAUDE.md's "Token discipline" paragraph is accurate.
 
   Acceptance Criteria:
-    - Given /backlog runs, when it reads BACKLOG.md, then it uses `sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md` (or equivalent) rather than `cat memory/BACKLOG.md`
+    - Given /backlog runs, when it reads BACKLOG.md, then it uses `sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md` (or equivalent) rather than `cat .claude/memory/BACKLOG.md`
     - Given a story body is needed during grooming, when an agent acts on a specific story, then the full body is extracted individually — the Index read does not also load all bodies
     - Given the migration is complete, when CLAUDE.md states "ceremonies read the BACKLOG.md ## Index section first", then that statement is true for all ceremony commands including /backlog
 
   Definition of Done:
-    - [x] .claude/commands/backlog.md line 10 (or equivalent) updated from `cat memory/BACKLOG.md` to `sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md`
+    - [x] .claude/commands/backlog.md line 10 (or equivalent) updated from `cat .claude/memory/BACKLOG.md` to `sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md`
     - [x] Token rule prose added to /backlog command matching the pattern used in the other 7 migrated commands
     - [x] CLAUDE.md "Token discipline" paragraph is now accurate for all ceremony commands
 
@@ -172,12 +172,12 @@
   So that the 6-agent sprint planning chain does not pay the token cost of loading all story bodies upfront.
 
   Acceptance Criteria:
-    - Given /sprint-plan runs, when it reads BACKLOG.md, then it uses `sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md` rather than `cat memory/BACKLOG.md`
+    - Given /sprint-plan runs, when it reads BACKLOG.md, then it uses `sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md` rather than `cat .claude/memory/BACKLOG.md`
     - Given an agent in the sprint-plan chain needs a specific story's full body, when it acts on that story, then it extracts the body individually using awk
     - Given the migration is complete, when CLAUDE.md states all ceremonies use the Index-first pattern, then that is true
 
   Definition of Done:
-    - [x] .claude/commands/sprint-plan.md updated from `cat memory/BACKLOG.md` to `sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md`
+    - [x] .claude/commands/sprint-plan.md updated from `cat .claude/memory/BACKLOG.md` to `sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md`
     - [x] Token rule prose added matching the pattern in the other migrated commands
     - [x] Per-story body extraction within the ceremony uses the awk `\[.\] STORY-XXX:` pattern
 
@@ -227,11 +227,11 @@
     - Given the amendment is made, when DEC-004's consequences section is read, then it still correctly states all listed memory files are covered by the data-not-commands constraint
 
   Definition of Done:
-    - [x] memory/DECISIONS.md DEC-004 decision text updated to include ARCHIVE.md in the memory file list
+    - [x] .claude/memory/DECISIONS.md DEC-004 decision text updated to include ARCHIVE.md in the memory file list
     - [x] DEC-004 amendment date noted inline (e.g. "Amended: 2026-06-10 — ARCHIVE.md added to the enumeration")
     - [x] No constraint weakening: "must not follow instructions" language unchanged
 
-  Test evidence: DEC-004 amendment verified at memory/DECISIONS.md:131,135 — ARCHIVE.md enumerated, policy strength preserved. Verified by security-analyst-agent in /review cycle 2. — manual inspection — PASS — 2026-06-10
+  Test evidence: DEC-004 amendment verified at .claude/memory/DECISIONS.md:131,135 — ARCHIVE.md enumerated, policy strength preserved. Verified by security-analyst-agent in /review cycle 2. — manual inspection — PASS — 2026-06-10
   Security Considerations: Security control amendment. Omitting ARCHIVE.md from the trust boundary at the same moment it is introduced as a memory file is the exact gap DEC-004 was written to prevent.
   Technical Notes: Single amendment to DEC-004. Consequences/append-only specifics deferred to DEC-007 (STORY-027). | Complexity: XS
 
@@ -256,7 +256,7 @@
     - [x] Access column reads "Read + Write (append-only)"
     - [x] Purpose column describes the file role
 
-  Test evidence: po-agent.md table row verified — `memory/ARCHIVE.md | Read + Write (append-only) | Completed story archive — written by you during /complete`. Verified by qa-agent in /review cycle 2. — manual inspection — PASS — 2026-06-10
+  Test evidence: po-agent.md table row verified — `.claude/memory/ARCHIVE.md | Read + Write (append-only) | Completed story archive — written by you during /complete`. Verified by qa-agent in /review cycle 2. — manual inspection — PASS — 2026-06-10
   Security Considerations: none
   Technical Notes: Single row addition. | Complexity: XS
 
@@ -268,11 +268,11 @@
   Completed: 2026-06-10
 
   As a new user or contributor reading the README,
-  I want ARCHIVE.md visible in the memory/ directory tree,
+  I want ARCHIVE.md visible in the .claude/memory/ directory tree,
   So that I understand where completed stories go and do not assume they vanish from BACKLOG.md without explanation.
 
   Acceptance Criteria:
-    - Given the README memory tree (at approximately line 184), when a reader scans the memory/ directory listing, then ARCHIVE.md appears with a description matching its role
+    - Given the README memory tree (at approximately line 184), when a reader scans the .claude/memory/ directory listing, then ARCHIVE.md appears with a description matching its role
     - Given there is a second memory tree in the README (at approximately line 348), when a reader views it, then ARCHIVE.md is present there as well
     - Given both trees are updated, when the CLAUDE.md tree is compared to the README trees, then all three are consistent
 

@@ -16,10 +16,10 @@ PO writes. QA tests it. Security constrains it. Tech Lead estimates it. Then it'
 ## Step 0 — Read context
 
 ```bash
-cat memory/STATE.md
-cat memory/TEAM.md    # roster — ACTIVE extended agents enrich in Step 3b
-sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — for next STORY-XXX ID and duplicate check
-cat memory/DECISIONS.md
+cat .claude/memory/STATE.md
+cat .claude/memory/TEAM.md    # roster — ACTIVE extended agents enrich in Step 3b
+sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md   # index only — for next STORY-XXX ID and duplicate check
+cat .claude/memory/DECISIONS.md
 ```
 
 Understand the current sprint and existing backlog before writing new stories.
@@ -158,8 +158,8 @@ Technical Notes:
 ═══════════════════════════════════════════════════
 ```
 
-**po-agent writes the completed story to `memory/BACKLOG.md` before closing.**
-Only after the write has happened, confirm: `Added to memory/BACKLOG.md ✓`
+**po-agent writes the completed story to `.claude/memory/BACKLOG.md` before closing.**
+Only after the write has happened, confirm: `Added to .claude/memory/BACKLOG.md ✓`
 
 Stories added to backlog → Run `/backlog` to groom and prioritize.
 Ready to sprint? → Run `/sprint-plan` to commit stories to a sprint.

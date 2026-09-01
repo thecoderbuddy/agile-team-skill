@@ -24,10 +24,10 @@ Two modes:
 
 Check whether memory is already initialized:
 ```bash
-grep -c 'STORY-' memory/BACKLOG.md 2>/dev/null
+grep -c 'STORY-' .claude/memory/BACKLOG.md 2>/dev/null
 ```
 
-If `memory/BACKLOG.md` already contains `STORY-` entries — **STOP** and warn:
+If `.claude/memory/BACKLOG.md` already contains `STORY-` entries — **STOP** and warn:
 
 > "Memory already initialized — re-running /init overwrites STATE.md, BACKLOG.md, and NEXT.md. Proceed anyway? [Y/N]"
 
@@ -103,7 +103,7 @@ One paragraph maximum. This is early signal, not a full audit.
 
 ## Step 4b — pm-agent proposes the team roster
 
-Read `memory/TEAM.md`. The core 7 are fixed. For each roster-gated extended agent,
+Read `.claude/memory/TEAM.md`. The core 7 are fixed. For each roster-gated extended agent,
 propose ACTIVE or DORMANT from the scan/description:
 
 - **design-lead-agent** → ACTIVE if the project has a user-facing UI (web/mobile/desktop
@@ -116,7 +116,7 @@ propose ACTIVE or DORMANT from the scan/description:
 - **principal-engineer / cto / ceo** → always ON-DEMAND — never change these
 
 Show the proposed roster with one-line reasoning per agent and confirm with the user
-before writing statuses into `memory/TEAM.md`.
+before writing statuses into `.claude/memory/TEAM.md`.
 
 ---
 
@@ -124,7 +124,7 @@ before writing statuses into `memory/TEAM.md`.
 
 **pm-agent** takes all input and writes:
 
-### Writes to memory/STATE.md:
+### Writes to .claude/memory/STATE.md:
 ```
 Sprint: 1
 Goal: [one sentence — the user outcome this first sprint delivers]
@@ -146,14 +146,14 @@ Stories planned: 0
 Stories done: 0
 ```
 
-### Writes to memory/BACKLOG.md:
+### Writes to .claude/memory/BACKLOG.md:
 Replaces the template placeholder with real stories from po-agent (Step 2).
 Each story fully formed: title, user statement, AC, priority, complexity, security flag.
 
-### Writes to memory/DECISIONS.md:
+### Writes to .claude/memory/DECISIONS.md:
 If tech-lead identified a first architectural decision, logs it as DEC-001.
 
-### Writes to memory/NEXT.md:
+### Writes to .claude/memory/NEXT.md:
 ```
 Sprint: 1
 Updated: [today]
@@ -203,11 +203,11 @@ TEAM ROSTER
   principal/cto/ceo: ON-DEMAND (escalation only)
 
 FILES WRITTEN
-  memory/STATE.md   ✓ Sprint 1 goal set
-  memory/BACKLOG.md ✓ [n] stories ready
-  memory/NEXT.md    ✓ → /sprint-plan
-  memory/DECISIONS.md ✓ [n decision or "template only"]
-  memory/TEAM.md    ✓ roster set
+  .claude/memory/STATE.md   ✓ Sprint 1 goal set
+  .claude/memory/BACKLOG.md ✓ [n] stories ready
+  .claude/memory/NEXT.md    ✓ → /sprint-plan
+  .claude/memory/DECISIONS.md ✓ [n decision or "template only"]
+  .claude/memory/TEAM.md    ✓ roster set
 ═══════════════════════════════════════════════════
 Team is ready. Run /sprint-plan to begin Sprint 1.
 ```

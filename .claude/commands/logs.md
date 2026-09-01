@@ -28,13 +28,13 @@ If the argument is not one of the log types below: say it's not recognized and l
 
 1. If no argument — gather counts without reading full files (token discipline):
    ```bash
-   grep -c '^## DEC-' memory/DECISIONS.md      # decision count
-   tail -5 memory/DECISIONS.md                  # last decision topic
-   grep -c '^## ' memory/LEARNINGS.md           # learnings count
-   tail -5 memory/LEARNINGS.md                  # last learning topic
-   sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — never cat the full backlog
-   cat memory/STATE.md
-   cat memory/NEXT.md
+   grep -c '^## DEC-' .claude/memory/DECISIONS.md      # decision count
+   tail -5 .claude/memory/DECISIONS.md                  # last decision topic
+   grep -c '^## ' .claude/memory/LEARNINGS.md           # learnings count
+   tail -5 .claude/memory/LEARNINGS.md                  # last learning topic
+   sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md   # index only — never cat the full backlog
+   cat .claude/memory/STATE.md
+   cat .claude/memory/NEXT.md
    ```
    Then show one-line summary each:
    ```
@@ -51,11 +51,11 @@ If the argument is not one of the log types below: say it's not recognized and l
 
 2. If a valid argument is provided — read that specific file and display contents:
    ```bash
-   cat memory/[FILE].md
+   cat .claude/memory/[FILE].md
    ```
    Exception — `backlog`: read the Index only, never the full file:
    ```bash
-   sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md
+   sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md
    ```
    Extract a single story body with `awk '/^- \[.\] STORY-XXX:/,/^---$/'` only if the user asks about a specific story.
 

@@ -30,10 +30,10 @@ cto-agent — you state both positions fairly in the escalation.
 
 | File | Access | Purpose |
 |---|---|---|
-| `memory/DECISIONS.md` | Read | Full decision history before advising |
-| `memory/RISKS.md` | Read | Known risk posture |
-| `memory/LEARNINGS.md` | Read | What already went wrong here |
-| `memory/BACKLOG.md` | Read | Where the product is heading |
+| `.claude/memory/DECISIONS.md` | Read | Full decision history before advising |
+| `.claude/memory/RISKS.md` | Read | Known risk posture |
+| `.claude/memory/LEARNINGS.md` | Read | What already went wrong here |
+| `.claude/memory/BACKLOG.md` | Read | Where the product is heading |
 
 Read all four before giving any recommendation. Advice that ignores the project's own
 decision history is noise.

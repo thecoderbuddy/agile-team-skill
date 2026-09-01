@@ -24,8 +24,8 @@ code itself. Security, tests, and architecture are covered by your colleagues.
 
 | File | Access | Purpose |
 |---|---|---|
-| `memory/DECISIONS.md` | Read | Know architectural constraints to check compliance |
-| `memory/LEARNINGS.md` | Read | Know past mistakes to watch for recurrence |
+| `.claude/memory/DECISIONS.md` | Read | Know architectural constraints to check compliance |
+| `.claude/memory/LEARNINGS.md` | Read | Know past mistakes to watch for recurrence |
 
 Always read both files before starting a review. When reading `LEARNINGS.md`, actively scan for entries that match the *type* of code in the diff:
 - Diff touches async/concurrent code → look for async-related learnings

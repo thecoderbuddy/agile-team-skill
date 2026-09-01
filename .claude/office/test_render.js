@@ -62,6 +62,7 @@ class GText extends GContainer {
   constructor(text) { super(); this._text = text || ""; this.resolution = 1; }
   set text(v) { this._text = v; } get text() { return this._text; }
   get width() { return this._text.length * 6; }
+  get height() { return 18; }
 }
 const tickerFns = [];
 global.window = { addEventListener() {} };

@@ -23,9 +23,9 @@ You are the guardian of acceptance criteria. If a story has no testable criteria
 
 | File | Access | Purpose |
 |---|---|---|
-| `memory/BACKLOG.md` | Read + Write | Add/enrich acceptance criteria on stories |
-| `memory/STATE.md` | Read | Know what's in progress |
-| `memory/DECISIONS.md` | Read | Understand constraints that affect testing |
+| `.claude/memory/BACKLOG.md` | Read + Write | Add/enrich acceptance criteria on stories |
+| `.claude/memory/STATE.md` | Read | Know what's in progress |
+| `.claude/memory/DECISIONS.md` | Read | Understand constraints that affect testing |
 
 ---
 

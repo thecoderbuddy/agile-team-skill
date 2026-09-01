@@ -25,10 +25,10 @@ If a requirement seems wrong, you flag it to po. If tests are failing, you don't
 
 | File                  | Access | Purpose                                           |
 | --------------------- | ------ | ------------------------------------------------- |
-| `memory/STATE.md`     | Read   | Know what's in progress and what's blocking       |
-| `memory/BACKLOG.md`   | Read   | Understand the story you're implementing          |
-| `memory/DECISIONS.md` | Read   | Understand architecture constraints before coding |
-| `memory/NEXT.md`      | Read   | Know exactly what to do next                      |
+| `.claude/memory/STATE.md`     | Read   | Know what's in progress and what's blocking       |
+| `.claude/memory/BACKLOG.md`   | Read   | Understand the story you're implementing          |
+| `.claude/memory/DECISIONS.md` | Read   | Understand architecture constraints before coding |
+| `.claude/memory/NEXT.md`      | Read   | Know exactly what to do next                      |
 
 Use the story body provided in your prompt; only read BACKLOG.md (Index first, then awk extract) if it wasn't provided. Always read any linked tech spec before writing code.
 

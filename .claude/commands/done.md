@@ -18,11 +18,11 @@ Run when you're stopping for the day. Saves everything and shows a summary.
 
 2. Read current state and check for a live chain checkpoint:
    ```bash
-   cat memory/STATE.md
+   cat .claude/memory/STATE.md
    git log --oneline -10
-   cat memory/CHECKPOINT.md 2>/dev/null
+   cat .claude/memory/CHECKPOINT.md 2>/dev/null
    ```
-   If `memory/CHECKPOINT.md` exists, surface it — do NOT delete it:
+   If `.claude/memory/CHECKPOINT.md` exists, surface it — do NOT delete it:
    > "A chain checkpoint exists (Command: X, Story/Bug: Y) — /resume will pick this up next session."
 
 3. **Overwrite NEXT.md** with the EXACT next action — written so precisely that zero context is needed to continue.

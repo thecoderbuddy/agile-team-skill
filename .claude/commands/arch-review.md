@@ -15,8 +15,8 @@ tech-lead-agent + security-analyst-agent review before complex builds.
 
 1. Read architectural context (bounded — never cat all of LEARNINGS.md):
    ```bash
-   cat memory/DECISIONS.md
-   grep -i -A 3 -E 'architect|design|stack|dependency|performance' memory/LEARNINGS.md | head -60
+   cat .claude/memory/DECISIONS.md
+   grep -i -A 3 -E 'architect|design|stack|dependency|performance' .claude/memory/LEARNINGS.md | head -60
    ```
    If the grep yields nothing useful, read only the most recent sprint's section of
    LEARNINGS.md instead.
@@ -65,11 +65,11 @@ VERDICT: [APPROVED / NEEDS CHANGES / BLOCKED]
 ═══════════════════════════════════════
 ```
 
-7. If new DEC-XXX decision needed, append to memory/DECISIONS.md.
+7. If new DEC-XXX decision needed, append to .claude/memory/DECISIONS.md.
 
 8. **Persist the outcome (Iron Rule 4 — backlog everything):**
    - Every RECOMMENDATIONS item, and every item behind a NEEDS CHANGES or BLOCKED
-     verdict, is written to memory/BACKLOG.md as a story (next STORY number from the
+     verdict, is written to .claude/memory/BACKLOG.md as a story (next STORY number from the
      `## Index`, standard story format with priority and complexity).
    - Add a matching line to the `## Index` for each story added.
    - The review output on screen is not the artifact — the BACKLOG.md entries are.

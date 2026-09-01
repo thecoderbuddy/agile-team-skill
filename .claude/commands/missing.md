@@ -18,7 +18,7 @@ If a focus area is given, limit the scan to that area.
 
 2. Read what's built:
    ```bash
-   cat memory/STATE.md
+   cat .claude/memory/STATE.md
    git log --oneline -30
    ```
 
@@ -28,10 +28,10 @@ If a focus area is given, limit the scan to that area.
    git diff --stat HEAD~5 HEAD 2>/dev/null | head -30
    ```
 
-4. Read the backlog overview — the `## Index` section of memory/BACKLOG.md only
+4. Read the backlog overview — the `## Index` section of .claude/memory/BACKLOG.md only
    (never the full file):
    ```bash
-   awk '/^## Index$/,/^---$/' memory/BACKLOG.md
+   awk '/^## Index$/,/^---$/' .claude/memory/BACKLOG.md
    ```
 
 5. **po-agent scans for gaps:**
@@ -68,5 +68,5 @@ RECOMMENDATION
 7. **Persist findings (Iron Rule 4 — backlog everything):**
    - Ask the user: "Add the confirmed gaps to the backlog? [Y/N]"
    - On [Y], write each confirmed gap not already tracked as a story in
-     memory/BACKLOG.md (next STORY number from the `## Index`, standard story
+     .claude/memory/BACKLOG.md (next STORY number from the `## Index`, standard story
      format) and add a matching line to the `## Index`.

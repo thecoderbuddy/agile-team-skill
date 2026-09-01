@@ -15,7 +15,7 @@ One command. Agents investigate, diagnose, fix, test, review, and commit.
 
 ## Checkpoint Protocol
 
-After **every agent step completes**, write to `memory/CHECKPOINT.md` before moving to the next step. This ensures recovery is possible if the session drops or the host sleeps mid-chain.
+After **every agent step completes**, write to `.claude/memory/CHECKPOINT.md` before moving to the next step. This ensures recovery is possible if the session drops or the host sleeps mid-chain.
 
 Format:
 ```
@@ -39,16 +39,16 @@ Format and lifecycle: see Checkpoint Protocol in CLAUDE.md (accepts `Story:` or 
 Skipped steps (e.g., Step 5 when the bug is not security-adjacent) must be written to the
 checkpoint as `[SKIPPED] ... (reason)` — never left `[PENDING]`, or /resume will try to run them.
 
-On chain completion (commit approved), delete `memory/CHECKPOINT.md`.
+On chain completion (commit approved), delete `.claude/memory/CHECKPOINT.md`.
 
 ---
 
 ## Step 0 — Check for incomplete chain + read context
 
 ```bash
-cat memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
-cat memory/TEAM.md                    # roster — senior-engineer takes hard diagnosis if ACTIVE
-cat memory/STATE.md
+cat .claude/memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
+cat .claude/memory/TEAM.md                    # roster — senior-engineer takes hard diagnosis if ACTIVE
+cat .claude/memory/STATE.md
 git log --oneline -5
 ```
 
@@ -114,7 +114,7 @@ LEARNINGS.md, and hands back — dev still implements the fix in Step 3.
 If SEV-1 → proceed immediately regardless of sprint state.
 If SEV-2 → proceed if in current sprint scope, else log to the top of BACKLOG.md and stop.
 "In current sprint scope" means: the bug affects a story in the current sprint — check the
-stories listed in `memory/STATE.md` (In Progress / Done This Sprint / sprint plan).
+stories listed in `.claude/memory/STATE.md` (In Progress / Done This Sprint / sprint plan).
 If SEV-3 → log to BACKLOG.md as a story for this or next sprint and stop.
 If SEV-4 → log to BACKLOG.md and stop (don't interrupt sprint flow).
 

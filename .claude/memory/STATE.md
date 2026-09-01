@@ -41,7 +41,7 @@ Sprint capacity: ~1 working day (~2 hours active work)
 ## Out-of-Plan Work (recorded 2026-08-31)
 - ROSTER-EXPANSION: jira ticket-drafting (pm), CEO/CTO gap fixes (7 fixes across agents +
   complete/sprint-close/incident), 6 extended agents (senior/principal/ai/design/cto/ceo),
-  memory/TEAM.md roster, roster hooks in 9 ceremony commands, CLAUDE.md + install.sh sync.
+  .claude/memory/TEAM.md roster, roster hooks in 9 ceremony commands, CLAUDE.md + install.sh sync.
   Status: UNCOMMITTED — has not been through /review. ~23 files, +530 lines.
   /po consultation findings backlogged as STORY-034..039 + BUG-024.
 

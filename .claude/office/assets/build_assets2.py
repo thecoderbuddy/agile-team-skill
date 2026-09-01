@@ -141,10 +141,16 @@ atlas.save("../tiles.png")
 # frames), 8 half-body (behind desks). "manager" wears the CEO art (user call);
 # "guest" is a ghosted dev for unknown agent types.
 from PIL import ImageSequence, ImageOps
+import os
 
 CH_DIR = "custom-chars"
+# When a dedicated manager character is dropped into custom-chars/ (manager.png,
+# manager.gif, seated/manager-seated.gif, half/manager-half.png), the CEO stops
+# doubling as the manager: ceo-agent gets the upper cabin, CTO the lower one.
+HAS_MGR = all(os.path.exists(f"{CH_DIR}/{p}") for p in
+              ("manager.png", "manager.gif", "seated/manager-seated.gif", "half/manager-half.png"))
 AGENT_ART = {  # display name -> art file basename
-    "manager": "ceo-agent",
+    "manager": "manager" if HAS_MGR else "ceo-agent",
     "cto-agent": "cto-agent",
     "po-agent": "po-agent", "pm-agent": "pm-agent",
     "tech-lead-agent": "tech-lead-agent",
@@ -156,6 +162,8 @@ AGENT_ART = {  # display name -> art file basename
     "security-analyst-agent": "security-analyst-agent",
     "guest": "dev-agent",   # ghosted below
 }
+if HAS_MGR:
+    AGENT_ART["ceo-agent"] = "ceo-agent"
 # Frames are baked at 2x (charScale 0.5 at render) so the art stays crisp.
 CH_SCALE = 0.68            # standing art 200px -> 136 baked -> 68 world px
 HALF_SCALE = 0.92          # waist-up art is drawn larger so the torso clears the desk
@@ -219,6 +227,10 @@ SEATING = {        # agent -> (desk, x offset within the 96px desk)
     "pr-reviewer-agent": ("C1", 24), "security-analyst-agent": ("C1", 72),
     "guest": ("C2", 24),
 }
+if HAS_MGR:   # CEO takes the upper cabin, CTO the lower; principal moves to a pod
+    SEATING["ceo-agent"] = ("ceoD", 48)
+    SEATING["cto-agent"] = ("ctoD", 48)
+    SEATING["principal-engineer-agent"] = ("C2", 72)
 # hallway waypoints: x=560 vertical hall (col 17.5), per-row corridors above desks
 VIAS = {
     "cto-agent": [560, 170], "principal-engineer-agent": [560, 304],
@@ -229,6 +241,10 @@ VIAS = {
     "pr-reviewer-agent": [560, 400], "security-analyst-agent": [560, 400],
     "guest": [560, 400],
 }
+if HAS_MGR:
+    VIAS["ceo-agent"] = [560, 170]
+    VIAS["cto-agent"] = [560, 304]
+    VIAS["principal-engineer-agent"] = [560, 400]
 RUGS = [
     {"name": "rug", "c": 10, "r": 3},    # lavender, under the manager desk
     {"name": "rug2", "c": 17, "r": 3},   # sage, whiteboard collab corner
@@ -310,7 +326,7 @@ meta = {
     "atlas": index, "agents": order,
     "charW": FRAME_W, "charH": FRAME_H, "charCols": COLS, "foot": FOOT, "charScale": 0.5,
     "walkFrames": 6, "sitCol": 6, "sitAltCol": 7, "halfCol": 8,
-    "aliases": {"ceo-agent": "manager"},
+    "aliases": {} if HAS_MGR else {"ceo-agent": "manager"},
     "wallRows": WALL_ROWS, "wallTiles": ["wall_cap", "wall_top", "wall_bot"],
     "rugs": RUGS, "wallDeco": WALL_DECO, "partitions": PARTITIONS, "objects": OBJECTS,
     "desks": desks_by_agent, "seats": seats, "laptops": laptops, "vias": VIAS,

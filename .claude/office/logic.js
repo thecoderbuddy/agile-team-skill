@@ -22,18 +22,19 @@
     function mkAgent(name) {
       const s = map.seats[name];
       const home = { x: s[0], y: s[1] };
-      const isMgr = name === "manager";
+      const visitor = name === "guest";   // whole team is always in; guests come and go
       return { name, home,
-        present: isMgr,
-        x: isMgr ? home.x : door.x, y: isMgr ? home.y : door.y,
-        path: [], state: isMgr ? "working" : "off", next: "working",
+        present: !visitor,
+        x: visitor ? door.x : home.x, y: visitor ? door.y : home.y,
+        path: [], state: visitor ? "off" : "working", next: "working", busy: false,
         bubble: null, bubbleUntil: 0, typing: 0, reportT: 0, hangT: 0, sitDir: 2,
       };
     }
     for (const name of map.agents) agents[name] = mkAgent(name);
 
     const resolveType = t => {
-      const n = (map.aliases || {})[t] || t;
+      const base = (t || "").split(":").pop();   // plugin agents arrive namespaced, e.g. "agile-team:qa-agent"
+      const n = (map.aliases || {})[base] || base;
       return map.seats[n] ? n : "guest";
     };
 
@@ -56,9 +57,12 @@
       else walkTo(a, a.home.x, a.home.y, "working");
     }
     function say(a, text, now, ms) {
-      a.bubble = (text || "").slice(0, 60);
-      a.bubbleUntil = now + (ms || 4200);
       a.typing = now + 1600;
+      // don't flash-replace a bubble the viewer is still reading
+      if (a.bubble && a.bubbleUntil > now && now < (a.bubbleMin || 0)) return;
+      a.bubble = (text || "").slice(0, 90);
+      a.bubbleUntil = now + (ms || 4200);
+      a.bubbleMin = now + 2500;
     }
     function goToMeeting(a) {
       const seat = map.confSeats[nextSeat++ % map.confSeats.length];
@@ -87,9 +91,14 @@
             const t = resolveType(ev.agent_type || "guest");
             const a = agents[t];
             a.present = true;
+            a.busy = true;
             if (a.state === "off") { a.x = door.x; a.y = door.y; }
-            if (office.ceremony) goToMeeting(a);
-            else goHome(a, t);
+            if (office.ceremony) {
+              if (a.state !== "meeting" && !(a.state === "walking" && a.next === "meeting"))
+                goToMeeting(a);
+            } else if (a.state !== "working") {
+              goHome(a, t);
+            }
             say(a, ev.desc || "on it", now, 6000);
             activeStack.push(t);
             log(t, "→ starts: " + (ev.desc || ""));
@@ -101,6 +110,7 @@
             const i = activeStack.lastIndexOf(t);
             if (i >= 0) activeStack.splice(i, 1);
             const a = agents[t];
+            a.busy = false;
             if (a.present) {
               if (office.ceremony) {
                 say(a, "✓ done", now, 4000);        // stays seated until the ceremony ends
@@ -131,9 +141,10 @@
             for (const k of map.agents) {
               const a = agents[k];
               if (!a.present) continue;
-              if (k === "manager") leaveMeeting(a, a.home.x, a.home.y, "working");
-              else if (a.state === "meeting" || (a.state === "walking" && a.next === "meeting"))
-                leaveMeeting(a, door.x, door.y, "off");
+              if (a.state === "meeting" || (a.state === "walking" && a.next === "meeting")) {
+                if (k === "guest") leaveMeeting(a, door.x, door.y, "off");
+                else leaveMeeting(a, a.home.x, a.home.y, "working");
+              }
             }
           }
           break;
@@ -148,6 +159,10 @@
     function housekeeping(now) {
       for (const k in agents) {
         const a = agents[k];
+        const settle = () => {   // team members return to their desk; guests leave
+          if (k === "guest") walkTo(a, door.x, door.y, "off");
+          else goHome(a, k);
+        };
         if (a.state === "reporting" && !a.reportT) a.reportT = now;
         if (a.state === "reporting" && now - a.reportT > 3500) {
           a.reportT = 0;
@@ -155,13 +170,13 @@
           if (spot && map.hangVia)
             walkVia(a, { x: map.hangVia[0], y: map.hangVia[1] }, spot[0], spot[1], "hangout");
           else if (spot) walkTo(a, spot[0], spot[1], "hangout");
-          else walkTo(a, door.x, door.y, "off");
+          else settle();
         }
         if (a.state === "hangout" && !a.hangT) { a.hangT = now; say(a, "☕", now, 6500); }
         if (a.state === "hangout" && now - a.hangT > 7000) {
-          a.hangT = 0; walkTo(a, door.x, door.y, "off");
+          a.hangT = 0; settle();
         }
-        if (a.state === "off" && k !== "manager") a.present = false;
+        if (a.state === "off" && k === "guest") a.present = false;
       }
     }
 

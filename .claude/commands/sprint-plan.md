@@ -11,9 +11,9 @@ Six agents collaborate to build the sprint. PO proposes. Dev commits capacity. T
 ## Step 0 — Read current state
 
 ```bash
-cat memory/STATE.md
-cat memory/TEAM.md    # roster — ACTIVE extended agents contribute in Step 5b
-sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md   # index only — extract a story body with awk to share with each agent
+cat .claude/memory/STATE.md
+cat .claude/memory/TEAM.md    # roster — ACTIVE extended agents contribute in Step 5b
+sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md   # index only — extract a story body with awk to share with each agent
 git log --oneline -10
 ```
 
@@ -21,10 +21,10 @@ git log --oneline -10
 orchestrator extracts just the proposed story bodies and passes them to each agent:
 
 ```bash
-awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
+awk '/^- \[.\] STORY-XXX:/,/^---$/' .claude/memory/BACKLOG.md
 ```
 
-Agents in this chain must NOT re-read `memory/BACKLOG.md` themselves.
+Agents in this chain must NOT re-read `.claude/memory/BACKLOG.md` themselves.
 
 **Edge case:** if the BACKLOG.md Index is empty, or contains no stories with testable AC
 ready to sprint — stop here. Suggest `/backlog` to groom or `/stories` to write new stories.
@@ -164,8 +164,8 @@ STORY-XXX: ELEVATED RISK — [reason] — add 0.5 days for security review
 - Adjusts scope if total committed days exceed sprint capacity
 - Resolves dependency ordering
 - Confirms all stories have testable AC (no exceptions)
-- Writes the finalized sprint to `memory/STATE.md`
-- Writes the first task to `memory/NEXT.md`
+- Writes the finalized sprint to `.claude/memory/STATE.md`
+- Writes the first task to `.claude/memory/NEXT.md`
 
 ---
 

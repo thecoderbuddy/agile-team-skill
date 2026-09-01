@@ -3,7 +3,7 @@
 # Stories are added here by: /stories, /retro (action items), /review (non-blocking findings)
 # Groomed by: /backlog
 # Stories enter a sprint via: /sprint-plan
-# Completed stories are moved to memory/ARCHIVE.md by /complete (append-only, never deleted)
+# Completed stories are moved to .claude/memory/ARCHIVE.md by /complete (append-only, never deleted)
 
 ---
 
@@ -38,6 +38,9 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
 - [ ] BUG-008 — Missing ghr_ GitHub runner token pattern — Low
 - [ ] BUG-010 — 30-day threshold inline comment, not named constant — LOW
 - [ ] BUG-011 — install.sh downloads hooks without checksum verification — MEDIUM
+- [ ] STORY-041 — Office bubble readability: lanes, min display, tint, wrap — High — S (implemented, needs /review)
+- [ ] STORY-042 — Office HTML overlay for native-DPI labels/bubbles — Medium — M
+- [ ] STORY-043 — Office accessibility: ARIA live mirror + reduced motion — Low — S
 - [ ] BUG-012 — /summary must not reproduce raw backlog text — MEDIUM
 - [ ] BUG-013 — post-tool-use.sh unquoted FILE_PATH log injection — LOW
 - [ ] BUG-014 — Force-push block misses --force-with-lease — MEDIUM
@@ -81,7 +84,7 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
   So that no work is silently lost or the chain falsely claims continuity.
 
   Acceptance Criteria:
-    - Given a chain is in progress, when any agent step completes, then a heartbeat timestamp + step name is written to memory/CHECKPOINT.md
+    - Given a chain is in progress, when any agent step completes, then a heartbeat timestamp + step name is written to .claude/memory/CHECKPOINT.md
     - Given the host sleeps mid-chain, when the session resumes, then /new-task detects the incomplete CHECKPOINT.md and asks the user to resume or restart
     - Given a resume is chosen, when the chain continues, then only uncompleted steps run — completed steps are not re-run
     - Given the chain completes successfully, when the commit is approved, then CHECKPOINT.md is deleted
@@ -414,7 +417,7 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
   So that I can replay or investigate without relying on scroll-back history.
 
   Acceptance Criteria:
-    - Given any /new-task or /review chain runs, when an agent step completes, then each tool call (file reads, edits, bash commands) is appended to memory/RUN_LOG.md with step number, agent, and timestamp
+    - Given any /new-task or /review chain runs, when an agent step completes, then each tool call (file reads, edits, bash commands) is appended to .claude/memory/RUN_LOG.md with step number, agent, and timestamp
     - Given a chain completes or is abandoned, when the user opens RUN_LOG.md, then they see a complete ordered record of every action taken
     - Given a new chain starts, when CHECKPOINT.md does not exist (fresh run), then RUN_LOG.md is rotated (old log renamed with timestamp)
 
@@ -640,9 +643,9 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
   Found by: security-analyst-agent — /security-review baseline (2026-06-09)
   pre-tool-use.sh line 18 protects: src, electron, node_modules, .next, .claude.
   This list is hardcoded to a Node.js/Electron profile. On Python or Go projects the protected
-  set is incomplete. memory/ and .git/ are also not in the protected list despite containing
+  set is incomplete. .claude/memory/ and .git/ are also not in the protected list despite containing
   critical state.
-  Fix: document that this list is project-profile-specific and add memory/ and .git/ to the
+  Fix: document that this list is project-profile-specific and add .claude/memory/ and .git/ to the
   default protected set.
   Priority: LOW — informational; install-time configuration issue.
 
@@ -708,7 +711,7 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
 
   Acceptance Criteria:
     - Given DEC-006 is read, when a new command author decides how to read BACKLOG.md, then the decision gives an unambiguous prescription: read only the ## Index section first; extract individual story bodies only when acting on a specific story
-    - Given the decision is written, when it references the sed command, then it includes the exact pattern (`sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md`) so authors copy it correctly
+    - Given the decision is written, when it references the sed command, then it includes the exact pattern (`sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md`) so authors copy it correctly
     - Given DEC-006 is active, when any future command is reviewed, then deviation from the pattern is a DEC violation — not a style suggestion
 
   Test Scenarios:
@@ -717,7 +720,7 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
     - Consequences section: lists that new command authors must apply the pattern and that deviation is a DEC violation
 
   Definition of Done:
-    - [ ] memory/DECISIONS.md DEC-006 entry written with Date, Status: ACTIVE, Decision, Rationale, Alternatives considered, Consequences
+    - [ ] .claude/memory/DECISIONS.md DEC-006 entry written with Date, Status: ACTIVE, Decision, Rationale, Alternatives considered, Consequences
     - [ ] Decision includes the exact sed command and awk body-extraction pattern
     - [ ] DEC-006 number does not conflict with existing decisions (DEC-001 through DEC-005 are taken)
 
@@ -745,7 +748,7 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
     - Violation example: decision or consequences section names what a violation looks like
 
   Definition of Done:
-    - [ ] memory/DECISIONS.md DEC-007 entry written with Date, Status: ACTIVE, Decision, Rationale, Alternatives considered, Consequences
+    - [ ] .claude/memory/DECISIONS.md DEC-007 entry written with Date, Status: ACTIVE, Decision, Rationale, Alternatives considered, Consequences
     - [ ] Decision states: append-only, po-agent only, /complete only
     - [ ] Decision references DEC-004 for the trust boundary
     - [ ] DEC-007 number does not conflict with existing or planned decisions
@@ -887,7 +890,7 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
     - New amendment: author adding a future amendment uses the template field correctly
 
   Definition of Done:
-    - [ ] "How to add a decision" template in memory/DECISIONS.md updated to include optional "Amended:" field
+    - [ ] "How to add a decision" template in .claude/memory/DECISIONS.md updated to include optional "Amended:" field
     - [ ] Field documented as optional (not required for new decisions, only for amended ones)
     - [ ] DEC-004 amendment line verified to conform to the template format
 
@@ -1059,7 +1062,7 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
   Added by: po-agent via /po role consultation on 2026-08-31
 
   As a pm-agent starting a fresh session,
-  I want my agent file to list memory/TEAM.md in Your Files and describe my roster duties (propose activation at /standup and /retro when TEAM.md criteria appear, execute /init Step 4b),
+  I want my agent file to list .claude/memory/TEAM.md in Your Files and describe my roster duties (propose activation at /standup and /retro when TEAM.md criteria appear, execute /init Step 4b),
   So that roster maintenance actually happens — CLAUDE.md and /init assign me duties my own definition doesn't know about.
 
   Success metric: N/A — internal/maintenance.
@@ -1072,7 +1075,7 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
   Definition of Done:
     - [ ] TEAM.md row added to pm-agent.md Your Files
     - [ ] Roster duty described in pm-agent.md (ceremony roles or its own short section)
-    - [ ] Consistent with memory/TEAM.md "Changing the roster" rules
+    - [ ] Consistent with .claude/memory/TEAM.md "Changing the roster" rules
 
   Security Considerations: none
   Technical Notes: Prompt-only edit to pm-agent.md. | Complexity: XS
@@ -1093,7 +1096,7 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
     - Given design-lead is ACTIVE, when /ux-review runs, then design-lead leads the review using its 7 UX dimensions
     - Given design-lead is ACTIVE, when /focus-group runs, then design-lead facilitates and synthesizes persona findings
     - Given design-lead is DORMANT, when any of the three ceremonies runs, then the current (pre-roster) agent flow runs unchanged
-    - Given any of the three commands, when Step 0 runs, then memory/TEAM.md is read
+    - Given any of the three commands, when Step 0 runs, then .claude/memory/TEAM.md is read
 
   Definition of Done:
     - [ ] ux-review.md, focus-group.md, design.md each read TEAM.md in Step 0
@@ -1218,6 +1221,92 @@ Keep this index in sync: add a line when a story is added, remove it when /compl
 
   Security Considerations: closes the pre-existing DEC-004 implementation gap (BUG-017 defence-in-depth layer)
   Technical Notes: Copy the exact line already used in the 6 extended agent files. Pre-existing violation — surfaced, not introduced, by ROSTER-EXPANSION review. | Complexity: XS
+
+---
+
+- [ ] STORY-041: Office bubble readability — collision lanes, min display time, speaker tint, 2-line wrap
+  Priority: High
+  Added by: /ux-review on 2026-08-31
+
+  As a developer watching the pixel office during a busy ceremony,
+  I want every agent's speech bubble to stay readable when several agents talk at once,
+  So that I can follow who is doing what without opening the activity log.
+
+  Acceptance Criteria:
+    - Given two agents whose bubbles overlap horizontally, when both bubbles are visible, then the later bubble is placed in a higher lane so neither is occluded
+    - Given an agent emits a second event within 2.5s of the previous bubble, when the new say fires, then the visible bubble is not replaced until its minimum display time has passed
+    - Given a bubble is shown, when rendered, then its border uses the speaking agent's roster color for attribution
+    - Given a message longer than one bubble line, when rendered, then it wraps to up to 2 lines before truncating with an ellipsis
+
+  Test Scenarios:
+    - Happy path: 5 simultaneous speakers incl. desk-mates — all 5 bubbles fully readable (visual review via headless screenshot)
+    - Edge case: pod desk-mates 48px apart — bubbles stack in lanes, tails still point at speakers
+    - Failure case: >5 stacked lanes reach the canvas top — clamped at y=2, oldest may overlap (accepted)
+
+  Definition of Done:
+    - [x] Lane-based collision avoidance in office/index.html render pass
+    - [x] Min display time in logic.js say()
+    - [x] Speaker-colored bubble borders
+    - [x] 2-line word wrap with height-based truncation
+    - [ ] Verified via /review
+  Test evidence: busy-scene headless screenshot QA — visual review — pending re-verification — 2026-08-31
+
+  Security Considerations: none
+  Technical Notes: Implemented same-day as the /ux-review that raised it. | Complexity: S
+
+---
+
+- [ ] STORY-042: Office HTML overlay for labels and speech bubbles (native-DPI text)
+  Priority: Medium
+  Added by: /ux-review on 2026-08-31
+
+  As a developer viewing the office on a laptop-width window,
+  I want labels and bubbles rendered as DOM elements overlaid on the canvas instead of inside it,
+  So that text stays sharp at native resolution regardless of how far the canvas is CSS-downscaled.
+
+  Acceptance Criteria:
+    - Given a window narrower than the canvas, when the canvas downscales, then bubble/label text renders at device resolution (not scaled bitmap text)
+    - Given the overlay, when agents move, then labels/bubbles track their canvas positions within one frame
+
+  Test Scenarios:
+    - Happy path: 1200px window — text crisp where it previously blurred
+    - Edge case: window resize mid-session — overlay positions recompute
+
+  Definition of Done:
+    - [ ] Overlay div positioned over #stage, synced to canvas scale
+    - [ ] Labels + bubbles moved out of the PIXI uiC layer
+    - [ ] All tests pass
+  Test evidence: —
+
+  Security Considerations: bubble text comes from event descriptions — must be inserted via textContent (never innerHTML) to avoid HTML injection from tool inputs
+  Technical Notes: Also unblocks STORY-043 (DOM text is screen-reader accessible). | Complexity: M
+
+---
+
+- [ ] STORY-043: Office accessibility — ARIA live event mirror and reduced motion
+  Priority: Low
+  Added by: /ux-review on 2026-08-31
+
+  As a screen-reader or motion-sensitive user,
+  I want office activity announced via an ARIA live region and animations reduced on request,
+  So that the dashboard is usable without seeing the canvas.
+
+  Acceptance Criteria:
+    - Given a new agent event, when it renders as a bubble, then an aria-live="polite" region announces "[agent]: [message]"
+    - Given prefers-reduced-motion, when the office renders, then walk/spark/glow animations are minimized (agents teleport, effects static)
+
+  Test Scenarios:
+    - Happy path: VoiceOver announces bubble messages in order
+    - Edge case: burst of events — announcements throttled, not queued forever
+
+  Definition of Done:
+    - [ ] ARIA live region wired to the same feed as the log pane
+    - [ ] Reduced-motion media query honored
+    - [ ] All tests pass
+  Test evidence: —
+
+  Security Considerations: same textContent-only rule as STORY-042
+  Technical Notes: The log pane already mirrors events; the live region can reuse logLine. | Complexity: S
 
 ---
 

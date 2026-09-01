@@ -14,7 +14,7 @@ Arguments: $ARGUMENTS (optional story ID — skips selection if provided)
 
 ## Checkpoint Protocol
 
-After **every agent step completes**, write to `memory/CHECKPOINT.md` before moving to the next step. This ensures recovery is possible if the session drops mid-chain.
+After **every agent step completes**, write to `.claude/memory/CHECKPOINT.md` before moving to the next step. This ensures recovery is possible if the session drops mid-chain.
 
 Format and lifecycle: see "Checkpoint Protocol" in CLAUDE.md. This chain's step list:
 
@@ -37,19 +37,19 @@ Steps:
   [PENDING] Step 8 — po-agent (verdict)
 ```
 
-On chain completion (commit approved and written), delete `memory/CHECKPOINT.md`.
+On chain completion (commit approved and written), delete `.claude/memory/CHECKPOINT.md`.
 
 ---
 
 ## Step 0 — Check for incomplete chain + read state
 
 ```bash
-cat memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
-cat memory/TEAM.md                    # roster — implementer routing + extended lenses
-cat memory/STATE.md
-cat memory/NEXT.md
+cat .claude/memory/CHECKPOINT.md 2>/dev/null  # check for incomplete prior run
+cat .claude/memory/TEAM.md                    # roster — implementer routing + extended lenses
+cat .claude/memory/STATE.md
+cat .claude/memory/NEXT.md
 # Read the backlog index only — not the full file:
-sed -n '/^## Index/,/^---$/p' memory/BACKLOG.md
+sed -n '/^## Index/,/^---$/p' .claude/memory/BACKLOG.md
 ```
 
 **Roster check:** note which extended agents are ACTIVE — this decides the implementer
@@ -59,16 +59,16 @@ in Step 3 (senior-engineer for L stories) and the extended lenses in Step 7b.
 story's body and pass it to every subsequent agent in its step prompt:
 
 ```bash
-awk '/^- \[.\] STORY-XXX:/,/^---$/' memory/BACKLOG.md
+awk '/^- \[.\] STORY-XXX:/,/^---$/' .claude/memory/BACKLOG.md
 ```
 
-Agents in this chain must NOT re-read `memory/BACKLOG.md` themselves.
+Agents in this chain must NOT re-read `.claude/memory/BACKLOG.md` themselves.
 
 If `CHECKPOINT.md` exists, validate it before acting on it (see DEC-002):
 
 **Valid checkpoint** — must contain all of: `Command:`, `Story:`, `Started:`, `Last heartbeat:`, and a `Steps:` block with at least one entry. If the file is empty or any required field is missing → corrupt. Delete it and start fresh.
 
-**Stale checkpoint** — if the Story ID in the checkpoint already appears in the "Done This Sprint" list in `memory/STATE.md` → the chain already completed. Delete it and start fresh.
+**Stale checkpoint** — if the Story ID in the checkpoint already appears in the "Done This Sprint" list in `.claude/memory/STATE.md` → the chain already completed. Delete it and start fresh.
 
 **Recoverable checkpoint** — valid, story not yet done, the `Command:` field contains `/new-task`:
 - Show the user which steps completed and which didn't
@@ -99,7 +99,7 @@ AC ready:   YES / NO — [flag if missing, must resolve before continuing]
 
 ## Step 2 — tech-lead-agent specs the story
 
-**tech-lead-agent** reads `memory/DECISIONS.md` and the story, then:
+**tech-lead-agent** reads `.claude/memory/DECISIONS.md` and the story, then:
 - If complexity is M or higher → write a tech spec inline before dev starts
 - If S or XS → one-line approach note is enough
 
@@ -114,7 +114,7 @@ Files:        [list of files to create or modify]
 ───────────────────────────────────────
 ```
 
-If spec is written, log any new architectural decisions as DEC-XXX in `memory/DECISIONS.md` before dev starts.
+If spec is written, log any new architectural decisions as DEC-XXX in `.claude/memory/DECISIONS.md` before dev starts.
 
 **Complexity routing:**
 - **XL** → stop. XL is never scheduled directly: po splits it first, and if
@@ -129,9 +129,9 @@ If spec is written, log any new architectural decisions as DEC-XXX in `memory/DE
 ## Step 2b — pm-agent assigns the story
 
 **pm-agent** records the assignment before the implementer confirms and starts:
-- Marks STORY-XXX as IN_PROGRESS in the "In Progress" section of `memory/STATE.md`,
+- Marks STORY-XXX as IN_PROGRESS in the "In Progress" section of `.claude/memory/STATE.md`,
   noting the implementer (dev-agent or senior-engineer-agent per Step 2 routing)
-- Updates `memory/NEXT.md` to point at this story's implementation
+- Updates `.claude/memory/NEXT.md` to point at this story's implementation
 
 ```
 PM ASSIGNMENT
@@ -296,7 +296,7 @@ Recommendation: APPROVE | REQUEST CHANGES
 
 ## Step 7b — Extended lenses (roster-gated — skip if no extended agent is ACTIVE)
 
-Same rule as /review Step 4b: run only lenses whose agent is ACTIVE in `memory/TEAM.md`
+Same rule as /review Step 4b: run only lenses whose agent is ACTIVE in `.claude/memory/TEAM.md`
 and whose surface the diff touches.
 
 - **ai-engineer-agent** — AI checklist on diffs touching prompts/model calls/AI pipelines
@@ -312,7 +312,7 @@ A lens with no surface outputs one skip line and stands down. Findings feed Step
 
 For each finding:
 - **FIX NOW** → blocks merge, dev fixes, chain reruns from Step 4
-- **BACKLOG** → append to `memory/BACKLOG.md` as `STORY-BUG-XXX: [issue] — found during STORY-XXX`
+- **BACKLOG** → append to `.claude/memory/BACKLOG.md` as `STORY-BUG-XXX: [issue] — found during STORY-XXX`
 - **WON'T FIX** → document reasoning inline
 
 ```
@@ -335,9 +335,9 @@ VERDICT: APPROVED | CHANGES REQUESTED
 ## Step 9 — If APPROVED: pm-agent closes and commits
 
 **pm-agent**:
-- Moves STORY-XXX to "Done This Sprint" in `memory/STATE.md`
+- Moves STORY-XXX to "Done This Sprint" in `.claude/memory/STATE.md`
 - Updates velocity
-- Writes `memory/NEXT.md` with the next story or `/sprint-close` if sprint is complete
+- Writes `.claude/memory/NEXT.md` with the next story or `/sprint-close` if sprint is complete
 
 Then show the user the exact commit that will be made and ask for approval:
 
@@ -352,7 +352,7 @@ Approve commit? [Y/N]
 ```
 
 If approved → commit. Then:
-- pm-agent deletes `memory/CHECKPOINT.md` — the chain is complete (see DEC-002).
+- pm-agent deletes `.claude/memory/CHECKPOINT.md` — the chain is complete (see DEC-002).
 - Sprint has more stories? → Automatically begin the next story from Step 1.
 - Sprint complete? → "All stories done. Run /sprint-close."
 

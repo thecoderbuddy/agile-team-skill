@@ -17,8 +17,8 @@ Takes a raw idea and runs it through the product pipeline: evaluate, decompose, 
 
 1. Read current state for context:
    ```bash
-   cat memory/STATE.md
-   cat memory/DECISIONS.md
+   cat .claude/memory/STATE.md
+   cat .claude/memory/DECISIONS.md
    ```
 
 2. **po-agent evaluates the idea:**
@@ -67,7 +67,7 @@ CONCERNS
 
 7. If approved, ask: "Add these stories to the backlog? [Y/N]"
 
-8. **On [Y], write to memory/BACKLOG.md:**
+8. **On [Y], write to .claude/memory/BACKLOG.md:**
    - Read the `## Index` to find the highest existing STORY number; new stories
      take the next numbers.
    - Append each story below the Index in the standard story format (title,
