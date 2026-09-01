@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Agile Team — Pixel Office</title>
+<style>
+  :root { --bg:#1a1c22; --panel:#0d0f12; --dim:#8b949e; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:#e6edf3; font-family:"Courier New",monospace; display:flex; flex-direction:column; align-items:center; min-height:100vh; }
+  header { width:100%; max-width:1400px; display:flex; justify-content:space-between; align-items:baseline; padding:10px 4px 4px; }
+  header h1 { font-size:15px; margin:0; letter-spacing:1px; }
+  header .stat { font-size:11px; color:var(--dim); }
+  #roster { width:100%; max-width:1400px; display:flex; gap:6px; flex-wrap:wrap; padding:0 4px 8px; }
+  #roster .chip { display:flex; align-items:center; gap:5px; background:#22262e; border:1px solid #2d333b; border-radius:10px; padding:2px 9px; font-size:10px; color:var(--dim); }
+  #roster .chip .dot { width:6px; height:6px; border-radius:50%; background:#3a3f47; }
+  #roster .chip.on { color:#e6edf3; }
+  #roster .chip.on .dot { background:#3fb950; box-shadow:0 0 4px #3fb950; }
+  #wrap { display:flex; flex-direction:column; gap:8px; max-width:1400px; width:100%; }
+  #stage canvas { border:2px solid #2d333b; display:block; width:100%; height:auto; }
+  #logpane { background:var(--panel); border:2px solid #2d333b; padding:8px; overflow-y:auto; font-size:11px; line-height:1.55; height:210px; }
+  #logpane .t { color:#484f58; }
+  #logpane .sys { color:var(--dim); font-style:italic; }
+  footer { font-size:11px; color:var(--dim); padding:8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>▦ AGILE TEAM — PIXEL OFFICE</h1>
+  <div class="stat" id="stat">loading assets…</div>
+</header>
+<div id="roster"></div>
+<div id="wrap">
+  <div id="stage"></div>
+  <div id="logpane"></div>
+</div>
+<footer>tailing office/events.jsonl — run your ceremonies (/new-task, /review, /standup) in Claude Code and watch the team work &nbsp;·&nbsp; art: LPC / OpenGameArt (see assets/CREDITS.md) · renderer: PixiJS</footer>
+
+<script src="pixi-legacy.min.js"></script>
+<script src="logic.js"></script>
+<script>
+"use strict";
+window.addEventListener("error", e => {
+  const s = document.getElementById("stat");
+  if (s) s.textContent = "JS error: " + e.message + " @ " + (e.filename || "").split("/").pop() + ":" + e.lineno;
+});
+const AGENT_COLORS = {
+  "manager":"#d4b45e","cto-agent":"#4d7dd6",
+  "po-agent":"#b083f0","pm-agent":"#58a6ff","tech-lead-agent":"#9aa5b1",
+  "principal-engineer-agent":"#7c8ff0","senior-engineer-agent":"#4fae7e",
+  "dev-agent":"#7ee787","ai-engineer-agent":"#56c8d8","qa-agent":"#e3b341",
+  "design-lead-agent":"#e070a8","pr-reviewer-agent":"#40aeb8",
+  "security-analyst-agent":"#f85149","guest":"#c9a075",
+};
+const LABELS = {
+  "manager":"CEO","cto-agent":"CTO",
+  "po-agent":"PO","pm-agent":"SCRUM","tech-lead-agent":"TECHLEAD",
+  "principal-engineer-agent":"PRINCIPAL","senior-engineer-agent":"SENIOR",
+  "dev-agent":"DEV","ai-engineer-agent":"AI-ENG","qa-agent":"QA",
+  "design-lead-agent":"DESIGN","pr-reviewer-agent":"REVIEWER",
+  "security-analyst-agent":"SECURITY","guest":"AGENT",
+};
+
+// ── Log pane ─────────────────────────────────────────────────────────────
+const logpane = document.getElementById("logpane");
+function logLine(who, text, cls) {
+  const d = document.createElement("div");
+  const time = new Date().toTimeString().slice(0, 8);
+  if (cls) { d.className = cls; d.textContent = text; }
+  else {
+    d.innerHTML = `<span class="t">${time}</span> <span style="color:${AGENT_COLORS[who]}">[${LABELS[who]}]</span> ${text.replace(/</g, "&lt;")}`;
+  }
+  logpane.appendChild(d); logpane.scrollTop = logpane.scrollHeight;
+  while (logpane.children.length > 400) logpane.removeChild(logpane.firstChild);
+}
+
+let MAP = null, office = null, app = null;
+let T = 32, SC = 2, CW = 0, CH = 0, FOOT = 150, FRW = 112, FRH = 152, CS = 0.5;
+
+// ── Pixi containers (populated in init) ──────────────────────────────────
+PIXI.BaseTexture.defaultOptions.scaleMode = PIXI.SCALE_MODES.NEAREST;
+const world = new PIXI.Container();
+const staticC = new PIXI.Container();          // floor + rug + walls + wall deco
+const dynC = new PIXI.Container(); dynC.sortableChildren = true;   // furniture + agents, y-sorted
+const fxC = new PIXI.Container();              // particles
+world.addChild(staticC, dynC, fxC);
+const uiC = new PIXI.Container();              // screen-space labels + bubbles
+
+let tilesBT = null, agentsBT = null;
+const texCache = {};
+function tileTex(name) {
+  if (!texCache[name]) {
+    const [x, y, w, h] = MAP.atlas[name];
+    texCache[name] = new PIXI.Texture(tilesBT, new PIXI.Rectangle(x, y, w, h));
+  }
+  return texCache[name];
+}
+function agentTex(name, col) {
+  const key = `a:${name}:${col}`;
+  if (!texCache[key]) {
+    const i = MAP.agents.indexOf(name) * MAP.charCols + col;
+    texCache[key] = new PIXI.Texture(agentsBT, new PIXI.Rectangle(i * FRW, 0, FRW, FRH));
+  }
+  return texCache[key];
+}
+function radialTex(size, stops) {
+  const c = document.createElement("canvas"); c.width = c.height = size;
+  const g = c.getContext("2d");
+  const grad = g.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+  for (const [p, col] of stops) grad.addColorStop(p, col);
+  g.fillStyle = grad; g.fillRect(0, 0, size, size);
+  return PIXI.Texture.from(c);
+}
+
+// ── Scene build ──────────────────────────────────────────────────────────
+const deskGear = {};   // name -> { laptop, glow }
+const views = {};      // name -> { cont, sprite, label, bubble }
+
+function buildScene() {
+  for (let r = MAP.wallRows; r < MAP.h; r++)
+    for (let c = 0; c < MAP.w; c++) {
+      const s = new PIXI.Sprite(tileTex("floor"));
+      s.position.set(c * T, r * T); staticC.addChild(s);
+    }
+  for (const rg of MAP.rugs) {
+    const rug = new PIXI.Sprite(tileTex(rg.name));
+    rug.position.set(rg.c * T, rg.r * T);
+    staticC.addChild(rug);
+  }
+  for (let c = 0; c < MAP.w; c++)
+    MAP.wallTiles.forEach((name, r) => {
+      const s = new PIXI.Sprite(tileTex(name));
+      s.position.set(c * T, r * T); staticC.addChild(s);
+    });
+  const sh = new PIXI.Graphics();
+  sh.beginFill(0x000000, 0.27).drawRect(0, MAP.wallRows * T, MAP.w * T, 6).endFill();
+  staticC.addChild(sh);
+  for (const d of MAP.wallDeco) {
+    const s = new PIXI.Sprite(tileTex(d.name));
+    s.position.set(d.c * T + (d.dx || 0), d.r * T + (d.dy || 0));
+    staticC.addChild(s);
+  }
+  for (const [c, r] of (MAP.partitions || [])) {
+    const s = new PIXI.Sprite(tileTex("partition"));
+    s.position.set(c * T, r * T);
+    staticC.addChild(s);
+  }
+  staticC.cacheAsBitmap = true;
+
+  for (const o of MAP.objects) {
+    const s = new PIXI.Sprite(tileTex(o.name));
+    const px = o.c * T + (o.dx || 0), py = o.r * T + (o.dy || 0);
+    s.position.set(px, py);
+    s.zIndex = py + MAP.atlas[o.name][3] + (o.dz || 0);
+    dynC.addChild(s);
+  }
+
+  const glowT = radialTex(48, [[0, "rgba(150,210,235,0.5)"], [0.5, "rgba(150,210,235,0.16)"], [1, "rgba(150,210,235,0)"]]);
+  const deskH = MAP.atlas.desk[3];
+  for (const name of MAP.agents) {
+    const [lx, ly] = MAP.laptops[name];
+    const [, dr] = MAP.desks[name];
+    const laptop = new PIXI.Sprite(tileTex("laptop_off"));
+    laptop.position.set(lx, ly);
+    laptop.zIndex = dr * T + deskH + 1;
+    const glow = new PIXI.Sprite(glowT);
+    glow.anchor.set(0.5); glow.width = glow.height = 40;
+    glow.position.set(lx + 9, ly + 8);
+    glow.blendMode = PIXI.BLEND_MODES.ADD; glow.alpha = 0;
+    glow.zIndex = dr * T + deskH + 2;
+    dynC.addChild(laptop, glow);
+    deskGear[name] = { laptop, glow };
+  }
+
+  for (const name of MAP.agents) views[name] = mkView(name);
+
+  const vig = new PIXI.Sprite(radialTex(256, [[0, "rgba(0,0,0,0)"], [0.62, "rgba(0,0,0,0)"], [1, "rgba(8,8,16,0.4)"]]));
+  vig.width = CW; vig.height = CH;
+  uiC.addChild(vig);
+}
+
+function mkView(name) {
+  const cont = new PIXI.Container();
+  const shadow = new PIXI.Graphics();
+  shadow.beginFill(0x000000, 0.22).drawEllipse(0, -1, 10, 2.8).endFill();
+  const sprite = new PIXI.Sprite(agentTex(name, 0));
+  sprite.anchor.set(0.5, FOOT / FRH);
+  sprite.scale.set(CS);   // frames are baked at 2x for crispness
+  cont.addChild(shadow, sprite);
+  cont.visible = false;
+  dynC.addChild(cont);
+
+  const label = new PIXI.Container();
+  const pill = new PIXI.Graphics();
+  const dot = new PIXI.Graphics();
+  const txt = new PIXI.Text(LABELS[name], { fontFamily: "Courier New, monospace", fontSize: 13, fontWeight: "bold", fill: 0xf2f6fa });
+  txt.resolution = 2;
+  const w = Math.ceil(txt.width) + 24;
+  pill.beginFill(0x12141a, 0.88).drawRoundedRect(-w / 2, 0, w, 18, 9).endFill();
+  dot.position.set(-w / 2 + 9, 9);
+  txt.position.set(-w / 2 + 16, 2);
+  label.addChild(pill, dot, txt);
+  label.visible = false;
+  uiC.addChild(label);
+
+  const bubble = new PIXI.Container();
+  const bg = new PIXI.Graphics();
+  const btxt = new PIXI.Text("", { fontFamily: "Courier New, monospace", fontSize: 11, fill: 0x111111 });
+  btxt.resolution = 2;
+  bubble.addChild(bg, btxt);
+  bubble.visible = false;
+  uiC.addChild(bubble);
+
+  return { cont, sprite, label: { root: label, dot, w }, bubble: { root: bubble, bg, txt: btxt, last: null, w: 0 } };
+}
+
+// ── Per-frame render ─────────────────────────────────────────────────────
+function dotColor(a) {
+  if (a.state === "working" && a.present) return 0x3fb950;
+  if (a.state === "walking") return 0xe3b341;
+  if (a.state === "meeting") return 0x58a6ff;
+  if (a.state === "hangout") return 0xd4b45e;
+  return 0x6a7078;
+}
+function movingLeft(a) {
+  if (!a.path.length) return false;
+  const t = a.path[0];
+  return Math.abs(t.x - a.x) > Math.abs(t.y - a.y) && t.x < a.x;
+}
+
+function render(now) {
+  for (const name in office.agents) {
+    const a = office.agents[name];
+    const v = views[name];
+    const gear = deskGear[name];
+    const visible = a.present || a.state === "walking";
+    v.cont.visible = visible;
+    v.label.root.visible = visible;
+
+    const atDesk = a.present && a.state === "working";
+    const typingNow = atDesk && a.typing > now;
+    if (gear) {
+      gear.laptop.texture = tileTex(atDesk ? "laptop_on" : "laptop_off");
+      gear.glow.alpha = typingNow ? 0.75 + 0.2 * Math.sin(now / 260) : (atDesk ? 0.22 : 0);
+      if (typingNow && Math.random() < 0.08) spawnSpark(gear.laptop.x + 9, gear.laptop.y + 2);
+    }
+
+    if (!visible) { v.bubble.root.visible = false; continue; }
+
+    let col, bob = 0, mirror = false;
+    if (atDesk) {
+      col = MAP.halfCol;                    // waist-up art behind the desk
+      if (a.typing > now) bob = Math.round(Math.sin(now / 150) * 0.8);
+    } else if (a.state === "meeting") {
+      col = Math.floor(now / 800) % 2 ? MAP.sitAltCol : MAP.sitCol;  // seated, own chair
+    } else if (a.state === "walking") {
+      col = Math.floor(now / 110) % MAP.walkFrames;
+      mirror = movingLeft(a);
+    } else {
+      col = 0;
+    }
+    v.sprite.texture = agentTex(name, col);
+    v.sprite.scale.x = mirror ? -CS : CS;
+    v.cont.position.set(Math.round(a.x), Math.round(a.y) + bob);
+    v.cont.zIndex = a.y;
+
+    // screen-space label above the head
+    const headY = a.y - (atDesk ? 46 : (a.state === "meeting" ? 52 : 74));
+    const sx = a.x * SC, sy = headY * SC;
+    v.label.root.position.set(sx, sy - 20);
+    v.label.dot.clear().beginFill(dotColor(a)).drawCircle(0, 0, 3.2).endFill();
+
+    const showB = a.bubble && a.bubbleUntil > now;
+    v.bubble.root.visible = !!showB;
+    if (showB) {
+      const b = v.bubble;
+      if (b.last !== a.bubble) {
+        b.last = a.bubble;
+        b.txt.text = a.bubble;
+        while (b.txt.width > 218 && b.txt.text.length > 2) b.txt.text = b.txt.text.slice(0, -2) + "…";
+        const tw = Math.ceil(b.txt.width) + 12;
+        b.bg.clear().lineStyle(1, 0x2b2b2b).beginFill(0xffffff)
+          .drawRoundedRect(0, 0, tw, 17, 4).endFill();
+        b.bg.lineStyle(0).beginFill(0xffffff)
+          .moveTo(tw / 2 - 4, 17).lineTo(tw / 2 + 4, 17).lineTo(tw / 2, 22).closePath().endFill();
+        b.txt.position.set(6, 2.5);
+        b.w = tw;
+      }
+      const bx = Math.max(2, Math.min(sx - b.w / 2, CW - b.w - 2));
+      b.root.position.set(bx, sy - 40);
+    }
+  }
+}
+
+// ── Typing sparks ────────────────────────────────────────────────────────
+const sparks = [];
+let sparkT = null;
+function spawnSpark(x, y) {
+  if (sparks.length > 50) return;
+  if (!sparkT) {
+    const c = document.createElement("canvas"); c.width = c.height = 2;
+    const g = c.getContext("2d"); g.fillStyle = "#dff0fa"; g.fillRect(0, 0, 2, 2);
+    sparkT = PIXI.Texture.from(c);
+  }
+  const s = new PIXI.Sprite(sparkT);
+  s.blendMode = PIXI.BLEND_MODES.ADD;
+  s.position.set(x + (Math.random() * 10 - 5), y);
+  s.alpha = 0.9;
+  s.vy = -(0.15 + Math.random() * 0.2);
+  fxC.addChild(s); sparks.push(s);
+}
+function stepSparks(dt) {
+  for (let i = sparks.length - 1; i >= 0; i--) {
+    const s = sparks[i];
+    s.y += s.vy * dt * 0.06; s.alpha -= 0.0012 * dt;
+    if (s.alpha <= 0) { fxC.removeChild(s); s.destroy(); sparks.splice(i, 1); }
+  }
+}
+
+// ── Polling ──────────────────────────────────────────────────────────────
+let seen = 0, attached = false, evCount = 0;
+async function poll() {
+  try {
+    const r = await fetch("events.jsonl", { cache: "no-store" });
+    if (!r.ok) throw 0;
+    const lines = (await r.text()).split("\n").filter(Boolean);
+    if (!attached) {
+      // ?replay processes the whole event history instead of skipping it
+      seen = location.search.includes("replay") ? 0 : lines.length;
+      attached = true;
+      logLine(null, seen ? `— attached · ${seen} past events skipped —` : "— attached (replay) —", "sys");
+    }
+    if (lines.length < seen) seen = 0;   // file was truncated/reset
+    for (; seen < lines.length; seen++) {
+      try { office.handle(JSON.parse(lines[seen]), performance.now()); evCount++; } catch (e) {}
+    }
+    document.getElementById("stat").textContent =
+      `events: ${evCount} · active agents: ${office.activeStack.length}`;
+  } catch (e) {
+    document.getElementById("stat").textContent = "no events.jsonl yet — waiting…";
+  }
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────
+async function init() {
+  MAP = await (await fetch("map.json")).json();
+  T = MAP.tile; SC = MAP.scale; FRW = MAP.charW; FRH = MAP.charH; FOOT = MAP.foot; CS = MAP.charScale || 1;
+  CW = MAP.w * T * SC; CH = MAP.h * T * SC;
+  app = new PIXI.Application({ width: CW, height: CH, background: 0x0b0c10, antialias: false });
+  document.getElementById("stage").appendChild(app.view);
+  world.scale.set(SC);
+  app.stage.addChild(world, uiC);
+
+  // plain Image loading — PIXI.Assets' format detection needs WebGL, which the
+  // canvas fallback renderer doesn't have
+  const loadImage = src => new Promise((res, rej) => {
+    const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src;
+  });
+  const [ti, ai] = await Promise.all([loadImage("tiles.png"), loadImage("agents.png")]);
+  tilesBT = PIXI.BaseTexture.from(ti);
+  agentsBT = PIXI.BaseTexture.from(ai);
+  agentsBT.scaleMode = PIXI.SCALE_MODES.LINEAR;   // smooth illustration art, not pixel art
+  office = OfficeLogic.createOffice(MAP, logLine);
+  buildScene();
+
+  const roster = document.getElementById("roster");
+  for (const name of MAP.agents) {
+    const chip = document.createElement("div");
+    chip.className = "chip"; chip.id = "chip-" + name;
+    chip.innerHTML = `<span class="dot"></span><span style="color:${AGENT_COLORS[name]}">●</span> ${LABELS[name]}`;
+    roster.appendChild(chip);
+  }
+
+  document.getElementById("stat").textContent = "waiting for events…";
+  setInterval(poll, 1000); poll();
+  setInterval(() => {
+    office.housekeeping(performance.now());
+    for (const k in office.agents) {
+      const chip = document.getElementById("chip-" + k);
+      if (chip) chip.classList.toggle("on", office.agents[k].present);
+    }
+  }, 500);
+
+  // wall-clock dt: rAF can stall (hidden tab, headless) while time keeps passing
+  let lastT = performance.now();
+  app.ticker.add(() => {
+    const now = performance.now();
+    const dt = Math.min(now - lastT, 4000);
+    lastT = now;
+    office.step(dt);
+    stepSparks(Math.min(dt, 100));
+    render(now);
+  });
+}
+
+init().catch(e => { document.getElementById("stat").textContent = "asset load failed: " + e; });
+</script>
+</body>
+</html>

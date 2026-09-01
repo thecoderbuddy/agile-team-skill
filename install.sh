@@ -192,6 +192,17 @@ EOF
     print_ok "CLAUDE.md installed"
   fi
 
+  # Pixel office (live agent visualization) — app + pre-baked assets only
+  if [ -d "$SOURCE_DIR/office" ] && [ "$SOURCE_DIR" != "$TARGET_DIR" ]; then
+    mkdir -p "$TARGET_DIR/office/assets"
+    for of in index.html logic.js pixi-legacy.min.js serve.sh demo.sh tiles.png agents.png map.json; do
+      cp "$SOURCE_DIR/office/$of" "$TARGET_DIR/office/$of"
+    done
+    cp "$SOURCE_DIR/office/assets/CREDITS.md" "$TARGET_DIR/office/assets/CREDITS.md"
+    chmod +x "$TARGET_DIR/office/serve.sh" "$TARGET_DIR/office/demo.sh"
+    print_ok "office/ installed (run: bash office/serve.sh → http://localhost:8123)"
+  fi
+
 else
   # ── Remote install (curl from GitHub) ────────────────────────────────────
 
@@ -222,7 +233,7 @@ else
     "DECISIONS" "LEARNINGS" "TEAM"
   )
 
-  HOOKS=("post-tool-use" "stop")
+  HOOKS=("pre-tool-use" "post-tool-use" "stop" "office-event")
 
   if [ "$SKIP_CLAUDE" != "true" ]; then
     mkdir -p "$TARGET_DIR/.claude/agents"
@@ -299,6 +310,15 @@ EOF
     curl -fsSL "$REPO_URL/CLAUDE.md" -o "$TARGET_DIR/CLAUDE.md"
     print_ok "CLAUDE.md installed"
   fi
+
+  # Pixel office (live agent visualization) — app + pre-baked assets only
+  mkdir -p "$TARGET_DIR/office/assets"
+  for of in index.html logic.js pixi-legacy.min.js serve.sh demo.sh tiles.png agents.png map.json; do
+    curl -fsSL "$REPO_URL/office/$of" -o "$TARGET_DIR/office/$of"
+  done
+  curl -fsSL "$REPO_URL/office/assets/CREDITS.md" -o "$TARGET_DIR/office/assets/CREDITS.md"
+  chmod +x "$TARGET_DIR/office/serve.sh" "$TARGET_DIR/office/demo.sh"
+  print_ok "office/ installed (run: bash office/serve.sh → http://localhost:8123)"
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -355,6 +375,7 @@ echo "    .claude/hooks/     — safety gates + secret scanning
     .gitleaks.toml     — secret scanner config
     .git/hooks/        — pre-commit secret scan (active if gitleaks installed)"
 echo "    memory/            — persistent team state"
+echo "    office/            — live pixel-office visualization of your agents"
 echo "    CLAUDE.md          — project constitution"
 echo ""
 echo -e "  ${BOLD}Next steps:${NC}"

@@ -11,6 +11,16 @@
             "statusMessage": "Running safety checks..."
           }
         ]
+      },
+      {
+        "matcher": "Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/office-event.sh",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -24,6 +34,38 @@
             "statusMessage": "Running post-tool checks..."
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/office-event.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/office-event.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/office-event.sh",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "Stop": [
@@ -33,6 +75,11 @@
             "type": "command",
             "command": "bash .claude/hooks/stop.sh",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/office-event.sh",
+            "timeout": 5
           }
         ]
       }
